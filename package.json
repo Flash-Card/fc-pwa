@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "eslint-plugin-react": "^7.0.1",
+    "gh-pages": "^1.1.0",
     "immutable-devtools": "^0.0.7",
     "jest-immutable-matchers": "^1.5.0",
     "prop-types": "^15.6.0",
@@ -33,9 +34,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
   },
-  "homepage": "https://flash-card.github.io/FlashCard-PWA/",
+  "homepage": "https://flash-card.github.io/fc-pwa/",
   "eslintConfig": {
     "extends": "react-app",
     "plugins": [

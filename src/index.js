@@ -26,7 +26,6 @@ fillStore((state) => {
     </Provider>,
   document.getElementById('root'));
 
-  registerServiceWorker();
-
 });
+registerServiceWorker();
 
