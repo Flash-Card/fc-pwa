@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose } from 'redux';
-import { connect } from 'react-redux';
 import Card from 'components/card';
 import SideBar from './sidebar';
 import injectSheet from 'react-jss';
@@ -14,7 +13,6 @@ class QuizPage extends React.Component {
   };
 
   render() {
-    const { classes } = this.props;
     return (
       <div className="screen">
         <Card />
@@ -25,6 +23,5 @@ class QuizPage extends React.Component {
 }
 
 export default compose(
-  connect(),
   injectSheet(sheet),
 )(QuizPage);

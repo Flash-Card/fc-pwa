@@ -1,5 +1,5 @@
-const green = '#3ddd73';
-const blue = '#128fdc';
+// const green = '#3ddd73';
+// const blue = '#128fdc';
 const darkBlue = '#13122d';
 
 export default {

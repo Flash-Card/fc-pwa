@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import { call, takeEvery } from 'redux-saga/effects';
 import * as Cards from 'domain/cards/sagas';
 import * as Storage from 'lib/indexedStorage';
 

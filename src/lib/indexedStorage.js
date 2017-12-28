@@ -49,18 +49,18 @@ function os(db, table, permission) {
   return db.transaction(table, permission).objectStore(table);
 }
 
-function createStore(db, schema) {
-  if (!db.objectStoreNames.contains(schema.name)) {
-
-    const objectStore = db.createObjectStore(schema.name, schema.options);
-
-    schema.indexes.forEach(e => {
-      objectStore.createIndex(e.name, e.keyPath, e.option);
-    });
-
-    schema.fixture.forEach(e => objectStore.add(e));
-  }
-}
+// function createStore(db, schema) {
+//   if (!db.objectStoreNames.contains(schema.name)) {
+//
+//     const objectStore = db.createObjectStore(schema.name, schema.options);
+//
+//     schema.indexes.forEach(e => {
+//       objectStore.createIndex(e.name, e.keyPath, e.option);
+//     });
+//
+//     schema.fixture.forEach(e => objectStore.add(e));
+//   }
+// }
 
 export function getAll(db, name) {
   return new Promise(resolve => {

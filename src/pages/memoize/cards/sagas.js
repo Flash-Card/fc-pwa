@@ -1,4 +1,4 @@
-import { takeLatest, call, select } from 'redux-saga/effects';
+import { takeLatest, call } from 'redux-saga/effects';
 import * as Cards from 'domain/cards/sagas';
 
 // function* watchAddToLexicon() {

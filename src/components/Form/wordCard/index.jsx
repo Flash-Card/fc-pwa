@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import I from 'immutable';
 import Field from 'redux-form/lib/Field';
 import FieldArray from 'redux-form/lib/FieldArray';
-import { Input, MultiInput, Select } from 'components/Form/element';
+import { Input, MultiInput } from 'components/Form/element';
 import injectSheet from 'react-jss';
 import sheet from './sheet.js';
 

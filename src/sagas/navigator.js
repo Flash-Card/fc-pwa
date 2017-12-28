@@ -1,4 +1,4 @@
-import { fork, takeEvery, cancel, select, call } from 'redux-saga/effects';
+import { fork, takeEvery, cancel, call } from 'redux-saga/effects';
 import routes from 'domain/router/routes';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { matchPath } from 'react-router-dom';

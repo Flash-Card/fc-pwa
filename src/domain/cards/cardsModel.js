@@ -1,6 +1,5 @@
 import I from 'immutable';
 import * as A from './cardsActions.js';
-import { cardItemImSerialize } from './helpers';
 
 const emptyMap = new I.Map();
 

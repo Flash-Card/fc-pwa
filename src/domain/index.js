@@ -10,7 +10,6 @@ import {
   lexiconSerialize,
   setsSerialize,
 } from 'domain/cards/helpers';
-import storeMiddleware from '../lib/storeMiddlware';
 
 const __DEV__ = (process.env.NODE_ENV === 'production');
 
