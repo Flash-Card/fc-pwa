@@ -1,0 +1,51 @@
+export default {
+  header: {
+    width: '100%',
+    height: 60,
+    boxShadow: '0 0 4px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24)',
+    display: 'flex',
+    alignItems: 'center',
+    padding: [0, 15],
+    zIndex: 99,
+    position: 'relative',
+    background: 'rgba(21,21,23,.95)',
+  },
+  menuBtn: {
+    height: 40,
+    width: 40,
+    borderRadius: 2,
+    color: '#fff',
+    position: 'relative',
+  },
+  logo: {
+    fontSize: 18,
+    fontWeight: 600,
+    color: '#fff',
+    marginLeft: 8,
+  },
+  burger: {
+    width: 16,
+    height: 2,
+    background: '#fff',
+    position: 'absolute',
+    borderRadius: 0.5,
+    left: 0,
+    right: 0,
+    margin: 'auto',
+    '&:before, &:after': {
+      content: "''",
+      width: 16,
+      height: 2,
+      background: '#fff',
+      position: 'absolute',
+      display: 'inline-block',
+      left: 0,
+    },
+    '&:before': {
+      top: -6,
+    },
+    '&:after': {
+      top: 6,
+    },
+  },
+};

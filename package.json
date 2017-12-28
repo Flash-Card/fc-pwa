@@ -1,0 +1,183 @@
+{
+  "name": "flash-card-pwa",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "axios": "^0.17.1",
+    "classnames": "^2.2.5",
+    "history": "^4.7.2",
+    "immutable": "^3.8.2",
+    "jss": "^9.3.3",
+    "nanoid": "^1.0.1",
+    "query-string": "^5.0.1",
+    "react": "^16.1.1",
+    "react-dom": "^16.1.1",
+    "react-jss": "^8.1.0",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^5.0.0-alpha.9",
+    "redux": "^3.7.2",
+    "redux-form": "^7.2.0",
+    "redux-saga": "^0.16.0",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1"
+  },
+  "devDependencies": {
+    "eslint-plugin-react": "^7.0.1",
+    "immutable-devtools": "^0.0.7",
+    "jest-immutable-matchers": "^1.5.0",
+    "prop-types": "^15.6.0",
+    "react-scripts": "1.0.17"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "plugins": [
+      "react"
+    ],
+    "parser": "babel-eslint",
+    "globals": {
+      "window": true,
+      "document": true
+    },
+    "rules": {
+      "jsx-quotes": [
+        "error",
+        "prefer-double"
+      ],
+      "quotes": [
+        "error",
+        "single",
+        {
+          "avoidEscape": true
+        }
+      ],
+      "key-spacing": [
+        "error",
+        {
+          "beforeColon": false,
+          "afterColon": true
+        }
+      ],
+      "eol-last": [
+        "error",
+        "always"
+      ],
+      "react/no-string-refs": 2,
+      "react/jsx-key": 2,
+      "react/jsx-indent": [
+        2,
+        2
+      ],
+      "react/jsx-indent-props": [
+        2,
+        2
+      ],
+      "react/jsx-boolean-value": [
+        "error",
+        "never"
+      ],
+      "react/jsx-max-props-per-line": [
+        "error",
+        {
+          "maximum": 1,
+          "when": "multiline"
+        }
+      ],
+      "space-before-function-paren": [
+        "error",
+        "never"
+      ],
+      "keyword-spacing": [
+        "error",
+        {
+          "before": true
+        }
+      ],
+      "no-empty-pattern": "error",
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "global-require": 0,
+      "no-underscore-dangle": 0,
+      "no-console": [
+        "warn",
+        {
+          "allow": [
+            "warn",
+            "error"
+          ]
+        }
+      ],
+      "react/require-default-props": 0,
+      "react/default-props-match-prop-types": [
+        "off",
+        {
+          "allowRequiredDefaults": false
+        }
+      ],
+      "react/prop-types": [
+        2,
+        {
+          "ignore": [],
+          "customValidators": [],
+          "skipUndeclared": false
+        }
+      ],
+      "react/no-unused-prop-types": 1,
+      "react/jsx-curly-spacing": [
+        "error",
+        "never",
+        {
+          "allowMultiline": true
+        }
+      ],
+      "react/jsx-filename-extension": [
+        1,
+        {
+          "extensions": [
+            ".js",
+            ".jsx"
+          ]
+        }
+      ],
+      "semi": [
+        "error",
+        "always"
+      ],
+      "comma-dangle": [
+        "error",
+        {
+          "arrays": "always-multiline",
+          "objects": "always-multiline",
+          "imports": "always-multiline",
+          "exports": "always-multiline",
+          "functions": "always-multiline"
+        }
+      ],
+      "no-unused-vars": [
+        "error",
+        {
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": true
+        }
+      ]
+    },
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "paths": [
+            "./src"
+          ]
+        }
+      }
+    }
+  }
+}
