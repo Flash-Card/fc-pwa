@@ -1,23 +1,16 @@
----
-sudo: required
-dist: trusty
 language: node_js
 node_js:
   - "stable"
 cache:
   directories:
-    - node_modules
+  - node_modules
 script:
   - npm test
   - npm run build
-#install:
-#  - npm install
-#before_script:
-#  - export CI=false
 deploy:
   provider: pages
   skip_cleanup: true
-  github_token: $GITHUB_TOKEN # Set in travis-ci.org dashboard
+  github_token: $GITHUB_TOKEN
   local_dir: build
   on:
     branch: master
