@@ -14,7 +14,7 @@ import {
 } from 'domain/cards';
 import { routesById } from 'domain/router/routes';
 import Card from 'components/card';
-import Info from '../info/index';
+import Info from 'components/info/index';
 import SideBar from '../sidebar';
 import injectSheet from 'react-jss';
 import sheet from './sheet';
@@ -45,13 +45,14 @@ class CardsPage extends React.Component {
     const pathMaker = (cardId) => routesById['/edit/:cardId'].path.pathMaker({ cardId });
     return (
       <div className="screen">
-        <Info card={card} classes={classes} />
+        <Info card={card} />
         {
           card.size ? (
             <Card
               card={card}
               types={types}
               location={location}
+              open
             >
               <Link
                 to={pathMaker(index)}
@@ -62,7 +63,6 @@ class CardsPage extends React.Component {
             <div>No Cards</div>
           )
         }
-
         <SideBar
           card={card}
           isRemembered={isRemembered}

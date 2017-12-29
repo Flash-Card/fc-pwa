@@ -12,6 +12,14 @@ export default {
     '& > *': {
       flex: [0, 0, '25%'],
       textAlign: 'center',
+      display: 'block',
+      height: 30,
+      width: 30,
+      background: {
+        size: 'contain',
+        repeat: 'no-repeat',
+        position: 'center',
+      },
     },
   },
 };

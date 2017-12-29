@@ -17,30 +17,8 @@ export default {
     justifyContent: 'space-around',
     padding: [20, 0],
   },
-  set: {
-    fontWeight: 600,
-    color: '#333',
-    minWidth: 0,
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
   counter: {
     whiteSpace: 'nowrap',
-  },
-  info: {
-    fontSize: 14,
-    textAlign: 'center',
-    color: '#5b5b5b',
-    display: 'flex',
-    justifyContent: 'space-between',
-    '& *': {
-      display: 'inline-block',
-      margin: [0, 2],
-    },
-    '& dd': {
-      color: '#0e74b3',
-    },
   },
   btnNext: {
     extend: [btn],

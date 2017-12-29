@@ -97,7 +97,8 @@ export function imIterator(map) {
   return map.keySeq().toList();
 }
 
-const emptyMap = new I.Map();
+export const emptyMap = new I.Map();
+export const emptyList = new I.List();
 
 export function listToMap(list, keyName = 'id') {
   return list.reduce((A, V) => A.set(V.get(keyName), V), emptyMap);

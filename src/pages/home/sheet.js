@@ -1,9 +1,4 @@
 export default {
-  home: {
-    width: '100%',
-    height: 'calc(100% - 60px)',
-    position: 'relative',
-  },
   menu: {
     height: '100%',
     display: 'flex',

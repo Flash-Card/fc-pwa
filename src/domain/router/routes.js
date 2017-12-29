@@ -47,8 +47,9 @@ const routes = [
     path: path`/quiz`,
     exact: true,
     title: 'quiz',
-    component: () => import('pages/quiz/index'),
+    component: () => import('pages/quiz'),
     restriction: null,
+    saga: () => import('pages/quiz/sagas'),
   },
   {
     path: path`/create`,

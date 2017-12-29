@@ -22,7 +22,7 @@ class Card extends React.Component {
             <div className={classes.key}>{card.get('key')}</div>
             <div className={classes.values}>
               {
-                card.get('values').map(e =>
+                card.get('values', new I.List()).map(e =>
                   <dl key={e.get('value')}>
                     <dd className={classes.description}>{types.getIn([e.get('type'), 'title'], '')}</dd>
                     <dt className={classes.value}>{e.get('value')}</dt>

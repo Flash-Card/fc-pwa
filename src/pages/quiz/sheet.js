@@ -1,12 +1,6 @@
-const btn = {
-  backgroundColor: '#128fdc',
-  color: '#fff',
-  padding: [4, 20],
-  borderRadius: 4,
-  '&:active': {
-    backgroundColor: '#0e74b3',
-  },
-};
+import up from './thumbs-up.svg';
+import flip from './arrows.svg';
+import arrow from './arrow-left.svg';
 
 export default {
   quiz: {
@@ -18,9 +12,13 @@ export default {
     padding: [20, 0],
   },
   btnNext: {
-    ...btn,
+    backgroundImage: `url(${arrow})`,
+    transform: 'rotate(180deg)',
+  },
+  btnOk: {
+    backgroundImage: `url(${up})`,
   },
   btnFlip: {
-    ...btn,
+    backgroundImage: `url(${flip})`,
   },
 };

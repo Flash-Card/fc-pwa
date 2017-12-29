@@ -8,6 +8,10 @@ const Cards = emptyMap;
 const Types = emptyMap;
 const CardsLog = emptyMap;
 const Lexicon = emptyMap;
+const Quiz = I.fromJS({
+  list: [],
+  current: 0,
+});
 
 export const reducer = {
   sets(state = Sets, action) {
@@ -55,6 +59,17 @@ export const reducer = {
 
       case A.getDictItem.success:
         return action.payload;
+
+      default:
+        return state;
+    }
+  },
+  quiz(state = Quiz, action) {
+    switch (action.type) {
+
+      case A.fillQuiz.type:
+        return state
+          .set('list', action.payload);
 
       default:
         return state;

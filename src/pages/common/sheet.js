@@ -45,14 +45,14 @@ export default {
     width: '100%',
     minHeight: '100%',
     height: '100%',
-    overflow: 'hidden',
+    overflow: ({ menu }) => menu.get('isOpen') ? 'hidden' : 'auto',
   },
   slider: {
+    minHeight: 'calc(100% - 60px)',
     height: 'calc(100% - 60px)',
     position: 'relative',
     transition: '0.3s transform',
     willChange: 'transform',
-    background: '#f5f5f5',
     zIndex: 10,
     transform: menuSlider,
     '& > .screen': {

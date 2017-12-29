@@ -3,7 +3,6 @@ export default {
     border: '1px solid #e5e9f2',
     width: '100%',
     height: window.innerHeight - 165,
-    margin: [5, 'auto', 10],
     background: '#fff',
     borderRadius: 5,
     position: 'relative',
@@ -28,6 +27,9 @@ export default {
   values: {
     maxHeight: '60%',
     overflowY: 'auto',
+    willChange: 'opacity',
+    transition: '.3s opacity',
+    opacity: ({ open }) => open ? 1 : 0,
   },
   value: {
     color: '#128fdc',

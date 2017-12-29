@@ -28,3 +28,5 @@ export const getCrds = action('cards/GET_CARDS', data => ({
     action: 'get',
   },
 }));
+
+export const fillQuiz = action('quiz/FILL_LIST');

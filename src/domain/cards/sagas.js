@@ -21,20 +21,27 @@ export const ensureGetDictionary = ensure({
   }),
 }, 'set');
 
-export function* ensureGetCard({ cardId }) {
-  const card = yield call(
+export function* getCardBy(index, value) {
+  return yield call(
     Storage.getItem,
     Storage.TABLE.DICTIONARY,
-    'index',
-    parseInt(cardId, 10),
+    index,
+    value,
   );
-  if (typeof card !== 'undefined') {
-    const set = (yield checkCardSets(card.index)).setIn(['meta', 'current'], card.index);
-    yield call(ensureUpdateSets, set);
-    yield put({
-      type: action.getDictItem.success,
-      payload: cardItemImSerialize(card).set('set', set),
-    });
+}
+
+export function* ensureGetCard({ cardId }) {
+  const value = parseInt(cardId, 10);
+  if (!isNaN(value)) {
+    const card = yield call(getCardBy, 'index', value);
+    if (typeof card !== 'undefined') {
+      const set = (yield checkCardSets(card.index)).setIn(['meta', 'current'], card.index);
+      yield call(ensureUpdateSets, set);
+      yield put({
+        type: action.getDictItem.success,
+        payload: cardItemImSerialize(card).set('set', set),
+      });
+    }
   }
 }
 

@@ -26,7 +26,7 @@ class Catalog extends React.Component {
     const { classes, sets } = this.props;
     return (
       <div className="screen">
-        <ul>
+        <ul className="inner">
           {
             sets.map(e =>
               <li key={e.get('id')} className={classes.set}>

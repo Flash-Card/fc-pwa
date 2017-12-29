@@ -22,6 +22,7 @@ class Create extends React.Component {
       <form
         onSubmit={this.props.handleSubmit}
         name="create"
+        className="inner"
       >
         <Field
           name="key"
