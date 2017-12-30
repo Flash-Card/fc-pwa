@@ -15,10 +15,11 @@ export const lexiconKeys = selector(lexiconList, l => l.map(e => e.get('key')));
 export const isCardinLexicon = selector(lexicon, cardItem, (l, c) =>  l.has(c.get('key')));
 
 const quiz = state => state.quiz;
+export const quizList = selector(quiz, q => q.get('list'));
 export const quizCurrentIndex = selector(quiz, q => q.get('current'));
 export const quizCurrentItem = selector(
-  quiz,
+  quizList,
   quizCurrentIndex,
   lexicon,
-  (q, i, l) => l.get(q.getIn(['list', i]), new I.Map()),
+  (q, i, l) => l.get(q.get(i), new I.Map()),
 );

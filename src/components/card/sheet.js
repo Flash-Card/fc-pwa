@@ -1,10 +1,10 @@
 export default {
   card: {
-    border: '1px solid #e5e9f2',
+    borderTop: '1px solid #e5e9f2',
+    borderBottom: '1px solid #e5e9f2',
     width: '100%',
     height: window.innerHeight - 165,
     background: '#fff',
-    borderRadius: 5,
     position: 'relative',
   },
   wrapper: {

@@ -30,3 +30,9 @@ export const getCrds = action('cards/GET_CARDS', data => ({
 }));
 
 export const fillQuiz = action('quiz/FILL_LIST');
+
+export const flipCard = action('quiz/FLIP_CARD');
+
+export const truePositive = action('quiz/TRUE_POSITIVE');
+
+export const quzeNextCard = action('quiz/NEXT_CARD');

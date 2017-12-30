@@ -9,16 +9,20 @@ export default {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    '& > *': {
+    padding: [0, 15],
+    '& > button': {
       flex: [0, 0, '25%'],
       textAlign: 'center',
       display: 'block',
       height: 30,
       width: 30,
-      background: {
-        size: 'contain',
-        repeat: 'no-repeat',
-        position: 'center',
+      maxWidth: 30,
+      backgroundSize: 'contain',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      transition: '0.5 opacity',
+      '&:disabled': {
+        opacity: 0.5,
       },
     },
   },

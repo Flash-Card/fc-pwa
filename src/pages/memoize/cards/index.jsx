@@ -45,7 +45,11 @@ class CardsPage extends React.Component {
     const pathMaker = (cardId) => routesById['/edit/:cardId'].path.pathMaker({ cardId });
     return (
       <div className="screen">
-        <Info card={card} />
+        <Info
+          index={card.get('index')}
+          data={card.getIn(['set', 'meta'])}
+          title={card.getIn(['set', 'title'])}
+        />
         {
           card.size ? (
             <Card
@@ -91,18 +95,3 @@ export default compose(
   connect(mapStateToProps, mapDispatchToProps),
   injectSheet(sheet),
 )(CardsPage);
-
-
-/**
- * <div className={classes.btnGroup}>
- <button
- className="btn btn_regular"
- disabled={lexicon.includes(card.get('key'))}
- onClick={() => this.props.addToLexicon()}
- >Remember</button>
- <Link
- className="btn btn_regular"
- to={routesById['/memoize/:cardId'].path.pathMaker({ cardId: 1 + index })}
- >Skip</Link>
- </div>
- */
