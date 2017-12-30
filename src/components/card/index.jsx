@@ -13,6 +13,10 @@ class Card extends React.Component {
     types: PropTypes.instanceOf(I.Map).isRequired,
   };
 
+  shouldComponentUpdate(nextProps) {
+    return !I.is(nextProps.card, this.props.card);
+  }
+
   render() {
     const { classes, card, types } = this.props;
     return (

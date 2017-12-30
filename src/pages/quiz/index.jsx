@@ -35,10 +35,9 @@ class QuizPage extends React.Component {
   };
 
   flipHandler = () => {
-    const { flip } = this.props;
     this.setState({
       open: true,
-    }, () => flip());
+    }, () => this.props.flip());
   };
 
   get infoData() {
@@ -54,27 +53,29 @@ class QuizPage extends React.Component {
 
   render() {
     const { card, types, classes, positive, next } = this.props;
+    const isOpen = this.state.open;
     return (
       <div className="screen">
         <Info data={this.infoData} title="Quiz" index={this.left} />
-        <Card card={card} types={types} open={this.state.open} />
+        <Card card={card} types={types} open={isOpen} />
         <SideBar>
           <button
             type="button"
             className={classes.btnFlip}
             onClick={this.flipHandler}
-            disabled={this.state.open}
+            disabled={isOpen}
           />
           <button
             type="button"
             className={classes.btnOk}
-            onClick={positive}
+            onClick={() => positive()}
+            disabled={isOpen}
           />
           <button
             type="button"
             className={classes.btnNext}
-            disabled={!this.state.open}
-            onClick={next}
+            disabled={!isOpen}
+            onClick={() => next()}
           />
         </SideBar>
       </div>
