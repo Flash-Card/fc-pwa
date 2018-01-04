@@ -7,9 +7,9 @@ import {
   quizCurrentItem,
   quizList,
   typesById,
-  flipCard,
-  quzeNextCard,
-  truePositive,
+  negative,
+  nextCard,
+  positive,
 } from 'domain/cards';
 import Info from 'components/info/index';
 import Card from 'components/card';
@@ -35,9 +35,17 @@ class QuizPage extends React.Component {
   };
 
   flipHandler = () => {
+    const { flip, card } = this.props;
     this.setState({
       open: true,
-    }, () => this.props.flip());
+    }, () => flip(card.get('key')));
+  };
+
+  nextHandler = () => {
+    const { next, card } = this.props;
+    this.setState({
+      open: false,
+    }, () => next(card.get('key')));
   };
 
   get infoData() {
@@ -52,12 +60,16 @@ class QuizPage extends React.Component {
   }
 
   render() {
-    const { card, types, classes, positive, next } = this.props;
+    const { card, types, classes, positive } = this.props;
     const isOpen = this.state.open;
     return (
       <div className="screen">
-        <Info data={this.infoData} title="Quiz" index={this.left} />
-        <Card card={card} types={types} open={isOpen} />
+        {
+          card.size ? [
+            <Info key="1" data={this.infoData} title="Quiz" index={this.left} />,
+            <Card key="2" card={card} types={types} open={isOpen} />,
+          ] : <div>No Cards</div>
+        }
         <SideBar>
           <button
             type="button"
@@ -68,14 +80,14 @@ class QuizPage extends React.Component {
           <button
             type="button"
             className={classes.btnOk}
-            onClick={() => positive()}
+            onClick={() => positive(card.get('key'))}
             disabled={isOpen}
           />
           <button
             type="button"
             className={classes.btnNext}
             disabled={!isOpen}
-            onClick={() => next()}
+            onClick={this.nextHandler}
           />
         </SideBar>
       </div>
@@ -91,9 +103,9 @@ const mapStateToProps = (state) => ({
 
 export default compose(
   connect(mapStateToProps, {
-    flip: flipCard,
-    next: quzeNextCard,
-    positive: truePositive,
+    flip: negative,
+    next: nextCard,
+    positive: positive,
   }),
   injectSheet(sheet),
 )(QuizPage);

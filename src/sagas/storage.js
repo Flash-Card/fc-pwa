@@ -1,9 +1,9 @@
 import { call, takeEvery } from 'redux-saga/effects';
 import * as Cards from 'domain/cards/sagas';
-import * as Storage from 'lib/indexedStorage';
+import * as idb from 'lib/db';
 
 function* ensureInsertKit({ set, payload }) {
-  const list = yield call(Storage.addData, Storage.TABLE.DICTIONARY, payload);
+  const list = yield call(idb.addList, idb.TABLE.DICTIONARY, payload);
 
   const data = set
     .set('isLoaded', true)

@@ -9,6 +9,8 @@ export const addToLexicon = asyncAction('dict/ADD_TO_LEXICON');
 
 export const removeFromLexicon = asyncAction('dict/REMOVE_FROM_LEXICON');
 
+export const updateLexicon = asyncAction('dict/UPDATE_LEXICON');
+
 export const getDictItem = asyncAction('dict/GET_ITEM');
 
 export const createCard = action('card/CREATE_CARD', data => ({
@@ -31,8 +33,8 @@ export const getCrds = action('cards/GET_CARDS', data => ({
 
 export const fillQuiz = action('quiz/FILL_LIST');
 
-export const flipCard = action('quiz/FLIP_CARD');
+export const negative = action('quiz/NEGATIVE');
 
-export const truePositive = action('quiz/TRUE_POSITIVE');
+export const positive = action('quiz/POSITIVE');
 
-export const quzeNextCard = action('quiz/NEXT_CARD');
+export const nextCard = action('quiz/NEXT_CARD');

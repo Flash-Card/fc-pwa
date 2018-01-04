@@ -6,7 +6,6 @@ const emptyMap = new I.Map();
 const Sets = emptyMap;
 const Cards = emptyMap;
 const Types = emptyMap;
-const CardsLog = emptyMap;
 const Lexicon = emptyMap;
 const Quiz = I.fromJS({
   list: [],
@@ -47,6 +46,10 @@ export const reducer = {
         return state
           .remove(action.key);
 
+      case A.updateLexicon.success:
+        return state
+          .set(action.payload.get('key'), action.payload);
+
       default:
         return state;
     }
@@ -71,12 +74,10 @@ export const reducer = {
         return state
           .set('list', action.payload);
 
-      default:
-        return state;
-    }
-  },
-  log(state = CardsLog, action) {
-    switch (action.type) {
+      case A.nextCard.type:
+      case A.positive.type:
+        return state
+          .update('list', l => l.filter(f => f !== action.payload));
 
       default:
         return state;

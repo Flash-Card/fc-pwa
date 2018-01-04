@@ -5,7 +5,6 @@ import {
   dstObjToImSerialize,
   createSerializer,
   dstImToObjSerialize,
-  isExistValue,
   emptyList,
   emptyMap,
 } from 'lib/serialize';
@@ -42,10 +41,6 @@ const typeItem = {
 const lexiconItem = {
   ...createSerializer([
     'key',
-    'count',
-    'k',
-    'lastShow',
-    'dateAdd',
   ]),
   values: v => ['values', cardImValues(v)],
   meta: v => ['meta', I.fromJS(v)],
@@ -83,8 +78,4 @@ export const cadsToLexiconSerialize = dstImToObjSerialize({
   key: v => ['key', v],
   values: v => ['values', (v || emptyList).toJS()],
   meta: v => ['meta', (v || emptyMap).toJS()],
-  dateAdd: v => ['dateAdd', isExistValue(v, new Date())],
-  count: v => ['count', isExistValue(v, 0)],
-  k: v => ['k', isExistValue(v, 1)],
-  lastShow: v => ['k', isExistValue(v, undefined)],
 });

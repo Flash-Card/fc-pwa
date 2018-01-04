@@ -3,7 +3,7 @@ import I from 'immutable';
 import Api, { ensure } from 'domain/api';
 import * as selector from './cardsSelector';
 import * as action from './cardsActions';
-import * as Storage from 'lib/indexedStorage';
+import * as idb from 'lib/db';
 import {
   cardItemImSerialize,
   cadsToLexiconSerialize,
@@ -23,8 +23,8 @@ export const ensureGetDictionary = ensure({
 
 export function* getCardBy(index, value) {
   return yield call(
-    Storage.getItem,
-    Storage.TABLE.DICTIONARY,
+    idb.getItem,
+    idb.TABLE.DICTIONARY,
     index,
     value,
   );
@@ -64,7 +64,7 @@ export function* checkCardSets(index) {
 }
 
 export function* ensureUpdateCard({ payload }) {
-  yield call(Storage.updateItem, Storage.TABLE.DICTIONARY, cardItemDeSerialize(payload));
+  yield call(idb.updateItem, idb.TABLE.DICTIONARY, cardItemDeSerialize(payload));
   const lexicon = yield select(selector.lexiconKeys);
   const isInclude = lexicon.includes(payload.key);
   if (payload.to_set && !isInclude) {
@@ -78,7 +78,7 @@ export function* ensureUpdateCard({ payload }) {
 
 export function* ensureAddToLexicon({ card }) {
   const lexicon = cadsToLexiconSerialize(card || (yield select(selector.cardItem)));
-  const key = yield call(Storage.addData, Storage.TABLE.LEXICON, lexicon);
+  const key = yield call(idb.addItem, idb.TABLE.LEXICON, lexicon);
   yield put({
     type: action.addToLexicon.success,
     key,
@@ -88,7 +88,7 @@ export function* ensureAddToLexicon({ card }) {
 
 export function* ensureRemoveFromLexicon({ payload }) {
   const key = payload.get('key');
-  yield call(Storage.deleteItem, Storage.TABLE.LEXICON, key);
+  yield call(idb.deleteItem, idb.TABLE.LEXICON, key);
   yield put({
     type: action.removeFromLexicon.success,
     key,
@@ -96,10 +96,18 @@ export function* ensureRemoveFromLexicon({ payload }) {
 }
 
 export function* ensureUpdateSets(data) {
-  yield call(Storage.updateItem, Storage.TABLE.SETS, data.toJS());
+  yield call(idb.updateItem, idb.TABLE.SETS, data.toJS());
   yield put({
     type: action.updateSet.success,
     id: data.get('id'),
     payload: data,
+  });
+}
+
+export function* ensureUpdateLexicon(payload) {
+  yield call(idb.updateItem, idb.TABLE.LEXICON, payload.toJS());
+  yield put({
+    type: action.updateLexicon.success,
+    payload,
   });
 }
