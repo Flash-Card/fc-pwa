@@ -127,6 +127,11 @@ export function deleteItem(table, index) {
     .then(db => promisify(os(db, table, READ_WRITE).delete(index)));
 }
 
+export function count(table) {
+  return openDB()
+    .then(db => promisify(os(db, table, READ_WRITE).count()));
+}
+
 export function clean() {
   return openDB()
     .then(db => {

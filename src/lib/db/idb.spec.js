@@ -20,7 +20,7 @@ describe('Indexed store', () => {
   });
 
   it('Open db check indexes', () => {
-    return idb.openDB()
+    return idb.openDB({ DB_NAME: 'FlashCards', DB_VERSION: 1 })
       .then(db => {
         expect(db.name).toEqual('FlashCards');
         expect(db.version).toBe(1);
@@ -73,6 +73,39 @@ describe('Indexed store', () => {
       .then(db => idb.getList(db, 'dictionary'))
       .then(l => {
         expect(l).toEqual(list);
+      });
+  });
+
+  it('update item', () => {
+    list = [{ key: 'test', index: 1 }, { key: 'test2', index: 10 }];
+    const item = { key: 'test2-1', index: 10 };
+    return idb.addList('dictionary', list)
+      .then(res => {
+        expect(res).toEqual([1, 10]);
+        return idb.updateItem('dictionary', item);
+      })
+      .then(res => {
+        expect(res).toBe(10);
+        return idb.getItem('dictionary', 'index', res);
+      })
+      .then(res => {
+        expect(res).toEqual(item);
+      });
+  });
+
+  it('delete item', () => {
+    list = [{ key: 'test', index: 1 }, { key: 'test2', index: 10 }];
+    return idb.addList('dictionary', list)
+      .then(res => {
+        expect(res).toEqual([1, 10]);
+        return idb.deleteItem('dictionary', 1);
+      })
+      .then(res => {
+        expect(res).not.toBeDefined();
+        return idb.count('dictionary');
+      })
+      .then(res => {
+        expect(res).toBe(1);
       });
   });
 
