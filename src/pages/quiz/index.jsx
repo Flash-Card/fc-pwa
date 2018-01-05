@@ -109,7 +109,7 @@ class QuizPage extends React.Component {
       <div className="screen">
         <div className="inner">
           <div className="btn__group">
-            <Link to="/memoize" className="btn btn_regular">Choice Sets</Link>
+            <Link to="/memoize" className="btn btn_regular">Choice and load Sets</Link>
           </div>
         </div>
       </div>

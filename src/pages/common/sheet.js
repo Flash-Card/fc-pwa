@@ -13,6 +13,7 @@ export default {
         width: '100%',
         height: 35,
         lineHeight: '35px',
+        textAlign: 'center',
         '&:active': {
           backgroundColor: '#0e74b3',
           boxShadow: 'none',
