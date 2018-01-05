@@ -38,3 +38,5 @@ export const negative = action('quiz/NEGATIVE');
 export const positive = action('quiz/POSITIVE');
 
 export const nextCard = action('quiz/NEXT_CARD');
+
+export const newQuiz = action('quiz/NEW_QUIZ');

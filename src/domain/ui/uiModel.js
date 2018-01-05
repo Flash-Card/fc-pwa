@@ -5,12 +5,6 @@ import * as A from './uiActions.js';
 const UI = I.fromJS({
   menu: {
     isOpen: false,
-    list: [
-      { name: 'home', path: '/', title: 'home' },
-      { name: 'memoize', path: '/memoize', title: 'memoize' },
-      { name: 'quiz', path: '/quiz', title: 'quiz' },
-      { name: 'create',  path: '/create', title: 'create card' },
-    ],
   },
 });
 

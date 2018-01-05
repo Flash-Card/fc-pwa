@@ -45,7 +45,7 @@ export default {
     width: '100%',
     minHeight: '100%',
     height: '100%',
-    overflow: ({ menu }) => menu.get('isOpen') ? 'hidden' : 'auto',
+    overflow: ({ menuStatus }) => menuStatus ? 'hidden' : 'auto',
   },
   slider: {
     minHeight: 'calc(100% - 60px)',
@@ -56,7 +56,7 @@ export default {
     zIndex: 10,
     transform: menuSlider,
     '& > .screen': {
-      pointerEvents: ({ menu }) => menu.get('isOpen') ? 'none' : 'auto',
+      pointerEvents: ({ menuStatus }) => menuStatus ? 'none' : 'auto',
     },
   },
   overlay: {
@@ -68,6 +68,6 @@ export default {
   },
 };
 
-function menuSlider({ menu }) {
-  return menu.get('isOpen') ? 'translateX(100%) translateX(-75px) scale(0.9)' : 'translateX(0%)';
+function menuSlider({ menuStatus }) {
+  return menuStatus ? 'translateX(100%) translateX(-75px) scale(0.9)' : 'translateX(0%)';
 }

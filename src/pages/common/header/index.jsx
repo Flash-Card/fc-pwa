@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
@@ -21,6 +22,11 @@ function Header({ classes, toggle }){
     </header>
   );
 }
+
+Header.propTypes = {
+  classes: PropTypes.objectOf(PropTypes.string).isRequired,
+  toggle: PropTypes.func.isRequired,
+};
 
 export default compose(
   injectSheet(sheet),

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import I from 'immutable';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { Switch, withRouter } from 'react-router-dom';
 
 import AsyncRoute from 'lib/AsyncRoute';
 
-import routes, { routesById } from 'domain/router/routes';
-import { menuToggle, menu as menuSelector } from 'domain/ui';
+import routes from 'domain/router/routes';
+import { menuToggle, menuStatus } from 'domain/ui';
+import * as ACL from 'domain/restriction';
 
 import Header from './common/header';
 import Menu from './common/menu';
@@ -18,28 +18,16 @@ import sheet from './common/sheet';
 
 require('./common/layout.css');
 
-const MENU = ['/', '/memoize', '/create', '/quiz', '/auth'];
-
 class App extends React.Component {
 
   static propTypes = {
     classes: PropTypes.objectOf(PropTypes.string).isRequired,
     toggle: PropTypes.func.isRequired,
-    // menu: PropTypes.arrayOf(
-    //   PropTypes.shape({
-    //     path: PropTypes.shape({
-    //       pathname: PropTypes.string,
-    //     }),
-    //     title: PropTypes.string,
-    //     exact: PropTypes.bool,
-    //     component: PropTypes.func.isRequired,
-    //   }),
-    // ),
-    menu: PropTypes.instanceOf(I.Map).isRequired,
     location: PropTypes.shape({
       pathname: PropTypes.string.isRequired,
       search: PropTypes.string.isRequired,
     }).isRequired,
+    restriction: PropTypes.number.isRequired,
   };
 
   shouldComponentUpdate(nextProps) {
@@ -48,14 +36,12 @@ class App extends React.Component {
   }
 
   render() {
-    const { classes, toggle } = this.props;
+    const { classes, toggle, restriction } = this.props;
     return (
       <div className={classes.container}>
         <Header />
-        <Menu list={MENU.map(e => routesById[e])} toggle={toggle} />
-        <div
-          className={classes.slider}
-        >
+        <Menu list={routes.filter(ACL.arrayFilter(restriction))} toggle={toggle} />
+        <div className={classes.slider}>
           <div
             className={classes.overlay}
             onTouchMove={() => toggle(false)}
@@ -78,8 +64,13 @@ class App extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  restriction: ACL.myRestriction(state),
+  menuStatus: menuStatus(state),
+});
+
 export default compose(
   withRouter,
-  connect(state => ({ menu: menuSelector(state) }), { toggle: menuToggle }),
+  connect(mapStateToProps, { toggle: menuToggle }),
   injectSheet(sheet),
 )(App);

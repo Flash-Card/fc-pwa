@@ -21,4 +21,9 @@ export default {
   btnFlip: {
     backgroundImage: `url(${flip})`,
   },
+  title: {
+    fontSize: 24,
+    margin: [20, 0],
+    textAlign: 'center',
+  },
 };
