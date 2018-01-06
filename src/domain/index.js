@@ -36,6 +36,7 @@ export default function configureStore(history, state) {
 
   const store = createStore(
     combineReducers({
+      ...require('./env').reducer,
       ...require('./cards').reducer,
       ...require('./ui/').reducer,
       ...require('./router').reducer,

@@ -60,7 +60,14 @@ const routes = [
     path: path`/auth`,
     exact: true,
     title: 'SignIn',
-    component: () => import('pages/home/index'),
+    component: () => import('pages/auth'),
+    restriction: ACL.MENU_SIGN_IN,
+  },
+  {
+    path: path`/auth-cb`,
+    exact: true,
+    title: 'SignIn',
+    component: () => import('pages/auth/cb'),
     restriction: false,
   },
 ];

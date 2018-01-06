@@ -23,14 +23,6 @@ export const createCard = action('card/CREATE_CARD', data => ({
 
 export const editCard = asyncAction('card/EDIT_CARD');
 
-export const getCrds = action('cards/GET_CARDS', data => ({
-  payload: data,
-  meta: {
-    table: 'dictionary',
-    action: 'get',
-  },
-}));
-
 export const fillQuiz = action('quiz/FILL_LIST');
 
 export const negative = action('quiz/NEGATIVE');
