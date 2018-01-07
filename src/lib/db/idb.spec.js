@@ -30,6 +30,15 @@ describe('Indexed store', () => {
       });
   });
 
+  it('object store throw if table not exist', () => {
+    const permission = 'readonly';
+    const table = 'notExistTable';
+    return idb.openDB({ DB_NAME: 'FlashCards', DB_VERSION: 1 })
+      .then(db => {
+        expect(() => idb.os(db, table, permission)).toThrow();
+      });
+  });
+
   it('add item to table', () => {
     data = { key: 'test' };
     return idb.addItem('dictionary', data)

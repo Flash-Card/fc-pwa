@@ -195,4 +195,24 @@ export default {
     ],
     fixture: [],
   }],
+  3: [{
+    name: 'env',
+    options: { keyPath: 'key', autoIncrement: false },
+    indexes: [
+      { name: 'key', keyPath: 'key', option: { unique: true } },
+    ],
+    fixture: [
+      { key: 'isAuthorized', value: 'false' },
+      { key: 'user', value: {} },
+      { key: 'gitHub', value: {
+          url: 'https://github.com/login/oauth/authorize',
+          client_id: 'a08c8e7509caa2da1f2a',
+          redirect_uri: 'https://flash-card.github.io/fc-pwa/#/auth-cb',
+          scope: 'gist',
+          state: '1234',
+          allow_signup: true,
+        },
+      },
+    ],
+  }],
 };
