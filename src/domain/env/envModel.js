@@ -1,19 +1,21 @@
 import I from 'immutable';
+import * as A from './envActions';
 
-const Env = new I.fromJS({
-  isAuthorized: false,
-  gitHub: {
-    url: 'https://github.com/login/oauth/authorize',
-    client_id: 'a08c8e7509caa2da1f2a',
-    redirect_uri: 'https://flash-card.github.io/fc-pwa/#/auth-cb',
-    state: '1234',
-    allow_signup: true,
-  },
-});
+const emptyMap = new I.Map();
 
 export const reducer = {
-  env(state = Env, action) {
+  env(state = emptyMap, action) {
     switch (action.type) {
+
+      case A.signIn.success:
+        return state
+          .set('user', action.payload)
+          .set('isAuthorized', true);
+
+      case A.signOut.success:
+        return state
+          .set('user', emptyMap)
+          .set('isAuthorized', false);
 
       default:
         return state;

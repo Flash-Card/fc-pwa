@@ -7,10 +7,11 @@ import configureStore from './domain';
 import registerServiceWorker from './registerServiceWorker';
 import { fillStore } from 'lib/db/index';
 import rootSaga from './sagas';
+import * as config from 'config';
 
 import App from './pages';
 
-fillStore()
+fillStore(config)
   .then((state) => {
 
     const history = createHistory();

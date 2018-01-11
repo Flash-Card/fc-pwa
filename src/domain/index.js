@@ -10,6 +10,9 @@ import {
   lexiconSerialize,
   setsSerialize,
 } from 'domain/cards/helpers';
+import {
+  envSerialize,
+} from 'domain/env/helpers';
 
 const __DEV__ = (process.env.NODE_ENV === 'production');
 
@@ -19,6 +22,7 @@ const stateSerialize = dstExObjToObjSerialize({
   types: v => ['types', typeSerialize(v)],
   lexicon: v => ['lexicon', lexiconSerialize(v)],
   sets: v => ['sets', setsSerialize(v)],
+  env: v => ['env', envSerialize(v)],
 });
 
 export default function configureStore(history, state) {

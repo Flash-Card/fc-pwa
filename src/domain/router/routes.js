@@ -56,20 +56,6 @@ const routes = [
     saga: () => import('pages/edit/sagas'),
     restriction: false,
   },
-  {
-    path: path`/auth`,
-    exact: true,
-    title: 'SignIn',
-    component: () => import('pages/auth'),
-    restriction: ACL.MENU_SIGN_IN,
-  },
-  {
-    path: path`/auth-cb`,
-    exact: true,
-    title: 'SignIn',
-    component: () => import('pages/auth/cb'),
-    restriction: false,
-  },
 ];
 
 function byId(arr) {

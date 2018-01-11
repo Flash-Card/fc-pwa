@@ -1,11 +1,16 @@
 import * as CONFIG from 'config';
-import schema from './schema';
+import SCHEMA from './schema';
 import { arrayRange } from 'lib/helpers';
+import Api from 'domain/api';
 
 const READ_ONLY = 'readonly';
 const READ_WRITE = 'readwrite';
 
 export const TABLE = CONFIG.TABLES;
+
+/**
+ * helpers
+ **/
 
 function rejectify(request, reject) {
   request.onerror = function() {
@@ -37,6 +42,11 @@ function promiSeq(cursor) {
   });
 }
 
+
+/**
+ * DB helpers
+ **/
+
 function tableExist(db, table) {
   const osn = db.objectStoreNames;
   for (let i = 0; i < osn.length; i++) {
@@ -45,57 +55,18 @@ function tableExist(db, table) {
   return false;
 }
 
-export function openDB(config = CONFIG) {
-  let fixtures = [];
-  const request = indexedDB.open(config.DB_NAME, config.DB_VERSION);
-  request.onupgradeneeded = event => {
-    const { newVersion, oldVersion, target: { result } } = event;
-    arrayRange(newVersion).slice(oldVersion).forEach(idx => {
-      schema[idx + 1].forEach(item => {
-
-        const objectStore = result.createObjectStore(item.name, item.options);
-
-        item.indexes.forEach(idx => {
-          objectStore.createIndex(idx.name, idx.keyPath, idx.option);
-        });
-
-        if (Array.isArray(item.fixture) && item.fixture.length) {
-          fixtures = item.fixture.reduce((A, values) => A.concat({ table: item.name, values }), fixtures);
-        }
-
-      });
-    });
-  };
-  return promisify(request)
-    .then(db => {
-      if (fixtures.length) {
-        const a = table => add(db, table);
-        return Promise
-          .all(fixtures.map(item => a(item.table)(item.values)))
-          .then(() => db);
-      }
-      return db;
-    });
+function add(db, table) {
+  return (item) => promisify(os(db, table, READ_WRITE).add(item));
 }
 
-/**
- *
- * @param db
- * @param table{string}
- * @param permission{string}
- * @returns {*|IDBObjectStore}
- */
+function put(db, table, modifier = d => d) {
+  return (item) => promisify(os(db, table, READ_WRITE).put(modifier(item)));
+}
+
 export function os(db, table, permission) {
   if (tableExist(db, table))
     return db.transaction(table, permission).objectStore(table);
   throw new Error(`Table ${table} is not exist`);
-}
-
-export function getItem(table, indexName, value) {
-  return openDB()
-    .then(db => promisify(
-      os(db, table, READ_ONLY).index(indexName).get(value)),
-    );
 }
 
 export function getList(db, table) {
@@ -104,58 +75,122 @@ export function getList(db, table) {
   } return Promise.reject(`Table ${table} is not exist in object store`);
 }
 
-function add(db, table) {
-  return (item) => promisify(os(db, table, READ_WRITE).add(item));
+export function updateList(db, table, modifier) {
+  const updater = put(db, table, modifier);
+  return promiSeq(os(db, table, READ_WRITE).openCursor())
+    .then(list => Promise.all(list.map(updater)));
 }
 
-function put(db, table) {
-  return (item) => promisify(os(db, table, READ_WRITE).put(item));
+export function upgrade({ getFixtures, schema }) {
+  return function(event) {
+    const { newVersion, oldVersion, target: { result } } = event;
+    arrayRange(newVersion).slice(oldVersion).forEach(idx => {
+      schema[idx + 1].forEach(item => {
+
+        if (typeof item.options !== 'undefined') {
+          const objectStore = result.createObjectStore(item.name, item.options);
+          item.indexes.forEach(idx => {
+            objectStore.createIndex(idx.name, idx.keyPath, idx.option);
+          });
+        }
+
+        if (typeof item.fixture !== 'undefined') {
+          this.setFixture(getFixtures({ name: item.fixture }));
+        }
+
+        if (typeof item.modifier === 'function') {
+          this.setModifier(item);
+        }
+      });
+    });
+  };
+}
+
+
+export function OpenDB(config, onUpgrade) {
+  let fixtures = [];
+  let modifier = [];
+
+  this.setFixture = (value) => {
+    fixtures = fixtures.concat([value]);
+  };
+
+  this.setModifier = (value) => {
+    modifier = modifier.concat([value]);
+  };
+
+  const request = indexedDB.open(config.DB_NAME, config.DB_VERSION);
+
+  request.onupgradeneeded = onUpgrade.bind(this);
+
+  return promisify(request)
+    .then(db => {
+      if (fixtures.length) {
+        const a = table => add(db, table);
+        const flatMap = (A, V) => A.concat(V.data.values.map(a(V.data.name)));
+        const update = ({ name, modifier }) => updateList(db, name, modifier);
+        return Promise
+          .all(fixtures)
+          .then(resp => Promise.all(resp.reduce(flatMap, [])))
+          .then(() => Promise.all(modifier.map(update)))
+          .then(() => db);
+      }
+      return db;
+    });
 }
 
 /**
  *
- * @param table{string}
- * @param item{object}
- * @returns {*|PromiseLike<T>|Promise<T>}
- */
-export function addItem(table, item) {
-  return openDB()
+ **/
+
+const iDB = (getFixtures = Api.fixtures, schema = SCHEMA) => new OpenDB(CONFIG, upgrade({ getFixtures, schema }));
+
+export function getItem(table, indexName, value, idb = iDB) {
+  return idb()
+    .then(db => promisify(
+      os(db, table, READ_ONLY).index(indexName).get(value)),
+    );
+}
+
+export function addItem(table, item, idb = iDB) {
+  return idb()
     .then(db => add(db, table)(item));
 }
 
-export function addList(table, list) {
-  return openDB()
+export function addList(table, list, idb = iDB) {
+  return idb()
     .then(db => {
       const a = add(db, table);
       return Promise.all(list.map(a));
     });
 }
 
-export function updateItem(table, item) {
-  return openDB()
+export function updateItem(table, item, idb = iDB) {
+  return idb()
     .then(db => put(db, table)(item));
 }
 
-export function deleteItem(table, index) {
-  return openDB()
+export function deleteItem(table, index, idb = iDB) {
+  return idb()
     .then(db => promisify(os(db, table, READ_WRITE).delete(index)));
 }
 
-export function count(table) {
-  return openDB()
+export function count(table, idb = iDB) {
+  return idb()
     .then(db => promisify(os(db, table, READ_ONLY).count()));
 }
 
-export function clean() {
-  return openDB()
-    .then(db => {
-      db.close();
-      return promisify(global.indexedDB.deleteDatabase(CONFIG.DB_NAME));
-    });
-}
+// export function clean(idb = iDB) {
+//   return idb()
+//     .then(db => {
+//       db.close();
+//       return promisify(global.indexedDB.deleteDatabase(CONFIG.DB_NAME));
+//     });
+// }
 
-export function fillStore(tables = CONFIG.STORE_TABLES) {
-  return openDB()
+export function fillStore({ STORE_TABLES }, idb = iDB) {
+  const tables = STORE_TABLES;
+  return idb()
     .then(db => {
       const isExist = t => tableExist(db, t);
       const tList = t => getList(db, t);

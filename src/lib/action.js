@@ -20,7 +20,7 @@ function makeActionCreator(base, makeAction) {
   };
 }
 
-export function action(base: string, makeAction: Function = makeActionDefault) {
+export function action(base, makeAction = makeActionDefault) {
 
   const actionCreator = makeActionCreator(base, makeAction);
 
@@ -31,7 +31,7 @@ export function action(base: string, makeAction: Function = makeActionDefault) {
 }
 
 
-export function asyncAction(base: string, makeAction: Function = makeActionDefault) {
+export function asyncAction(base, makeAction = makeActionDefault) {
 
   const actionCreator = makeActionCreator(base, makeAction);
 

@@ -43,4 +43,3 @@ export const SETS_IS_LOADED = policy(RIGHTS.SETS_IS_LOADED);
 export const LEXICON_IS_EXIST = policy(RIGHTS.LEXICON_IS_EXIST);
 
 export const MENU_QUIZ = policy(RIGHTS.LEXICON_IS_EXIST);
-export const MENU_SIGN_IN = policy(RIGHTS.IS_NOT_AUTHORIZED);

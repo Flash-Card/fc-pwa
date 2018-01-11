@@ -35,7 +35,7 @@ function makeUrl(strings, ...values) {
       str += strings[i];
       str += args[values[i]];
     }
-    str += strings[strings.length-1];
+    str += strings[strings.length - 1];
     return str;
   };
 }
@@ -49,6 +49,6 @@ function method(method, url) {
 }
 
 export default {
-  ajaxGet: method('get', makeUrl(`${'url'}`)),
-  ox3000: method('get', 'https://raw.githubusercontent.com/OliverCollins/Oxford-3000-Word-List/master/Oxford%203000%20Word%20List.txt'),
+  fixtures: method('get', makeUrl`/db/${'name'}`),
+  ajaxGet: method('get', makeUrl`${'url'}`),
 };
