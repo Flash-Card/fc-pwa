@@ -53,7 +53,7 @@ describe('Indexed store', () => {
   let list;
 
   const update = idb.upgrade({ getFixtures, schema });
-  const iDBx = () => new OpenDB({ DB_NAME: 'FlashCards', DB_VERSION: 1 }, update);
+  const iDBx = () => new OpenDB({ DB_NAME: 'FlashCards', DB_VERSION: 3 }, update);
 
   beforeEach(() => {
     global.indexedDB = fakeIndexedDB;
@@ -71,7 +71,7 @@ describe('Indexed store', () => {
     return iDBx()
       .then(db => {
         expect(db.name).toEqual('FlashCards');
-        expect(db.version).toBe(1);
+        expect(db.version).toBe(3);
         const os = idb.os(db, schema[1][0].name, 'readonly');
         expect(os.name).toEqual(schema[1][0].name);
         expect(os.indexNames).toEqual(schema[1][0].indexes.map(e => e.name));

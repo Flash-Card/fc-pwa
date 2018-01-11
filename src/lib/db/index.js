@@ -84,7 +84,11 @@ export function updateList(db, table, modifier) {
 export function upgrade({ getFixtures, schema }) {
   return function(event) {
     const { newVersion, oldVersion, target: { result } } = event;
+
+    const update = ({ name, modifier }) => db => updateList(db, name, modifier);
+
     arrayRange(newVersion).slice(oldVersion).forEach(idx => {
+
       schema[idx + 1].forEach(item => {
 
         if (typeof item.options !== 'undefined') {
@@ -95,11 +99,17 @@ export function upgrade({ getFixtures, schema }) {
         }
 
         if (typeof item.fixture !== 'undefined') {
-          this.setFixture(getFixtures({ name: item.fixture }));
+          this.setAsync(db =>
+            getFixtures({ name: item.fixture })
+              .then(({ data: { name, values } }) => {
+                const a = add(db, name);
+                return Promise.all(values.map(a));
+              }),
+          );
         }
 
         if (typeof item.modifier === 'function') {
-          this.setModifier(item);
+          this.setAsync(update(item));
         }
       });
     });
@@ -108,15 +118,10 @@ export function upgrade({ getFixtures, schema }) {
 
 
 export function OpenDB(config, onUpgrade) {
-  let fixtures = [];
-  let modifier = [];
+  let async = [];
 
-  this.setFixture = (value) => {
-    fixtures = fixtures.concat([value]);
-  };
-
-  this.setModifier = (value) => {
-    modifier = modifier.concat([value]);
+  this.setAsync = (value) => {
+    async = async.concat(value);
   };
 
   const request = indexedDB.open(config.DB_NAME, config.DB_VERSION);
@@ -125,15 +130,8 @@ export function OpenDB(config, onUpgrade) {
 
   return promisify(request)
     .then(db => {
-      if (fixtures.length) {
-        const a = table => add(db, table);
-        const flatMap = (A, V) => A.concat(V.data.values.map(a(V.data.name)));
-        const update = ({ name, modifier }) => updateList(db, name, modifier);
-        return Promise
-          .all(fixtures)
-          .then(resp => Promise.all(resp.reduce(flatMap, [])))
-          .then(() => Promise.all(modifier.map(update)))
-          .then(() => db);
+      if (async.length) {
+        return Promise.all(async.map(fn => fn(db))).then(() => db);
       }
       return db;
     });

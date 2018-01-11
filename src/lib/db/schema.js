@@ -47,4 +47,8 @@ export default {
     name: 'sets',
     modifier: (item) => ({ ...item, meta: { ...item.meta, type: 'textLine' } }),
   }],
+  4: [{
+    name: 'sets',
+    modifier: (item) => ({ ...item, meta: { ...item.meta, type: 'textLine' } }),
+  }],
 };
