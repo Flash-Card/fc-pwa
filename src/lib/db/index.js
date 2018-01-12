@@ -155,11 +155,37 @@ export function addItem(table, item, idb = iDB) {
     .then(db => add(db, table)(item));
 }
 
+function iterator(set, actionFn, resolve) {
+  let res = [];
+  let count = set.size >= 4 ? 3 : set.size - 1; /** Count of thread - 1 */
+  const it = set.keys();
+  const nx = function(event) {
+    if (event) {
+      res = res.concat([event.target.result]);
+    }
+    const n = it.next();
+    if (!n.done) {
+      const storeItem = actionFn(n.value);
+      storeItem.onsuccess = nx;
+      ++count;
+    } else if (count === 0) {
+      resolve(res);
+    }
+    --count;
+  };
+  for (let i = 0; i <= count; i++) {
+    nx();
+  }
+}
+
 export function addList(table, list, idb = iDB) {
   return idb()
     .then(db => {
-      const a = add(db, table);
-      return Promise.all(list.map(a));
+      const set = new Set(list);
+      return new Promise(resolve => {
+        const itemStore = (v) => os(db, table, READ_WRITE).add(v);
+        iterator(set, itemStore, resolve);
+      });
     });
 }
 
