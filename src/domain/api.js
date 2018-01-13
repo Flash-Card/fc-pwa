@@ -49,6 +49,6 @@ function method(method, url) {
 }
 
 export default {
-  fixtures: method('get', makeUrl`/fc-pwa/db/${'name'}`),
+  fixtures: method('get', makeUrl`${'pathname'}db/${'name'}`),
   ajaxGet: method('get', makeUrl`${'url'}`),
 };

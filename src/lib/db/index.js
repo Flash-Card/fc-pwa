@@ -100,10 +100,9 @@ export function upgrade({ getFixtures, schema }) {
 
         if (typeof item.fixture !== 'undefined') {
           this.setAsync(db =>
-            getFixtures({ name: item.fixture })
+            getFixtures({ name: item.fixture, pathname: global.location.pathname })
               .then(({ data: { name, values } }) => {
-                const a = add(db, name);
-                return Promise.all(values.map(a));
+                return iterator(values, (v) => os(db, name, READ_WRITE).add(v));
               }),
           );
         }
@@ -155,37 +154,45 @@ export function addItem(table, item, idb = iDB) {
     .then(db => add(db, table)(item));
 }
 
-function iterator(set, actionFn, resolve) {
-  let res = [];
-  let count = set.size >= 4 ? 3 : set.size - 1; /** Count of thread - 1 */
-  const it = set.keys();
-  const nx = function(event) {
-    if (event) {
-      res = res.concat([event.target.result]);
+function iterator(arr, actionFn, progress = () => null) {
+  const set = new Set(arr);
+  return new Promise((resolve, reject) => {
+    let res = [];
+
+    const si = setInterval(() => { progress(res.length / arr.length); }, 300);
+
+    let count = set.size >= 4 ? 3 : set.size - 1; /** Count of thread - 1 */
+    const it = set.keys();
+
+    const nx = function(event) {
+      if (event) {
+        res = res.concat([event.target.result]);
+      }
+      const n = it.next();
+      if (!n.done) {
+        const storeItem = actionFn(n.value);
+        storeItem.onsuccess = nx;
+        storeItem.onerror = reject;
+        ++count;
+      } else if (count === 0) {
+        clearInterval(si);
+        progress(res.length / arr.length);
+        resolve(res);
+      }
+      --count;
+    };
+
+    for (let i = 0; i <= count; i++) {
+      nx();
     }
-    const n = it.next();
-    if (!n.done) {
-      const storeItem = actionFn(n.value);
-      storeItem.onsuccess = nx;
-      ++count;
-    } else if (count === 0) {
-      resolve(res);
-    }
-    --count;
-  };
-  for (let i = 0; i <= count; i++) {
-    nx();
-  }
+
+  });
 }
 
-export function addList(table, list, idb = iDB) {
+export function addList(table, list, { idb = iDB, progress }) {
   return idb()
     .then(db => {
-      const set = new Set(list);
-      return new Promise(resolve => {
-        const itemStore = (v) => os(db, table, READ_WRITE).add(v);
-        iterator(set, itemStore, resolve);
-      });
+      return iterator(list, (v) => os(db, table, READ_WRITE).add(v), progress);
     });
 }
 
@@ -202,6 +209,10 @@ export function deleteItem(table, index, idb = iDB) {
 export function count(table, idb = iDB) {
   return idb()
     .then(db => promisify(os(db, table, READ_ONLY).count()));
+}
+
+export function version(idb = iDB) {
+  return idb().then(db => db.version);
 }
 
 // export function clean(idb = iDB) {

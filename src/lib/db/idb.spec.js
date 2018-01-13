@@ -33,7 +33,7 @@ const TYPES = {
 };
 
 
-function getFixtures(name) {
+function getFixtures({ name }) {
   switch (name) {
     case 'fx01types.json':
       return Promise.resolve({ data: TYPES });
@@ -42,7 +42,7 @@ function getFixtures(name) {
       return Promise.resolve({ data: SETS });
 
     default:
-      return Promise.resolve({ data: { name: '', values: [] }});
+      return Promise.resolve({ data: { name: '', values: [] } });
   }
 }
 
@@ -57,6 +57,7 @@ describe('Indexed store', () => {
 
   beforeEach(() => {
     global.indexedDB = fakeIndexedDB;
+    global.location = { pathname: '/' };
     data = {};
     list = [];
   });
@@ -64,7 +65,7 @@ describe('Indexed store', () => {
   afterEach(() => {
     global.indexedDB._databases.clear();
     global.indexedDB = originIndexedDB;
-    delete global.document.reload;
+    // delete global.document.reload;
   });
 
   it('Open db check indexes', () => {
@@ -75,6 +76,13 @@ describe('Indexed store', () => {
         const os = idb.os(db, schema[1][0].name, 'readonly');
         expect(os.name).toEqual(schema[1][0].name);
         expect(os.indexNames).toEqual(schema[1][0].indexes.map(e => e.name));
+      });
+  });
+
+  it('Database version', () => {
+    return idb.version(iDBx)
+      .then(res => {
+        expect(res).toBe(3);
       });
   });
 
@@ -110,7 +118,7 @@ describe('Indexed store', () => {
 
   it('add list of item', () => {
     list = [{ key: 'test' }, { key: 'test2' }];
-    return idb.addList('dictionary', list, iDBx)
+    return idb.addList('dictionary', list, { idb: iDBx })
       .then(res => {
         expect(res).toEqual([1, 2]);
         return idb.getItem('dictionary', 'key', 'test2', iDBx);
@@ -122,7 +130,7 @@ describe('Indexed store', () => {
 
   it('get list', () => {
     list = [{ key: 'test', index: 1 }, { key: 'test2', index: 10 }];
-    return idb.addList('dictionary', list, iDBx)
+    return idb.addList('dictionary', list, { idb: iDBx })
       .then(res => {
         expect(res).toEqual([1, 10]);
         return iDBx();
@@ -136,7 +144,7 @@ describe('Indexed store', () => {
   it('update item', () => {
     list = [{ key: 'test', index: 1 }, { key: 'test2', index: 10 }];
     const item = { key: 'test2-1', index: 10 };
-    return idb.addList('dictionary', list, iDBx)
+    return idb.addList('dictionary', list, { idb: iDBx })
       .then(res => {
         expect(res).toEqual([1, 10]);
         return idb.updateItem('dictionary', item, iDBx);
@@ -152,7 +160,7 @@ describe('Indexed store', () => {
 
   it('delete item', () => {
     list = [{ key: 'test', index: 1 }, { key: 'test2', index: 10 }];
-    return idb.addList('dictionary', list, iDBx)
+    return idb.addList('dictionary', list, { idb: iDBx })
       .then(res => {
         expect(res).toEqual([1, 10]);
         return idb.deleteItem('dictionary', 1, iDBx);
@@ -169,7 +177,7 @@ describe('Indexed store', () => {
   it('update list', () => {
     list = [{ key: 'test', index: 1 }, { key: 'test2', index: 10 }];
     const modifier = (item) => ({ ...item, k: item.index + 1 });
-    return idb.addList('dictionary', list, iDBx)
+    return idb.addList('dictionary', list, { idb: iDBx })
       .then(res => {
         expect(res).toEqual([1, 10]);
         return iDBx();
@@ -192,7 +200,7 @@ describe('Indexed store', () => {
 
   it('fill store', () => {
     list = [{ key: 'test', index: 1 }, { key: 'test2', index: 10 }];
-    return idb.addList('dictionary', list, iDBx)
+    return idb.addList('dictionary', list, { idb: iDBx })
       .then(res => {
         expect(res).toEqual([1, 10]);
         return idb.fillStore({ STORE_TABLES: ['dictionary'] }, iDBx);
