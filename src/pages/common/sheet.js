@@ -56,6 +56,7 @@ export default {
     willChange: 'transform',
     zIndex: 10,
     transform: menuSlider,
+    backgroundColor: '#fff',
     '& > .screen': {
       pointerEvents: ({ menuStatus }) => menuStatus ? 'none' : 'auto',
     },

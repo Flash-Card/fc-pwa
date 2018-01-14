@@ -17,6 +17,10 @@ export const reducer = {
           .set('user', emptyMap)
           .set('isAuthorized', false);
 
+      case A.version.type:
+        return state
+          .set('version', action.payload);
+
       default:
         return state;
     }

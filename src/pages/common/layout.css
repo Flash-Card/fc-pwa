@@ -32,3 +32,11 @@ button {
 .inner {
     padding: 10px;
 }
+
+.btn_warning {
+    color: #ffffff;
+    height: 35px;
+    width: 100%;
+    background-color: #cb2431;
+    font-weight: bold;
+}

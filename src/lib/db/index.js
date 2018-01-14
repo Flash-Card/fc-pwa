@@ -215,13 +215,13 @@ export function version(idb = iDB) {
   return idb().then(db => db.version);
 }
 
-// export function clean(idb = iDB) {
-//   return idb()
-//     .then(db => {
-//       db.close();
-//       return promisify(global.indexedDB.deleteDatabase(CONFIG.DB_NAME));
-//     });
-// }
+export function clean(idb = iDB) {
+  return idb()
+    .then(db => {
+      db.close();
+      return promisify(global.indexedDB.deleteDatabase(CONFIG.DB_NAME));
+    });
+}
 
 export function fillStore({ STORE_TABLES }, idb = iDB) {
   const tables = STORE_TABLES;

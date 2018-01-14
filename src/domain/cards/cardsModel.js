@@ -1,6 +1,7 @@
 import I from 'immutable';
 import * as A from './cardsActions.js';
 import * as UI from 'domain/ui/uiActions';
+import * as Env from 'domain/env/envActions';
 
 const emptyMap = new I.Map();
 
@@ -16,6 +17,9 @@ const Quiz = I.fromJS({
 export const reducer = {
   sets(state = Sets, action) {
     switch (action.type) {
+
+      case Env.clearDB.success:
+        return Sets;
 
       case A.getDictionary.type:
         return state
@@ -36,12 +40,18 @@ export const reducer = {
   types(state = Types, action) {
     switch (action.type) {
 
+      case Env.clearDB.success:
+        return Types;
+
       default:
         return state;
     }
   },
   lexicon(state = Lexicon, action) {
     switch (action.type) {
+
+      case Env.clearDB.success:
+        return Lexicon;
 
       case A.addToLexicon.success:
         return state
@@ -62,6 +72,9 @@ export const reducer = {
   cards(state = Cards, action) {
     switch (action.type) {
 
+      case Env.clearDB.success:
+        return Cards;
+
       case A.createCard.type:
         return state;
 
@@ -74,6 +87,9 @@ export const reducer = {
   },
   quiz(state = Quiz, action) {
     switch (action.type) {
+
+      case Env.clearDB.success:
+        return Quiz;
 
       case A.fillQuiz.type:
         return state

@@ -56,6 +56,14 @@ const routes = [
     saga: () => import('pages/edit/sagas'),
     restriction: false,
   },
+  {
+    path: path`/about`,
+    exact: true,
+    title: 'About',
+    component: () => import('pages/about'),
+    saga: () => import('pages/about/sagas'),
+    restriction: true,
+  },
 ];
 
 function byId(arr) {

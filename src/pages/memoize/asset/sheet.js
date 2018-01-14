@@ -9,6 +9,7 @@ export default {
   set: {
     borderBottom: '1px solid #e5e5e5',
     position: 'relative',
+    overflow: 'hidden',
   },
   text: {
     fontSize: 14,
@@ -43,7 +44,7 @@ export default {
     height: 8,
     background: '#128edc',
     transform: ({ data }) => `translate3d(-${100 - data.get('progress', 0)}%, 0, 0)`,
-    transition: '0.3s transform',
+    transition: '0.3s transform linear',
   },
 };
 
