@@ -4,8 +4,7 @@ import I from 'immutable';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { getDictionary, setsList } from 'domain/cards';
-import { routesById } from 'domain/router/routes';
-import { Link } from 'react-router-dom';
+import Asset from './asset';
 import injectSheet from 'react-jss';
 import sheet from './sheet';
 
@@ -22,32 +21,23 @@ class Catalog extends React.Component {
     return set.getIn(['meta', 'current'], first);
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !I.is(this.props.sets, nextProps.sets);
+  }
+
   render() {
-    const { classes, sets } = this.props;
+    const { sets } = this.props;
     return (
       <div className="screen">
-        <ul className="inner">
+        <ul>
           {
             sets.map(e =>
-              <li key={e.get('id')} className={classes.set}>
-                <h2 className={classes.title}>{e.get('title')}</h2>
-                <p className={classes.text}>{e.getIn(['meta', 'description'])}</p>
-                <div className={classes.btnGroup}>
-                  <button
-                    className={classes.download}
-                    disabled={e.get('isLoaded') || e.get('isLoading')}
-                    onClick={() => this.props.getDictionary(e)}
-                  />
-                  {
-                    e.get('isLoaded') ? (
-                      <Link
-                        className="btn btn_regular"
-                        to={routesById['/memoize/:cardId'].path.pathMaker({ cardId: Catalog.getCardId(e) })}
-                      >Go</Link>
-                    ) : null
-                  }
-                </div>
-              </li>,
+              <Asset
+                key={e.get('id')}
+                data={e}
+                cardId={Catalog.getCardId(e)}
+                getDictionary={() => this.props.getDictionary(e)}
+              />,
             )
           }
         </ul>
@@ -56,7 +46,11 @@ class Catalog extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  sets: setsList(state),
+});
+
 export default compose(
-  connect(state => ({ sets: setsList(state) }), { getDictionary }),
+  connect(mapStateToProps, { getDictionary }),
   injectSheet(sheet),
 )(Catalog);

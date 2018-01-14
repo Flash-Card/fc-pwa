@@ -189,7 +189,7 @@ function iterator(arr, actionFn, progress = () => null) {
   });
 }
 
-export function addList(table, list, { idb = iDB, progress }) {
+export function addList(table, list, { idb = iDB, progress } = {}) {
   return idb()
     .then(db => {
       return iterator(list, (v) => os(db, table, READ_WRITE).add(v), progress);

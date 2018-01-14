@@ -8,7 +8,7 @@ export const typesList = selector(typesById, c => c.toList().sort((a, b) => a.ge
 
 export const setsById = state => state.sets;
 export const setsList = selector(setsById, c => c.toList());
-export const setsLoadedList = selector(setsList, s => s.filter(f => f.get('isLoaded')));
+export const setsLoadedList = selector(setsList, s => s.filter(f => (f.get('progress') === 100)));
 
 export const lexicon = state => state.lexicon;
 export const lexiconList = selector(lexicon, l => l.toList());

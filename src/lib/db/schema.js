@@ -51,4 +51,13 @@ export default {
     name: 'sets',
     modifier: (item) => ({ ...item, meta: { ...item.meta, type: 'textLine' } }),
   }],
+  5: [{
+    name: 'sets',
+    modifier: (item) => ({
+      id: item.id,
+      title: item.title,
+      meta: item.meta,
+      progress: item.isLoaded ? 100 : 0,
+    }),
+  }],
 };

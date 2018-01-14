@@ -55,7 +55,7 @@ export function* checkCardSets(index) {
   };
 
   return sets
-    .filter(e => e.get('isLoaded'))
+    .filter(e => (e.get('progress') === 100))
     .reduce((A, V) => {
       if (A.size) return A;
       return check(V) ? V : A;

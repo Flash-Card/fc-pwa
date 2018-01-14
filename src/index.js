@@ -18,7 +18,7 @@ fillStore(config)
 
     const store = configureStore(history, state);
 
-    store.runSaga(rootSaga);
+    store.runSaga(rootSaga, store.dispatch);
 
     ReactDOM.render(
       <Provider store={store}>

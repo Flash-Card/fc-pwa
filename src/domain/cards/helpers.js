@@ -50,7 +50,7 @@ const setsItem = {
   ...createSerializer([
     'id',
     'title',
-    'isLoaded',
+    'progress',
   ]),
   meta: v => ['meta', I.fromJS(v)],
 };

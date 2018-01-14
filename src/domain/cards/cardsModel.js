@@ -1,5 +1,6 @@
 import I from 'immutable';
 import * as A from './cardsActions.js';
+import * as UI from 'domain/ui/uiActions';
 
 const emptyMap = new I.Map();
 
@@ -18,11 +19,15 @@ export const reducer = {
 
       case A.getDictionary.type:
         return state
-          .setIn([action.payload.get('id'), 'isLoading'], true);
+          .setIn([action.payload.get('id'), 'progress'], 1);
 
       case A.updateSet.success:
         return state
-          .set(action.id, action.payload);
+          .mergeDeepIn([action.id], action.payload);
+
+      case UI.progress.type:
+        return state
+          .setIn([action.id, 'progress'], action.payload);
 
       default:
         return state;
