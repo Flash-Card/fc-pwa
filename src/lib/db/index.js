@@ -65,7 +65,7 @@ function put(db, table, modifier = d => d) {
 
 export function os(db, table, permission) {
   if (tableExist(db, table))
-    return db.transaction(table, permission).objectStore(table);
+    return db.transaction([table], permission).objectStore(table);
   throw new Error(`Table ${table} is not exist`);
 }
 
@@ -102,7 +102,7 @@ export function upgrade({ getFixtures, schema }) {
           this.setAsync(db =>
             getFixtures({ name: item.fixture, pathname: global.location.pathname })
               .then(({ data: { name, values } }) => {
-                return iterator(values, (v) => os(db, name, READ_WRITE).add(v));
+                return iterator(values, os(db, name, READ_WRITE), 'add');
               }),
           );
         }
@@ -154,14 +154,14 @@ export function addItem(table, item, idb = iDB) {
     .then(db => add(db, table)(item));
 }
 
-function iterator(arr, actionFn, progress = () => null) {
+function iterator(arr, objectStore, actionName,  progress = () => null) {
   const set = new Set(arr);
   return new Promise((resolve, reject) => {
     let res = [];
 
     const si = setInterval(() => { progress(res.length / arr.length); }, 300);
 
-    let count = set.size >= 4 ? 3 : set.size - 1; /** Count of thread - 1 */
+    let count = set.size >= 6 ? 5 : set.size - 1; /** Count of thread - 1 */
     const it = set.keys();
 
     const nx = function(event) {
@@ -170,7 +170,7 @@ function iterator(arr, actionFn, progress = () => null) {
       }
       const n = it.next();
       if (!n.done) {
-        const storeItem = actionFn(n.value);
+        const storeItem = objectStore[actionName](n.value);
         storeItem.onsuccess = nx;
         storeItem.onerror = reject;
         ++count;
@@ -192,7 +192,7 @@ function iterator(arr, actionFn, progress = () => null) {
 export function addList(table, list, { idb = iDB, progress } = {}) {
   return idb()
     .then(db => {
-      return iterator(list, (v) => os(db, table, READ_WRITE).add(v), progress);
+      return iterator(list, os(db, table, READ_WRITE), 'add', progress);
     });
 }
 
