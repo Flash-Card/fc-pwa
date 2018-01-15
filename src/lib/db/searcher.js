@@ -1,4 +1,4 @@
-import SymSpell from 'mnemonist/symspell';
+import SymSpell from './symSpell';
 
 export function searcher(store, query) {
   const symspell = new SymSpell({
@@ -9,7 +9,7 @@ export function searcher(store, query) {
   const setDictionary = new Promise((resolve) => {
     cursor.onsuccess = function() {
       if (this.result) {
-        symspell.add(this.result.value.key)
+        symspell.add(this.result.value.key);
         this.result.continue();
       } else {
         resolve();

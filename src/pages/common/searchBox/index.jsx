@@ -6,7 +6,7 @@ import injectSheet from 'react-jss';
 import sheet from './sheet';
 import searchIcon from './search.svg';
 import cx from 'classnames';
-import { debounce } from 'lib/helpers';
+import debounce from 'debounce';
 import { search } from 'domain/cards';
 import { push } from 'react-router-redux';
 import { routesById } from 'domain/router/routes';
@@ -85,13 +85,15 @@ class SearchBox extends Component {
       <div className={classes.searchWrapper}>
         <div className={cx(classes.search, { open: isOpen })}>
           <img className={classes.searchIcon} src={searchIcon} alt="search" onClick={this.handleOpen} />
-          {this.renderInput()}
-          <button
-            className={cx(classes.closeSearch, 'btn btn_regular')}
-            onClick={this.handleRedirectToSearch}
-          >
-            Search
-          </button>
+          {isOpen && this.renderInput()}
+          {isOpen &&
+            <button
+              className={cx(classes.closeSearch, 'btn btn_regular')}
+              onClick={this.handleRedirectToSearch}
+            >
+              Search
+            </button>
+          }
         </div>
       </div>
     );
