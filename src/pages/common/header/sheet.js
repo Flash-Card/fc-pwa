@@ -11,6 +11,7 @@ export default {
     background: 'rgba(21,21,23,.95)',
   },
   menuBtn: {
+    zIndex: 2,
     height: 40,
     width: 40,
     borderRadius: 2,
@@ -22,6 +23,7 @@ export default {
     fontWeight: 600,
     color: '#fff',
     marginLeft: 8,
+    zIndex: 2,
   },
   burger: {
     width: 16,

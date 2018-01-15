@@ -13,6 +13,7 @@ const Quiz = I.fromJS({
   list: [],
   current: 0,
 });
+const SearchResults = new I.List();
 
 export const reducer = {
   sets(state = Sets, action) {
@@ -99,6 +100,16 @@ export const reducer = {
       case A.positive.type:
         return state
           .update('list', l => l.filter(f => f !== action.payload));
+
+      default:
+        return state;
+    }
+  },
+  searchResults(state = SearchResults, action) {
+    switch (action.type) {
+
+      case A.search.success:
+        return I.List(action.payload);
 
       default:
         return state;

@@ -8,6 +8,7 @@
     "history": "^4.7.2",
     "immutable": "^3.8.2",
     "jss": "^9.3.3",
+    "mnemonist": "^0.18.0",
     "nanoid": "^1.0.1",
     "query-string": "^5.0.1",
     "react": "^16",

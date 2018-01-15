@@ -2,6 +2,7 @@ import * as CONFIG from 'config';
 import SCHEMA from './schema';
 import { arrayRange } from 'lib/helpers';
 import Api from 'domain/api';
+import { searcher } from './searcher';
 
 const READ_ONLY = 'readonly';
 const READ_WRITE = 'readwrite';
@@ -27,11 +28,11 @@ function promisify(request) {
   });
 }
 
-function promiSeq(cursor) {
+function promiSeq(cursor, limit) {
   let list = [];
   return new Promise((resolve, reject) => {
     cursor.onsuccess = function() {
-      if (this.result) {
+      if (this.result && (limit ? list.length <= limit : true)) {
         list = list.concat(this.result.value);
         this.result.continue();
       } else {
@@ -234,4 +235,20 @@ export function fillStore({ STORE_TABLES }, idb = iDB) {
       );
     })
     .then(list => list.reduce((A, V, I) => ({ ...A, [tables[I]]: V }), {}));
+}
+
+export function searchByQuery(query, idb = iDB) {
+  return idb()
+    .then(db => {
+      const store = os(db, 'dictionary', READ_ONLY).index('key');
+      return promiSeq(store.openCursor(IDBKeyRange.bound(query, query + '\uffff'), IDBCursor.PREV), 10);
+    });
+}
+
+export function searchWithSpellCheck(word, idb = iDB) {
+  return idb()
+    .then(db => {
+      const store = os(db, 'dictionary', READ_ONLY);
+      return searcher(store, word);
+    });
 }
