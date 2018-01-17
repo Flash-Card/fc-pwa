@@ -23,17 +23,22 @@ class Asset extends React.Component {
   render() {
     const { classes, data, cardId, getDictionary } = this.props;
     const progress = data.get('progress');
+    const isOwn = data.get('isOwn');
     return (
       <li className={cx('inner', classes.set)}>
         <div className={classes.bar} />
         <h2 className={classes.title}>{data.get('title')}</h2>
         <p className={classes.text}>{data.getIn(['meta', 'description'])}</p>
         <div className={classes.btnGroup}>
-          <button
-            className={classes.download}
-            disabled={progress !== 0}
-            onClick={getDictionary}
-          />
+          {
+            isOwn ? null : (
+              <button
+                className={classes.download}
+                disabled={progress !== 0}
+                onClick={getDictionary}
+              />
+            )
+          }
           {
             progress === 100 ? (
               <Link

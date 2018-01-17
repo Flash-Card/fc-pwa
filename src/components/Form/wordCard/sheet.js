@@ -29,18 +29,6 @@ export default {
     verticalAlign: 'middle',
     '& > span': {
       marginLeft: 8,
-    }
-  },
-  submit: {
-    width: '100%',
-    margin: [14, 'auto'],
-    display: 'block',
-    height: 35,
-    borderRadius: 3,
-    background: '#128fdc',
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 600,
-    boxShadow: '0 0 4px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24)',
+    },
   },
 };

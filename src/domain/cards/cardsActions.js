@@ -1,9 +1,10 @@
 import { action, asyncAction } from 'lib/action';
-import { cardItemDeSerialize } from './helpers';
 
-export const getDictionary = asyncAction('dict/GET_SET');
+export const getDictionary = asyncAction('sets/GET_SET');
 
-export const updateSet = asyncAction('dict/UPDATE_SET');
+export const updateSet = asyncAction('sets/UPDATE_SET');
+
+export const addSetItem = action('sets/ADD_ITEM', (action) => action);
 
 export const addToLexicon = asyncAction('dict/ADD_TO_LEXICON');
 
@@ -13,13 +14,7 @@ export const updateLexicon = asyncAction('dict/UPDATE_LEXICON');
 
 export const getDictItem = asyncAction('dict/GET_ITEM');
 
-export const createCard = action('card/CREATE_CARD', data => ({
-  payload: cardItemDeSerialize(data),
-  meta: {
-    table: 'dictionary',
-    action: 'add',
-  },
-}));
+export const createCard = asyncAction('card/CREATE_CARD');
 
 export const editCard = asyncAction('card/EDIT_CARD');
 

@@ -21,6 +21,10 @@ export const reducer = {
       case Env.clearDB.success:
         return Sets;
 
+      case A.addSetItem.type:
+        return state
+          .set(action.id, action.payload);
+
       case A.getDictionary.type:
         return state
           .setIn([action.payload.get('id'), 'progress'], 1);

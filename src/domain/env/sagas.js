@@ -15,7 +15,8 @@ export function* clearDB() {
     yield put({
       type: action.clearDB.success,
       payload,
-    })
+    });
+    window.location.reload();
   } catch (err) {
     yield put({
       type: action.clearDB.failure,

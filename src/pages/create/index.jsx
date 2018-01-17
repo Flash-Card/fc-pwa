@@ -12,15 +12,17 @@ class Create extends React.Component {
   static propTypes = {
     types: PropTypes.instanceOf(I.List).isRequired,
     handleSubmit: PropTypes.func.isRequired,
+    pristine: PropTypes.bool,
   };
 
   render() {
-    const { types, handleSubmit } = this.props;
+    const { types, handleSubmit, pristine } = this.props;
     return (
       <div className="screen">
         <WordCard
           types={types}
           handleSubmit={handleSubmit}
+          pristine={pristine}
         />
       </div>
     );
@@ -33,7 +35,7 @@ export default compose(
   })),
   reduxForm({
     form: 'create',
-    initialValues: { values: [{ value: '' }] },
+    initialValues: { values: [{ value: '' }], set: 'owner-dict' },
     onSubmit: createCard.onSubmit,
   }),
 )(Create);

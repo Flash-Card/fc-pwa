@@ -47,6 +47,7 @@ const routes = [
     title: 'create card',
     component: () => import('pages/create/index'),
     restriction: true,
+    saga: () => import('pages/create/sagas'),
   },
   {
     path: path`/edit/${'cardId'}`,

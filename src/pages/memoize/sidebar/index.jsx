@@ -28,16 +28,15 @@ class SideBar extends React.Component {
 
   render() {
     const { classes, card, pathMaker } = this.props;
-    const index = card.get('index');
-    const first = card.getIn(['set', 'meta', 'first']);
-    const last = card.getIn(['set', 'meta', 'last']);
+    const prev = card.getIn(['set', 'meta', 'prev', 'index']);
+    const next = card.getIn(['set', 'meta', 'next', 'index']);
     return (
       <div className={classes.sidebar}>
         {
-          index - 1 < first  ? (
-            <span className={cx(classes.prev, classes.disabled)} />
+          typeof prev === 'number' ? (
+            <Link className={classes.prev} to={pathMaker(prev)} />
           ) : (
-            <Link className={classes.prev} to={pathMaker(index - 1)} />
+            <span className={cx(classes.prev, classes.disabled)} />
           )
         }
         <button
@@ -48,10 +47,10 @@ class SideBar extends React.Component {
           <span className={classes.whitePin} />
         </button>
         {
-          index + 1 > last ? (
-            <span className={cx(classes.next, classes.disabled)} />
+          typeof next === 'number' ? (
+            <Link className={classes.next} to={pathMaker(next)} />
           ) : (
-            <Link className={classes.next} to={pathMaker(index + 1)} />
+            <span className={cx(classes.next, classes.disabled)} />
           )
         }
       </div>

@@ -83,7 +83,7 @@ export function updateList(db, table, modifier) {
 
 export function upgrade({ getFixtures, schema }) {
   return function(event) {
-    const { newVersion, oldVersion, target: { result } } = event;
+    const { newVersion, oldVersion, target: { result, transaction } } = event;
 
     const update = ({ name, modifier }) => db => updateList(db, name, modifier);
 
@@ -93,8 +93,18 @@ export function upgrade({ getFixtures, schema }) {
 
         if (typeof item.options !== 'undefined') {
           const objectStore = result.createObjectStore(item.name, item.options);
-          item.indexes.forEach(idx => {
-            objectStore.createIndex(idx.name, idx.keyPath, idx.option);
+          item.indexes.forEach(index => {
+            objectStore.createIndex(index.name, index.keyPath, index.option);
+          });
+        }
+
+        if (Array.isArray(item.updateIndexes)) {
+          const objectStore = transaction.objectStore(item.name);
+          item.updateIndexes.forEach(index => {
+            if (objectStore.indexNames.contains(index.name)) {
+              objectStore.deleteIndex(index.name);
+            }
+            objectStore.createIndex(index.name, index.keyPath, index.option);
           });
         }
 
@@ -149,44 +159,57 @@ export function getItem(table, indexName, value, idb = iDB) {
     );
 }
 
+export function getListByIndex(table, indexName, value, idb = iDB) {
+  return idb()
+    .then(db => promiSeq(
+      os(db, table, READ_ONLY)
+        .index(indexName)
+        .openCursor(IDBKeyRange.only(value)),
+      ));
+}
+
 export function addItem(table, item, idb = iDB) {
   return idb()
     .then(db => add(db, table)(item));
 }
 
 function iterator(arr, objectStore, actionName,  progress = () => null) {
-  const set = new Set(arr);
   return new Promise((resolve, reject) => {
-    let res = [];
-
-    const si = setInterval(() => { progress(res.length / arr.length); }, 300);
-
-    let count = set.size >= 6 ? 5 : set.size - 1; /** Count of thread - 1 */
-    const it = set.keys();
-
-    const nx = function(event) {
-      if (event) {
-        res = res.concat([event.target.result]);
-      }
-      const n = it.next();
-      if (!n.done) {
-        const storeItem = objectStore[actionName](n.value);
-        storeItem.onsuccess = nx;
-        storeItem.onerror = reject;
-        ++count;
-      } else if (count === 0) {
-        clearInterval(si);
-        progress(res.length / arr.length);
-        resolve(res);
-      }
-      --count;
-    };
-
-    for (let i = 0; i <= count; i++) {
-      nx();
-    }
-
+    threadAction(arr, objectStore, actionName, resolve, reject, progress);
   });
+}
+
+function threadAction(arr, objectStore, actionName, resolve, reject, progress) {
+  const set = new Set(arr);
+
+  let res = [];
+
+  const si = setInterval(() => { progress(res.length / arr.length); }, 300);
+
+  let count = set.size >= 6 ? 5 : set.size - 1; /** Count of thread - 1 */
+  const it = set.keys();
+
+  const nx = function(event) {
+    if (event) {
+      res = res.concat([event.target.result]);
+    }
+    const n = it.next();
+    if (!n.done) {
+      const storeItem = objectStore[actionName](n.value);
+      storeItem.onsuccess = nx;
+      storeItem.onerror = reject;
+      ++count;
+    } else if (count === 0) {
+      clearInterval(si);
+      progress(res.length / arr.length);
+      resolve(res);
+    }
+    --count;
+  };
+
+  for (let i = 0; i <= count; i++) {
+    nx();
+  }
 }
 
 export function addList(table, list, { idb = iDB, progress } = {}) {

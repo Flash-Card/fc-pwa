@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
   cardItem,
-  getDictItem,
   addToLexicon,
   typesById,
   isCardinLexicon,
@@ -24,12 +23,6 @@ class CardsPage extends React.Component {
   static propTypes = {
     classes: PropTypes.objectOf(PropTypes.string).isRequired,
     card: PropTypes.instanceOf(I.Map),
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        cardId: PropTypes.string,
-      }),
-    }).isRequired,
-    getItem: PropTypes.func.isRequired,
     isRemembered: PropTypes.bool.isRequired,
     addToLexicon: PropTypes.func.isRequired,
     removeFromLexicon: PropTypes.func.isRequired,
@@ -46,9 +39,8 @@ class CardsPage extends React.Component {
     return (
       <div className="screen">
         <Info
-          index={card.get('index')}
-          data={card.getIn(['set', 'meta'])}
-          title={card.getIn(['set', 'title'])}
+          index={card.getIn(['set', 'meta', 'currentIndex'])}
+          all={card.getIn(['set', 'meta', 'length'])}
         />
         {
           card.size ? (
@@ -80,7 +72,6 @@ class CardsPage extends React.Component {
 }
 
 const mapDispatchToProps = {
-  getItem: getDictItem,
   addToLexicon,
   removeFromLexicon,
 };

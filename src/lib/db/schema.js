@@ -60,4 +60,15 @@ export default {
       progress: item.isLoaded ? 100 : 0,
     }),
   }],
+  6: [{
+    name: 'sets',
+    modifier: (item) => ({ ...item, isOwn: false }),
+    fixture: 'fx06sets.json',
+  }, {
+    name: 'dictionary',
+    updateIndexes: [
+      { name: 'key', keyPath: 'key', option: { unique: false } },
+      { name: 'set', keyPath: 'set', option: { unique: false } },
+    ],
+  }],
 };

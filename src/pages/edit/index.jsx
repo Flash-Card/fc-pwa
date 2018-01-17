@@ -16,21 +16,27 @@ class EditCard extends React.Component {
     history: PropTypes.shape({
       goBack: PropTypes.func.isRequired,
     }).isRequired,
+    pristine: PropTypes.bool,
   };
 
   render() {
-    const { handleSubmit, types, card, history } = this.props;
+    const { handleSubmit, types, history, card, pristine } = this.props;
     return (
       <div className="screen">
+        {
+          card.getIn(['set', 'id']) === 'owner-dict' ? null : (
+            <p className="inner warning">You can't edit <b>{card.getIn(['set', 'title'])}</b>, the card will be add in your own dictionary.</p>
+          )
+        }
         <WordCard
           types={types}
           handleSubmit={handleSubmit}
-          initialValues={card.toJS()}
         >
           <div className="btn__group">
             <button
               type="submit"
               className="btn btn_regular"
+              disabled={pristine}
             >Ok</button>
             <button
               type="button"

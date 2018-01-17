@@ -1,4 +1,4 @@
-import { takeLatest, call } from 'redux-saga/effects';
+import { takeLatest, fork } from 'redux-saga/effects';
 import * as Cards from 'domain/cards/sagas';
 
 // function* watchAddToLexicon() {
@@ -7,7 +7,7 @@ import * as Cards from 'domain/cards/sagas';
 // }
 
 export default function* (_, { params }) {
-  yield call(Cards.ensureGetCard, params);
+  yield fork(Cards.ensureGetCard, params);
   yield takeLatest(Cards.action.addToLexicon.type, Cards.ensureAddToLexicon);
   yield takeLatest(Cards.action.removeFromLexicon.type, Cards.ensureRemoveFromLexicon);
 }

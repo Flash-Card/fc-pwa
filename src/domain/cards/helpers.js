@@ -17,17 +17,16 @@ export const lexiconSerialize = srcArrToMapSerialize({
   key: (v, data, i) => [data[i][v], lexiconItemImSerialize(data[i])],
 }, l => l.map(() => 'key'));
 
-export const setsSerialize = srcArrToMapSerialize({
-  id: (v, data, i) => [data[i][v], setsItemImSerialize(data[i])],
-});
+
 
 function cardValues(v = []) {
-  const item = e => ({ value: (e.value || '').trim(), type: e.type })
+  const item = e => ({ value: (e.value || '').trim(), type: e.type });
   return v.map(item);
 }
 
 const cardItem = {
   index: v => ['index', v],
+  set: v => ['set', v],
   key: v => ['key', (v || '').trim()],
   values: v => ['values', cardValues(v)],
   meta: () => ['meta', { element: 'word' }],
@@ -46,18 +45,51 @@ const lexiconItem = {
   meta: v => ['meta', I.fromJS(v)],
 };
 
+export const lexiconItemImSerialize = dstObjToImSerialize(lexiconItem);
+
+/** ========
+ * Sets */
+
+export const setsSerialize = srcArrToMapSerialize({
+  id: (v, data, i) => [data[i][v], setsItemImSerialize(data[i])],
+});
+
 const setsItem = {
   ...createSerializer([
     'id',
     'title',
+    'isOwn',
     'progress',
   ]),
-  meta: v => ['meta', I.fromJS(v)],
 };
 
-export const lexiconItemImSerialize = dstObjToImSerialize(lexiconItem);
+export const setsItemImSerialize = dstObjToImSerialize({
+  ...setsItem,
+  meta: v => ['meta', I.fromJS(v)],
+});
 
-const setsItemImSerialize = dstObjToImSerialize(setsItem);
+export const setsItemSerialize = dstObjToObjSerialize({
+  ...setsItem,
+  meta: v => ['meta', v],
+});
+
+export const setsGlobal = (data, set) => {
+  const setId = set.get('id');
+  const cases = {
+    'jsonFC': () => ({
+      payload: data.dictionary.map(e => Object.assign({}, e, { set: setId })),
+      set,
+    }),
+    'textLine': () => ({
+      payload: data.match(/[^\r\n]+/g).map(e => ({ key: e, set: setId })),
+      set,
+    }),
+  };
+  return cases[set.getIn(['meta', 'type'], 'textLine')]();
+};
+
+/** ======
+ *  */
 
 function cardImValues(v = []) {
   const item = e => new I.Map({ value: (e.value || '').trim(), type: e.type });
