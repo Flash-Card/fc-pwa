@@ -1,4 +1,5 @@
 import { call, put, select, fork } from 'redux-saga/effects';
+import I from 'immutable';
 import Api, { ensure } from 'domain/api';
 import * as selector from './cardsSelector';
 import * as action from './cardsActions';
@@ -21,63 +22,40 @@ export const ensureGetDictionary = ensure({
   serializer: setsGlobal,
 }, 'set');
 
-export function* getCardBy(index, value) {
-  return yield call(
-    idb.getItem,
-    idb.TABLE.DICTIONARY,
-    index,
-    value,
-  );
-}
-
-export function* getCardNeighbor(setName, index) {
+export function* getCardNeighbor({ set, index }) {
   const all = yield call(
-    idb.getListByIndex,
-    idb.TABLE.DICTIONARY,
-    'set',
-    setName,
+    idb.getNeighbor,
+    set,
+    index,
   );
-  const currentIndex = all.map(e => e.index).indexOf(index);
-  return {
-    prev: all[currentIndex - 1],
-    next: all[currentIndex + 1],
-    length: all.length,
-    currentIndex,
-  };
+  console.log(all);
+  const prev = all[0] ? [all[0].set, all[0].key] : [];
+  const next = all[1] ? [all[1].set, all[1].key] : [];
+  return { prev, next };
 }
 
-export function* ensureGetCard({ cardId }) {
-  const value = parseInt(cardId, 10);
-  if (!isNaN(value)) {
-    const card = yield call(getCardBy, 'index', value);
-    if (typeof card !== 'undefined' && 'set' in card) {
-      const set = (yield select(selector.setsById))
-        .get(card.set)
-        .setIn(['meta', 'current'], card.index);
+export function* ensureGetCard({ key, set }) {
+  const card = yield call(idb.getCard, set, key);
+  const neighbor = yield call(getCardNeighbor, card);
 
-      yield fork(ensureUpdateSets, set);
-      const imCard = cardItemImSerialize(card).set('set', set);
-      yield put({
-        type: action.getDictItem.success,
-        payload: imCard,
-      });
-      const neighbor = yield call(getCardNeighbor, card.set, card.index);
-      yield put({
-        type: action.getDictItem.success,
-        payload: imCard.set('set', set
-          .setIn(['meta', 'prev'], cardItemImSerialize(neighbor.prev))
-          .setIn(['meta', 'next'], cardItemImSerialize(neighbor.next))
-          .setIn(['meta', 'currentIndex'], neighbor.currentIndex)
-          .setIn(['meta', 'length'], neighbor.length),
-        ),
-      });
-    }
-  }
+  yield put({
+    type: action.getDictItem.success,
+    payload: cardItemImSerialize(card)
+      .setIn(['meta', 'prev'], new I.List(neighbor.prev))
+      .setIn(['meta', 'next'], new I.List(neighbor.next)),
+  });
+
+  const currentSet = (yield select(selector.setsById))
+    .get(set)
+    .setIn(['meta', 'current'], new I.List([set, key]));
+
+  yield fork(ensureUpdateSets, currentSet);
+
 }
 
 export function* ensureCreateCard({ payload }) {
+  let index = 0;
   try {
-    const index = yield call(idb.addItem, idb.TABLE.DICTIONARY, cardItemDeSerialize(payload));
     const sets = yield select(selector.setsById);
     if (!sets.has(payload.set)) {
       yield call(ensureAddSetItem, {
@@ -86,14 +64,30 @@ export function* ensureCreateCard({ payload }) {
         title: 'Your own dictionary',
         isOwn: true,
         meta: {
-          first: index,
+          first: [payload.set, payload.key],
+          length: 1,
         },
       });
+    } else {
+      const set = sets.get(payload.set);
+      index = set.getIn(['meta', 'length']);
+      yield call(
+        ensureUpdateSets,
+        set.updateIn(['meta', 'length'], l => l + 1),
+      );
     }
+
+    yield call(
+      idb.addItem,
+      idb.TABLE.DICTIONARY,
+      cardItemDeSerialize({ ...payload, index }),
+    );
+
     yield put({
       type: action.createCard.success,
-      index,
+      ...payload,
     });
+
   } catch (err) {
     yield put({
       type: action.createCard.failure,

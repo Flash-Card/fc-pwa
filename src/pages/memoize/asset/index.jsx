@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import I from 'immutable';
 import { Link } from 'react-router-dom';
 import cx from 'classnames';
-import { routesById } from 'domain/router/routes';
+import { cardPath } from 'domain/router/helpers';
 import injectSheet from 'react-jss';
 import sheet from './sheet';
 
@@ -12,7 +12,7 @@ class Asset extends React.Component {
   static propTypes = {
     data: PropTypes.instanceOf(I.Map).isRequired,
     classes: PropTypes.objectOf(PropTypes.string).isRequired,
-    cardId: PropTypes.number,
+    keyPath: PropTypes.instanceOf(I.List),
     getDictionary: PropTypes.func.isRequired,
   };
 
@@ -21,7 +21,7 @@ class Asset extends React.Component {
   }
 
   render() {
-    const { classes, data, cardId, getDictionary } = this.props;
+    const { classes, data, getDictionary } = this.props;
     const progress = data.get('progress');
     const isOwn = data.get('isOwn');
     return (
@@ -43,7 +43,7 @@ class Asset extends React.Component {
             progress === 100 ? (
               <Link
                 className="btn btn_regular"
-                to={routesById['/memoize/:cardId'].path.pathMaker({ cardId })}
+                to={cardPath(data.getIn(['meta', 'current'], data.getIn(['meta', 'first'])))}
               >Go</Link>
             ) : null
           }

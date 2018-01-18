@@ -24,7 +24,7 @@ class EditCard extends React.Component {
     return (
       <div className="screen">
         {
-          card.getIn(['set', 'id']) === 'owner-dict' ? null : (
+          card.get('set') === 'owner-dict' ? null : (
             <p className="inner warning">You can't edit <b>{card.getIn(['set', 'title'])}</b>, the card will be add in your own dictionary.</p>
           )
         }

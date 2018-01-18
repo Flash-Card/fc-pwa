@@ -1,4 +1,5 @@
 import { call, takeEvery } from 'redux-saga/effects';
+import I from 'immutable';
 import * as Cards from 'domain/cards/sagas';
 import * as UI from 'domain/ui/sagas';
 import * as idb from 'lib/db';
@@ -16,8 +17,8 @@ function* ensureInsertKit(dispatch, { set, payload }) {
 
   const data = set
     .set('progress', 100)
-    .setIn(['meta', 'first'], list[0])
-    .setIn(['meta', 'last'], list[list.length - 1]);
+    .setIn(['meta', 'length'], list.length)
+    .setIn(['meta', 'first'], new I.List(list[0]));
 
   yield call(Cards.ensureUpdateSets, data);
 }

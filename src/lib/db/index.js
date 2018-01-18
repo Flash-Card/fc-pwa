@@ -27,19 +27,45 @@ function promisify(request) {
   });
 }
 
-function promiSeq(cursor) {
+const nextCursor = (resolve, max) => {
+  if (typeof max === 'number') {
+    return function(list) {
+      if (list.length < max) {
+        this.result.continue();
+      } else {
+        resolve(list);
+      }
+    };
+  }
+  return function() {
+    this.result.continue();
+  };
+};
+
+function promiSeq(cursor, max) {
   let list = [];
   return new Promise((resolve, reject) => {
+    const next = nextCursor(resolve, max);
     cursor.onsuccess = function() {
       if (this.result) {
         list = list.concat(this.result.value);
-        this.result.continue();
+        next.call(this, list);
       } else {
         resolve(list);
       }
     };
     rejectify(cursor, reject);
   });
+}
+
+export function updateIndex(table) {
+  return ({ transaction }, { name, keyPath, option }) => {
+    const objectStore = transaction.objectStore(table);
+    if (objectStore.indexNames.contains(name)) {
+      objectStore.deleteIndex(name);
+    }
+    objectStore.createIndex(name, keyPath, option);
+  };
 }
 
 
@@ -60,7 +86,7 @@ function add(db, table) {
 }
 
 function put(db, table, modifier = d => d) {
-  return (item) => promisify(os(db, table, READ_WRITE).put(modifier(item)));
+  return (item, i) => promisify(os(db, table, READ_WRITE).put(modifier(item, i)));
 }
 
 export function os(db, table, permission) {
@@ -117,9 +143,14 @@ export function upgrade({ getFixtures, schema }) {
           );
         }
 
+        if (typeof item.syncAction === 'function') {
+          item.syncAction.call(this, event, item.name);
+        }
+
         if (typeof item.modifier === 'function') {
           this.setAsync(update(item));
         }
+
       });
     });
   };
@@ -166,6 +197,27 @@ export function getListByIndex(table, indexName, value, idb = iDB) {
         .index(indexName)
         .openCursor(IDBKeyRange.only(value)),
       ));
+}
+
+export function getCard(set, key, idb = iDB) {
+  return idb()
+    .then(db =>
+      promisify(os(db, TABLE.DICTIONARY, READ_ONLY).get([set, key])),
+    );
+}
+
+export function getNeighbor(set, index, idb = iDB) {
+  const neighbor = el => el ? el.value : null;
+  return idb()
+    .then(db => {
+      const store = os(db, TABLE.DICTIONARY, READ_ONLY).index('index');
+      const upperBound = IDBKeyRange.only([set, index - 1]);
+      const lowerBound = IDBKeyRange.only([set, index + 1]);
+      return Promise.all([
+        promisify(store.openCursor(upperBound)).then(neighbor),
+        promisify(store.openCursor(lowerBound)).then(neighbor),
+      ]);
+    });
 }
 
 export function addItem(table, item, idb = iDB) {

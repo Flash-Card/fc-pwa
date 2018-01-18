@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { routesById } from 'domain/router/routes';
+import { cardPath } from 'domain/router/helpers';
 import cx from 'classnames';
 
 function Sets({ classes, sets }) {
@@ -9,7 +9,7 @@ function Sets({ classes, sets }) {
       sets.map(e =>
         <Link
           key={e.get('id')}
-          to={routesById['/memoize/:cardId'].path.pathMaker({ cardId: e.getIn(['meta', 'current']) })}
+          to={cardPath(e.getIn(['meta', 'current'], e.getIn(['meta', 'first'])))}
           className={cx('btn btn_main', classes.link)}
         >from <b>"{e.get('title')}"</b></Link>,
       ),

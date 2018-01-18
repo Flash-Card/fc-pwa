@@ -26,7 +26,7 @@ const routes = [
     saga: () => import('pages/memoize/sagas'),
   },
   {
-    path: path`/memoize/${'cardId'}`,
+    path: path`/memoize/${'set'}/${'key'}`,
     exact: true,
     title: 'memoize card',
     component: () => import('pages/memoize/cards'),
@@ -50,7 +50,7 @@ const routes = [
     saga: () => import('pages/create/sagas'),
   },
   {
-    path: path`/edit/${'cardId'}`,
+    path: path`/edit/${'set'}/${'key'}`,
     exact: true,
     title: 'edit card',
     component: () => import('pages/edit'),

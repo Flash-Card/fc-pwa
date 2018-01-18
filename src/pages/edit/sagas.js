@@ -20,25 +20,20 @@ function* watchEditCard({ payload }) {
   }
 }
 
-function* watchCreateSuccess({ index }) {
-  yield call(changePath, { cardId: index });
-}
-
 function* changePath(params) {
   yield put(
-    push(routesById['/memoize/:cardId'].path.pathMaker(params)),
+    push(routesById['/memoize/:set/:key'].path.pathMaker(params)),
   );
 }
 
 export default function* (_, { params }) {
   yield takeEvery(Cards.action.editCard.type, watchEditCard);
   yield takeEvery(Cards.action.editCard.success, changePath, params);
-  yield takeEvery(Cards.action.createCard.success, watchCreateSuccess);
+  yield takeEvery(Cards.action.createCard.success, changePath);
   yield call(Cards.ensureGetCard, params);
   const card = yield select(Cards.selector.cardItem);
   const item = card
     .set('to_lexicon', true)
-    .updateIn(['set'], v => v.get('id')) //TODO: Update after change Card schema
     .toJS();
   yield put(
     actions.initialize('edit', item),

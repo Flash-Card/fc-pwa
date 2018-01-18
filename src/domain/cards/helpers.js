@@ -6,18 +6,11 @@ import {
   createSerializer,
   dstImToObjSerialize,
   emptyList,
-  emptyMap,
 } from 'lib/serialize';
 
-export const typeSerialize = srcArrToMapSerialize({
-  id: (v, data, i) => [data[i][v], I.fromJS(data[i])],
-});
-
-export const lexiconSerialize = srcArrToMapSerialize({
-  key: (v, data, i) => [data[i][v], lexiconItemImSerialize(data[i])],
-}, l => l.map(() => 'key'));
-
-
+/**
+ * Dictionary Card
+ */
 
 function cardValues(v = []) {
   const item = e => ({ value: (e.value || '').trim(), type: e.type });
@@ -29,13 +22,31 @@ const cardItem = {
   set: v => ['set', v],
   key: v => ['key', (v || '').trim()],
   values: v => ['values', cardValues(v)],
-  meta: () => ['meta', { element: 'word' }],
 };
 
-const typeItem = {
-  id: (_, data) => ['id', data.title],
-  title: v => ['title', v],
-};
+function cardImValues(v = []) {
+  const item = e => new I.Map({ value: (e.value || '').trim(), type: e.type });
+  return new I.List(v.map(item));
+}
+
+export const cardItemImSerialize = dstObjToImSerialize({
+  ...cardItem,
+  values: v => ['values', cardImValues(v)],
+});
+
+export const cardItemDeSerialize = dstObjToObjSerialize(cardItem);
+
+export const cadsToLexiconSerialize = dstImToObjSerialize({
+  key: v => ['key', v],
+  values: v => ['values', (v || emptyList).toJS()],
+});
+
+/** ========
+ * Lexicon */
+
+export const lexiconSerialize = srcArrToMapSerialize({
+  key: (v, data, i) => [data[i][v], lexiconItemImSerialize(data[i])],
+}, l => l.map(() => 'key'));
 
 const lexiconItem = {
   ...createSerializer([
@@ -77,11 +88,11 @@ export const setsGlobal = (data, set) => {
   const setId = set.get('id');
   const cases = {
     'jsonFC': () => ({
-      payload: data.dictionary.map(e => Object.assign({}, e, { set: setId })),
+      payload: data.dictionary.map((e, index) => Object.assign({}, e, { set: setId, index })),
       set,
     }),
     'textLine': () => ({
-      payload: data.match(/[^\r\n]+/g).map(e => ({ key: e, set: setId })),
+      payload: data.match(/[^\r\n]+/g).map((e, index) => ({ key: e, set: setId, index })),
       set,
     }),
   };
@@ -89,25 +100,15 @@ export const setsGlobal = (data, set) => {
 };
 
 /** ======
- *  */
+ *  Type */
 
-function cardImValues(v = []) {
-  const item = e => new I.Map({ value: (e.value || '').trim(), type: e.type });
-  return new I.List(v.map(item));
-}
-
-export const cardItemImSerialize = dstObjToImSerialize({
-  ...cardItem,
-  values: v => ['values', cardImValues(v)],
-  meta: () => ['meta', new I.Map({ element: 'word' })],
+export const typeSerialize = srcArrToMapSerialize({
+  id: (v, data, i) => [data[i][v], I.fromJS(data[i])],
 });
 
-export const cardItemDeSerialize = dstObjToObjSerialize(cardItem);
+const typeItem = {
+  id: (_, data) => ['id', data.title],
+  title: v => ['title', v],
+};
 
 export const typeItemSerialize = dstObjToObjSerialize(typeItem);
-
-export const cadsToLexiconSerialize = dstImToObjSerialize({
-  key: v => ['key', v],
-  values: v => ['values', (v || emptyList).toJS()],
-  meta: v => ['meta', (v || emptyMap).toJS()],
-});
