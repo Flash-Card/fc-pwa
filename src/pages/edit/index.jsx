@@ -5,7 +5,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import reduxForm from 'redux-form/lib/reduxForm';
 import WordCard from 'components/Form/wordCard/index';
-import { editCard, typesList, getDictItem, cardItem } from 'domain/cards/index';
+import { editCard, typesList, getDictItem, cardItem, setsById } from 'domain/cards/index';
 
 class EditCard extends React.Component {
 
@@ -17,15 +17,16 @@ class EditCard extends React.Component {
       goBack: PropTypes.func.isRequired,
     }).isRequired,
     pristine: PropTypes.bool,
+    set: PropTypes.instanceOf(I.Map),
   };
 
   render() {
-    const { handleSubmit, types, history, card, pristine } = this.props;
+    const { handleSubmit, types, history, card, pristine, set } = this.props;
     return (
       <div className="screen">
         {
           card.get('set') === 'owner-dict' ? null : (
-            <p className="inner warning">You can't edit <b>{card.getIn(['set', 'title'])}</b>, the card will be add in your own dictionary.</p>
+            <p className="inner warning">You can't edit <b>{set.get('title')}</b>, this card will be add in to your own dictionary.</p>
           )
         }
         <WordCard
@@ -50,11 +51,14 @@ class EditCard extends React.Component {
   }
 }
 
+const mapStateToProps = (state, props) => ({
+  types: typesList(state),
+  card: cardItem(state),
+  set: setsById(state).get(props.match.params.set, new I.Map()),
+});
+
 export default compose(
-  connect(state => ({
-    types: typesList(state),
-    card: cardItem(state),
-  }), { getItem: getDictItem }),
+  connect(mapStateToProps, { getItem: getDictItem }),
   reduxForm({
     form: 'edit',
     onSubmit: editCard.onSubmit,
