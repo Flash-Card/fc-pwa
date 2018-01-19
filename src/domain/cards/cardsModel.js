@@ -13,7 +13,10 @@ const Quiz = I.fromJS({
   list: [],
   current: 0,
 });
-const SearchResults = new I.List();
+const SearchResults = I.fromJS({
+  search: [],
+  spellSearch: [],
+});
 
 export const reducer = {
   sets(state = Sets, action) {
@@ -113,7 +116,12 @@ export const reducer = {
     switch (action.type) {
 
       case A.search.success:
-        return I.List(action.payload);
+        return state
+          .update('search', () => I.List(action.payload));
+
+      case A.searchWithSpellCheck.success:
+        return state
+          .update('spellSearch', () => I.List(action.payload));
 
       default:
         return state;

@@ -27,14 +27,16 @@ function createDictionaryItem(value) {
   return {
     suggestions,
     count: 0,
+    set: [],
   };
 }
 
-function createSuggestionItem(key, distance, count) {
+function createSuggestionItem(key, distance, count, set) {
   return {
     key: key || '',
     distance: distance || 0,
     count: count || 0,
+    set,
   };
 }
 
@@ -171,32 +173,31 @@ export default class SymSpell {
   }
 
   add(word) {
-    let item = this.dictionary[word];
+    let item = this.dictionary[word.key];
 
     if (item !== undefined) {
       if (typeof item === 'number') {
-        item = createDictionaryItem(item);
-        this.dictionary[word] = item;
+        item = createDictionaryItem(item, word.set);
+        this.dictionary[word.key] = item;
       }
-
+      if (!item.set.includes(word.set)) item.set = [...item.set, word.set];
       item.count++;
-    }
-
-    else {
+    } else {
       item = createDictionaryItem();
       item.count++;
+      item.set = [word.set];
 
-      this.dictionary[word] = item;
+      this.dictionary[word.key] = item;
 
-      if (word.length > this.maxLength)
-        this.maxLength = word.length;
+      if (word.key.length > this.maxLength)
+        this.maxLength = word.key.length;
     }
 
     if (item.count === 1) {
       const number = this.words.length;
-      this.words.push(word);
+      this.words.push(word.key);
 
-      const deletes = edits(word, 0, this.maxDistance);
+      const deletes = edits(word.key, 0, this.maxDistance);
 
       deletes.forEach(deletedItem => {
         let target = this.dictionary[deletedItem];
@@ -213,7 +214,7 @@ export default class SymSpell {
               this.words,
               this.verbosity,
               target,
-              word,
+              word.key,
               number,
               deletedItem,
             );
@@ -266,6 +267,7 @@ export default class SymSpell {
             candidate,
             length - candidate.length,
             item.count,
+            item.set,
           );
 
           suggestions.push(suggestItem);
@@ -350,6 +352,7 @@ export default class SymSpell {
                 suggestion,
                 distance,
                 target.count,
+                target.set,
               ));
             }
           }

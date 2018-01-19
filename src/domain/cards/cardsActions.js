@@ -14,8 +14,6 @@ export const updateLexicon = asyncAction('dict/UPDATE_LEXICON');
 
 export const getDictItem = asyncAction('dict/GET_ITEM');
 
-export const getDictItemByKey = asyncAction('dict/GET_ITEM_BY_KEY');
-
 export const search = asyncAction('dict/SEARCH');
 
 export const searchWithSpellCheck = asyncAction('dict/SEARCH_WITH_SPELL_CHECK');

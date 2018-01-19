@@ -53,4 +53,11 @@ export default {
       },
     },
   },
+  itemDropDown: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  setWord: {
+    fontSize: 10,
+  },
 };

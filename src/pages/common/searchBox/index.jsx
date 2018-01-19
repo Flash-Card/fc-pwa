@@ -42,7 +42,7 @@ class SearchBox extends Component {
 
   handleRedirect = (card) => () => {
     this.setState({ query: card.key, showDropDown: false }, () => {
-      this.props.push(routesById['/memoize/:cardId'].path.pathMaker({ cardId: card.index }));
+      this.props.push(routesById['/memoize/:set/:key'].path.pathMaker({ set: card.set, key: card.key }));
     });
   }
 
@@ -70,7 +70,10 @@ class SearchBox extends Component {
         {showDropDown &&
           <ul className={classes.dropDown}>
             {searchResults && searchResults.map((i, index) => (
-              <li key={index} onClick={this.handleRedirect(i)}>{i.key}</li>
+              <li className={classes.itemDropDown} key={index} onClick={this.handleRedirect(i)}>
+                {i.key}
+                <span className={classes.setWord}>{i.set}</span>
+              </li>
             ))}
           </ul>}
       </div>
@@ -105,8 +108,10 @@ const mapActionCreators = {
   push,
 };
 
-const mapStateToProps = (state) => ({
-  searchResults: state.searchResults,
-});
+const mapStateToProps = (state) => {
+  return ({
+    searchResults: state.searchResults.get('search'),
+  });
+}
 
 export default connect(mapStateToProps, mapActionCreators)(injectSheet(sheet)(SearchBox));

@@ -6,28 +6,50 @@ import PropTypes from 'prop-types';
 import I from 'immutable';
 import injectSheet from 'react-jss';
 import sheet from './sheet';
-import { getDictItemByKey, searchWithSpellCheck } from 'domain/cards';
+import { searchWithSpellCheck } from 'domain/cards';
+import { push } from 'react-router-redux';
+import { routesById } from 'domain/router/routes';
 
 class SearchResults extends Component {
   static propTypes = {
     searchResults: PropTypes.instanceOf(I.List).isRequired,
     classes: PropTypes.object.isRequired,
-    getDictItemByKey: PropTypes.func.isRequired,
+    push: PropTypes.func.isRequired,
     searchWithSpellCheck: PropTypes.func.isRequired,
     location: PropTypes.instanceOf(I.Map).isRequired,
   }
 
   componentDidMount() {
-    const searcherWorker = new Worker();
-    const term = this.props.location.get('location').get('query').term;
-    searcherWorker.postMessage(term);
-    searcherWorker.addEventListener('message', (event) => {
+    this.searcherWorker = new Worker();
+    const term = this.props.location.get('query').get('term');
+    if (term) {
+      this.searcherWorker.postMessage(term);
+      this.searcherWorker.addEventListener('message', (event) => {
+        this.props.searchWithSpellCheck(event.data);
+      });
+    }
+  }
+
+  componentWillReceiveProps(nexProps) {
+    const newTerm = nexProps.location.get('query').get('term');
+    if (newTerm && this.props.location.get('query').get('term') !== newTerm) {
+      this.runSearchWorker(newTerm);
+    }
+  }
+
+  componentWillUnmount() {
+    this.searcherWorker.terminate();
+  }
+
+  runSearchWorker = (term) => {
+    this.searcherWorker.postMessage(term);
+    this.searcherWorker.addEventListener('message', (event) => {
       this.props.searchWithSpellCheck(event.data);
     });
   }
 
-  searchWord = (word) => () => {
-    this.props.getDictItemByKey({ word });
+  searchWord = (key, set) => () => {
+    this.props.push(routesById['/memoize/:set/:key'].path.pathMaker({ set, key }));
   }
 
   render() {
@@ -36,10 +58,13 @@ class SearchResults extends Component {
     return (
       <div className="screen">
         <ul className="inner">
-          {searchResults.map((i, index) => (
-            <li key={index} className={classes.list} onClick={this.searchWord(i.key)}>
-              {i.key}
-            </li>
+          {searchResults.map(i => (
+            i.set.map((set, index) => (
+              <li key={index} className={classes.list} onClick={this.searchWord(i.key, set)}>
+                {i.key}
+                <span className={classes.setWord}>{set}</span>
+              </li>
+            ))
           ))}
         </ul>
       </div>
@@ -48,13 +73,13 @@ class SearchResults extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  searchResults: state.searchResults,
-  location: state.routing,
+  searchResults: state.searchResults.get('spellSearch'),
+  location: state.routing.get('location'),
 });
 
 const mapActionCreators = {
-  getDictItemByKey,
   searchWithSpellCheck,
+  push,
 };
 
 export default connect(mapStateToProps, mapActionCreators)(injectSheet(sheet)(SearchResults));
