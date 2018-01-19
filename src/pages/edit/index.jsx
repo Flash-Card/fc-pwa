@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import I from 'immutable';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import reduxForm from 'redux-form/lib/reduxForm';
+import { Link } from 'react-router-dom';
+import { routesById } from 'domain/router/routes';
 import WordCard from 'components/Form/wordCard/index';
 import { editCard, typesList, getDictItem, cardItem, setsById } from 'domain/cards/index';
 
@@ -12,26 +13,24 @@ class EditCard extends React.Component {
   static propTypes = {
     card: PropTypes.instanceOf(I.Map).isRequired,
     types: PropTypes.instanceOf(I.List).isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    history: PropTypes.shape({
-      goBack: PropTypes.func.isRequired,
-    }).isRequired,
+    onSubmit: PropTypes.func.isRequired,
     pristine: PropTypes.bool,
     set: PropTypes.instanceOf(I.Map),
   };
 
   render() {
-    const { handleSubmit, types, history, card, pristine, set } = this.props;
+    const { onSubmit, types, card, pristine, set } = this.props;
     return (
       <div className="screen">
         {
-          card.get('set') === 'owner-dict' ? null : (
+          card.get('isOwn') ? null : (
             <p className="inner warning">You can't edit <b>{set.get('title')}</b>, this card will be add in to your own dictionary.</p>
           )
         }
         <WordCard
           types={types}
-          handleSubmit={handleSubmit}
+          onSubmit={onSubmit}
+          initialValues={card.set('to_lexicon', true).toJS()}
         >
           <div className="btn__group">
             <button
@@ -39,11 +38,10 @@ class EditCard extends React.Component {
               className="btn btn_regular"
               disabled={pristine}
             >Ok</button>
-            <button
-              type="button"
+            <Link
               className="btn btn_regular"
-              onClick={() => history.goBack()}
-            >Cancel</button>
+              to={routesById['/memoize/:set/:key'].path.pathMaker(card.toJS())}
+            >Cancel</Link>
           </div>
         </WordCard>
       </div>
@@ -58,9 +56,11 @@ const mapStateToProps = (state, props) => ({
 });
 
 export default compose(
-  connect(mapStateToProps, { getItem: getDictItem }),
-  reduxForm({
-    form: 'edit',
-    onSubmit: editCard.onSubmit,
-  }),
+  connect(
+    mapStateToProps,
+    {
+      getItem: getDictItem,
+      onSubmit: editCard,
+    },
+  ),
 )(EditCard);

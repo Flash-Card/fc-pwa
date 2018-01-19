@@ -45,7 +45,6 @@ export default function configureStore(history, state) {
       ...require('./ui/').reducer,
       ...require('./router').reducer,
       ...require('./log').reducer,
-      form: require('redux-form/lib/reducer').default,
     }),
     initialState,
     composeEnhancers(
