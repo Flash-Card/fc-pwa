@@ -13,7 +13,7 @@ export const reducer = {
       case LOCATION_CHANGE:
         return state
           .set('location', I.fromJS(action.payload).set('query'))
-          .setIn(['location', 'query'], parseQuery(action.payload.search))
+          .setIn(['location', 'query'], I.fromJS(parseQuery(action.payload.search)))
           .set('prevLocation', state.get('location'));
 
       default:

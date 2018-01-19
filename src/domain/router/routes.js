@@ -13,14 +13,14 @@ const routes = [
   {
     path: path`/`,
     exact: true,
-    title: 'home',
+    title: 'Home',
     component: () => import('pages/home/index'),
     restriction: true,
   },
   {
     path: path`/memoize`,
     exact: true,
-    title: 'memoize',
+    title: 'Memoize',
     component: () => import('pages/memoize/index'),
     restriction: true,
     saga: () => import('pages/memoize/sagas'),
@@ -28,7 +28,7 @@ const routes = [
   {
     path: path`/memoize/${'set'}/${'key'}`,
     exact: true,
-    title: 'memoize card',
+    title: 'Memoize card',
     component: () => import('pages/memoize/cards'),
     restriction: false,
     saga: () => import('pages/memoize/cards/sagas'),
@@ -36,7 +36,7 @@ const routes = [
   {
     path: path`/quiz`,
     exact: true,
-    title: 'quiz',
+    title: 'Quiz',
     component: () => import('pages/quiz'),
     restriction: ACL.MENU_QUIZ,
     saga: () => import('pages/quiz/sagas'),
@@ -44,7 +44,7 @@ const routes = [
   {
     path: path`/create`,
     exact: true,
-    title: 'create card',
+    title: 'Create card',
     component: () => import('pages/create/index'),
     restriction: true,
     saga: () => import('pages/create/sagas'),
@@ -52,7 +52,7 @@ const routes = [
   {
     path: path`/edit/${'set'}/${'key'}`,
     exact: true,
-    title: 'edit card',
+    title: 'Edit card',
     component: () => import('pages/edit'),
     saga: () => import('pages/edit/sagas'),
     restriction: false,

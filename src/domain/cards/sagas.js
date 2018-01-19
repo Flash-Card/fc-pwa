@@ -28,7 +28,6 @@ export function* getCardNeighbor({ set, index }) {
     set,
     index,
   );
-  console.log(all);
   const prev = all[0] ? [all[0].set, all[0].key] : [];
   const next = all[1] ? [all[1].set, all[1].key] : [];
   return { prev, next };
