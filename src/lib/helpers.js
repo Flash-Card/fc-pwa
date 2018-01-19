@@ -14,3 +14,16 @@ export function makeString(strings, ...keys) {
     return str;
   };
 }
+
+export function getIn(obj, path, def = undefined) {
+  const isObject = o => o === Object(o);
+  let A = obj;
+  for (let v of path) {
+    if (!isObject(A)) return def;
+    if (v in A) A = A[v];
+    else {
+      return def;
+    }
+  }
+  return A;
+}

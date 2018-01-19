@@ -53,13 +53,6 @@ class QuizPage extends React.Component {
     }, () => next(card.get('key')));
   };
 
-  get infoData() {
-    return new I.Map({
-      first: 0,
-      last: this.state.size - 1,
-    });
-  }
-
   get left() {
     return this.state.size - this.props.size + 1;
   }
@@ -71,7 +64,7 @@ class QuizPage extends React.Component {
       <div className="screen">
         {
           card.size ? [
-            <Info key="1" data={this.infoData} title="Quiz" index={this.left} />,
+            <Info key="1" all={this.state.size} title="Quiz" index={this.left} />,
             <Card key="2" card={card} types={types} open={isOpen} />,
             <SideBar key="3">
               <button

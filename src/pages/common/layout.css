@@ -23,6 +23,10 @@ button {
     padding: 0;
 }
 
+b {
+    font-weight: bold;
+}
+
 .screen {
     position: relative;
     min-height: 100%;
@@ -39,4 +43,11 @@ button {
     width: 100%;
     background-color: #cb2431;
     font-weight: bold;
+}
+
+.warning {
+    background-color: rgba(203,36,49,.8);
+    display: block;
+    color: #fff;
+    font-size: 14px;
 }

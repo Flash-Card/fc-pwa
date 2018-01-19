@@ -10,13 +10,13 @@ export function* version() {
 }
 
 export function* clearDB() {
-  console.log('!!!!');
   try {
     const payload = yield call(idb.clean);
     yield put({
       type: action.clearDB.success,
       payload,
-    })
+    });
+    window.location.reload();
   } catch (err) {
     yield put({
       type: action.clearDB.failure,

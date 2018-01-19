@@ -6,58 +6,23 @@ import {
   createSerializer,
   dstImToObjSerialize,
   emptyList,
-  emptyMap,
 } from 'lib/serialize';
 
-export const typeSerialize = srcArrToMapSerialize({
-  id: (v, data, i) => [data[i][v], I.fromJS(data[i])],
-});
-
-export const lexiconSerialize = srcArrToMapSerialize({
-  key: (v, data, i) => [data[i][v], lexiconItemImSerialize(data[i])],
-}, l => l.map(() => 'key'));
-
-export const setsSerialize = srcArrToMapSerialize({
-  id: (v, data, i) => [data[i][v], setsItemImSerialize(data[i])],
-});
+/**
+ * Dictionary Card
+ */
 
 function cardValues(v = []) {
-  const item = e => ({ value: (e.value || '').trim(), type: e.type })
+  const item = e => ({ value: (e.value || '').trim(), type: e.type });
   return v.map(item);
 }
 
 const cardItem = {
   index: v => ['index', v],
+  set: v => ['set', v],
   key: v => ['key', (v || '').trim()],
   values: v => ['values', cardValues(v)],
-  meta: () => ['meta', { element: 'word' }],
 };
-
-const typeItem = {
-  id: (_, data) => ['id', data.title],
-  title: v => ['title', v],
-};
-
-const lexiconItem = {
-  ...createSerializer([
-    'key',
-  ]),
-  values: v => ['values', cardImValues(v)],
-  meta: v => ['meta', I.fromJS(v)],
-};
-
-const setsItem = {
-  ...createSerializer([
-    'id',
-    'title',
-    'progress',
-  ]),
-  meta: v => ['meta', I.fromJS(v)],
-};
-
-export const lexiconItemImSerialize = dstObjToImSerialize(lexiconItem);
-
-const setsItemImSerialize = dstObjToImSerialize(setsItem);
 
 function cardImValues(v = []) {
   const item = e => new I.Map({ value: (e.value || '').trim(), type: e.type });
@@ -67,15 +32,83 @@ function cardImValues(v = []) {
 export const cardItemImSerialize = dstObjToImSerialize({
   ...cardItem,
   values: v => ['values', cardImValues(v)],
-  meta: () => ['meta', new I.Map({ element: 'word' })],
 });
 
 export const cardItemDeSerialize = dstObjToObjSerialize(cardItem);
 
-export const typeItemSerialize = dstObjToObjSerialize(typeItem);
-
 export const cadsToLexiconSerialize = dstImToObjSerialize({
   key: v => ['key', v],
   values: v => ['values', (v || emptyList).toJS()],
-  meta: v => ['meta', (v || emptyMap).toJS()],
 });
+
+/** ========
+ * Lexicon */
+
+export const lexiconSerialize = srcArrToMapSerialize({
+  key: (v, data, i) => [data[i][v], lexiconItemImSerialize(data[i])],
+}, l => l.map(() => 'key'));
+
+const lexiconItem = {
+  ...createSerializer([
+    'key',
+  ]),
+  values: v => ['values', cardImValues(v)],
+  meta: v => ['meta', I.fromJS(v)],
+};
+
+export const lexiconItemImSerialize = dstObjToImSerialize(lexiconItem);
+
+/** ========
+ * Sets */
+
+export const setsSerialize = srcArrToMapSerialize({
+  id: (v, data, i) => [data[i][v], setsItemImSerialize(data[i])],
+});
+
+const setsItem = {
+  ...createSerializer([
+    'id',
+    'title',
+    'isOwn',
+    'progress',
+  ]),
+};
+
+export const setsItemImSerialize = dstObjToImSerialize({
+  ...setsItem,
+  meta: v => ['meta', I.fromJS(v)],
+});
+
+export const setsItemSerialize = dstObjToObjSerialize({
+  ...setsItem,
+  meta: v => ['meta', v],
+});
+
+export const setsGlobal = (data, set) => {
+  const setId = set.get('id');
+  const cases = {
+    'jsonFC': () => ({
+      payload: data.dictionary.map((e, index) => Object.assign({}, e, { set: setId, index })),
+      set,
+    }),
+    'textLine': () => ({
+      payload: data.match(/[^\r\n]+/g).map((e, index) => ({ key: e, set: setId, index })),
+      set,
+    }),
+  };
+  return cases[set.getIn(['meta', 'type'], 'textLine')]();
+};
+
+/** ======
+ *  Type */
+
+export const typeSerialize = srcArrToMapSerialize({
+  id: (v, data, i) => [data[i][v], I.fromJS(data[i])],
+});
+
+const typeItem = {
+  id: (_, data) => ['id', data.title],
+  title: v => ['title', v],
+};
+
+export const typeItemSerialize = dstObjToObjSerialize(typeItem);

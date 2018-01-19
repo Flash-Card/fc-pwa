@@ -16,11 +16,6 @@ class Catalog extends React.Component {
     sets: PropTypes.instanceOf(I.List).isRequired,
   };
 
-  static getCardId(set) {
-    const first = set.getIn(['meta', 'first']);
-    return set.getIn(['meta', 'current'], first);
-  }
-
   shouldComponentUpdate(nextProps) {
     return !I.is(this.props.sets, nextProps.sets);
   }
@@ -35,7 +30,6 @@ class Catalog extends React.Component {
               <Asset
                 key={e.get('id')}
                 data={e}
-                cardId={Catalog.getCardId(e)}
                 getDictionary={() => this.props.getDictionary(e)}
               />,
             )

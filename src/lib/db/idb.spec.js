@@ -1,4 +1,5 @@
 import fakeIndexedDB from 'fake-indexeddb';
+import IDBKeyRange from 'fake-indexeddb/lib/FDBKeyRange';
 import * as idb from './index';
 import schema from './schema';
 import { OpenDB } from './index';
@@ -49,6 +50,7 @@ function getFixtures({ name }) {
 describe('Indexed store', () => {
 
   const originIndexedDB = global.indexedDB;
+  const originIDBKeyRange = global.IDBKeyRange;
   let data;
   let list;
 
@@ -58,6 +60,7 @@ describe('Indexed store', () => {
   beforeEach(() => {
     global.indexedDB = fakeIndexedDB;
     global.location = { pathname: '/' };
+    global.IDBKeyRange = IDBKeyRange;
     data = {};
     list = [];
   });
@@ -65,6 +68,7 @@ describe('Indexed store', () => {
   afterEach(() => {
     global.indexedDB._databases.clear();
     global.indexedDB = originIndexedDB;
+    global.IDBKeyRange = originIDBKeyRange;
     // delete global.document.reload;
   });
 
@@ -140,6 +144,22 @@ describe('Indexed store', () => {
         expect(l).toEqual(list);
       });
   });
+
+  // it('get specific list item', () => {
+  //   list = [
+  //     { key: 'test', set: 'own', index: 1 },
+  //     { key: 'test2', set: 'own', index: 2 },
+  //     { key: 'test3', set: 'foreign', index: 3 },
+  //   ];
+  //   return idb.addList('dictionary', list, { idb: iDBx })
+  //     .then(res => {
+  //       expect(res).toEqual([1, 2, 3]);
+  //       return idb.getItemsByIndex('dictionary', 'set', 'own', iDBx);
+  //     })
+  //     .then(res => {
+  //       console.log(res);
+  //     });
+  // });
 
   it('update item', () => {
     list = [{ key: 'test', index: 1 }, { key: 'test2', index: 10 }];

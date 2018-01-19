@@ -14,16 +14,22 @@ class Create extends React.Component {
     handleSubmit: PropTypes.func.isRequired,
     types: PropTypes.instanceOf(I.List).isRequired,
     children: PropTypes.node,
+    pristine: PropTypes.bool,
   };
 
   render() {
-    const { classes, types } = this.props;
+    const { classes, types, pristine } = this.props;
     return (
       <form
         onSubmit={this.props.handleSubmit}
         name="create"
         className="inner"
       >
+        <Field
+          name="set"
+          component="input"
+          type="hidden"
+        />
         <Field
           name="key"
           component={Input}
@@ -39,21 +45,24 @@ class Create extends React.Component {
             options: types,
           }}
         />
-        <label htmlFor="id-to_set" className={classes.label}>
+        <label htmlFor="to_lexicon" className={classes.label}>
           <Field
-            name="to_set"
+            name="to_lexicon"
             component="input"
             type="checkbox"
-            id="id-to_set"
+            id="id-to_lexicon"
           />
           <span>Append to my set</span>
         </label>
         {
           this.props.children || (
-            <button
-              type="submit"
-              className={classes.submit}
-            >Ok</button>
+            <div className="btn__group">
+              <button
+                type="submit"
+                className="btn btn_main"
+                disabled={pristine}
+              >Ok</button>
+            </div>
           )
         }
       </form>

@@ -1,4 +1,4 @@
-import { call, put, select } from 'redux-saga/effects';
+import { call, put, select, fork } from 'redux-saga/effects';
 import I from 'immutable';
 import Api, { ensure } from 'domain/api';
 import * as selector from './cardsSelector';
@@ -7,7 +7,11 @@ import * as idb from 'lib/db';
 import {
   cardItemImSerialize,
   cadsToLexiconSerialize,
-  lexiconItemImSerialize, cardItemDeSerialize,
+  lexiconItemImSerialize,
+  cardItemDeSerialize,
+  setsGlobal,
+  setsItemSerialize,
+  setsItemImSerialize,
 } from './helpers';
 
 export { action, selector } ;
@@ -15,52 +19,80 @@ export { action, selector } ;
 export const ensureGetDictionary = ensure({
   api: Api.ajaxGet,
   action: action.getDictionary,
-  serializer: (data, set) => ({
-    payload: data.match(/[^\r\n]+/g).map(e => ({ key: e })),
-    set,
-  }),
+  serializer: setsGlobal,
 }, 'set');
 
-export function* getCardBy(index, value) {
-  return yield call(
-    idb.getItem,
-    idb.TABLE.DICTIONARY,
+export function* getCardNeighbor({ set, index }) {
+  const all = yield call(
+    idb.getNeighbor,
+    set,
     index,
-    value,
   );
+  const prev = all[0] ? [all[0].set, all[0].key] : [];
+  const next = all[1] ? [all[1].set, all[1].key] : [];
+  return { prev, next };
 }
 
-export function* ensureGetCard({ cardId }) {
-  const value = parseInt(cardId, 10);
-  if (!isNaN(value)) {
-    const card = yield call(getCardBy, 'index', value);
-    if (typeof card !== 'undefined') {
-      const set = (yield checkCardSets(card.index)).setIn(['meta', 'current'], card.index);
-      yield call(ensureUpdateSets, set);
-      yield put({
-        type: action.getDictItem.success,
-        payload: cardItemImSerialize(card).set('set', set),
+export function* ensureGetCard({ key, set }) {
+  const card = yield call(idb.getCard, set, key);
+  const neighbor = yield call(getCardNeighbor, card);
+
+  yield put({
+    type: action.getDictItem.success,
+    payload: cardItemImSerialize(card)
+      .setIn(['meta', 'prev'], new I.List(neighbor.prev))
+      .setIn(['meta', 'next'], new I.List(neighbor.next)),
+  });
+
+  const currentSet = (yield select(selector.setsById))
+    .get(set)
+    .setIn(['meta', 'current'], new I.List([set, key]));
+
+  yield fork(ensureUpdateSets, currentSet);
+
+}
+
+export function* ensureCreateCard({ payload }) {
+  let index = 0;
+  try {
+    const sets = yield select(selector.setsById);
+    if (!sets.has(payload.set)) {
+      yield call(ensureAddSetItem, {
+        id: payload.set,
+        progress: 100,
+        title: 'Your own dictionary',
+        isOwn: true,
+        meta: {
+          first: [payload.set, payload.key],
+          length: 1,
+        },
       });
+    } else {
+      const set = sets.get(payload.set);
+      index = set.getIn(['meta', 'length']);
+      yield call(
+        ensureUpdateSets,
+        set.updateIn(['meta', 'length'], l => l + 1),
+      );
     }
+
+    yield call(
+      idb.addItem,
+      idb.TABLE.DICTIONARY,
+      cardItemDeSerialize({ ...payload, index }),
+    );
+
+    yield put({
+      type: action.createCard.success,
+      ...payload,
+    });
+
+  } catch (err) {
+    yield put({
+      type: action.createCard.failure,
+      err,
+    });
   }
-}
-
-
-export function* checkCardSets(index) {
-
-  const sets = yield select(selector.setsList);
-
-  const check = function(e) {
-    return e.getIn(['meta', 'first']) <= index && index <= e.getIn(['meta', 'last']);
-  };
-
-  return sets
-    .filter(e => (e.get('progress') === 100))
-    .reduce((A, V) => {
-      if (A.size) return A;
-      return check(V) ? V : A;
-    }, new I.Map());
-
 }
 
 export function* ensureUpdateCard({ payload }) {
@@ -93,6 +125,20 @@ export function* ensureRemoveFromLexicon({ payload }) {
     type: action.removeFromLexicon.success,
     key,
   });
+}
+
+export function* ensureAddSetItem(set) {
+  try {
+    yield call(idb.addItem, idb.TABLE.SETS, setsItemSerialize(set));
+    yield put(
+      action.addSetItem({
+        payload: setsItemImSerialize(set),
+        id: set.id,
+      }),
+    );
+  } catch (err) {
+
+  }
 }
 
 export function* ensureUpdateSets(data) {

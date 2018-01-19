@@ -1,3 +1,5 @@
+import * as idb from './index';
+
 export default {
   1: [{
     name: 'dictionary',
@@ -26,7 +28,6 @@ export default {
     indexes: [
       { name: 'id', keyPath: 'id', option: { unique: true } },
     ],
-    fixture: 'fx01sets.json',
   }],
   2: [{
     name: 'log',
@@ -43,21 +44,28 @@ export default {
     indexes: [
       { name: 'key', keyPath: 'key', option: { unique: true } },
     ],
+  }],
+  4: [],
+  5: [],
+  6: [],
+  7: [{
+    name: 'dictionary',
+    syncAction({ target }, table) {
+      target.result.deleteObjectStore(table);
+      target.result.createObjectStore(table, { keyPath: ['set', 'key'], autoIncrement: false });
+      const update = idb.updateIndex(table);
+      update(target, { name: 'key', keyPath: 'key', option: { unique: false } });
+      update(target, { name: 'set', keyPath: 'set', option: { unique: false } });
+      update(target, { name: 'index', keyPath: ['set', 'index'], option: { unique: true } });
+    },
   }, {
     name: 'sets',
-    modifier: (item) => ({ ...item, meta: { ...item.meta, type: 'textLine' } }),
-  }],
-  4: [{
-    name: 'sets',
-    modifier: (item) => ({ ...item, meta: { ...item.meta, type: 'textLine' } }),
-  }],
-  5: [{
-    name: 'sets',
-    modifier: (item) => ({
-      id: item.id,
-      title: item.title,
-      meta: item.meta,
-      progress: item.isLoaded ? 100 : 0,
-    }),
+    syncAction({ target }, table) {
+      target.result.deleteObjectStore(table);
+      target.result.createObjectStore(table, { keyPath: 'id', autoIncrement: false });
+      const update = idb.updateIndex(table);
+      update(target, { name: 'id', keyPath: 'id', option: { unique: true } });
+    },
+    fixture: 'fx07sets.json',
   }],
 };

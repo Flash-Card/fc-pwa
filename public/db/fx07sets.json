@@ -11,6 +11,18 @@
         "type": "textLine",
         "url": "https://raw.githubusercontent.com/OliverCollins/Oxford-3000-Word-List/master/Oxford%203000%20Word%20List.txt"
       }
+    },
+    {
+      "id": "oxford3000-en-ru",
+      "title": "The Oxford 3000 en-ru",
+      "isOwn": false,
+      "progress": 0,
+      "meta": {
+        "description": "The Oxford 3000 english to russian",
+        "type": "jsonFC",
+        "url": "https://raw.githubusercontent.com/Flash-Card/Oxford3000/master/Oxford3000-en-ru.json"
+      }
     }
   ]
 }
+

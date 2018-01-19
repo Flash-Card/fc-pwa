@@ -28,19 +28,45 @@ function promisify(request) {
   });
 }
 
-function promiSeq(cursor, limit) {
+const nextCursor = (resolve, max) => {
+  if (typeof max === 'number') {
+    return function(list) {
+      if (list.length < max) {
+        this.result.continue();
+      } else {
+        resolve(list);
+      }
+    };
+  }
+  return function() {
+    this.result.continue();
+  };
+};
+
+function promiSeq(cursor, max) {
   let list = [];
   return new Promise((resolve, reject) => {
+    const next = nextCursor(resolve, max);
     cursor.onsuccess = function() {
-      if (this.result && (limit ? list.length <= limit : true)) {
+      if (this.result) {
         list = list.concat(this.result.value);
-        this.result.continue();
+        next.call(this, list);
       } else {
         resolve(list);
       }
     };
     rejectify(cursor, reject);
   });
+}
+
+export function updateIndex(table) {
+  return ({ transaction }, { name, keyPath, option }) => {
+    const objectStore = transaction.objectStore(table);
+    if (objectStore.indexNames.contains(name)) {
+      objectStore.deleteIndex(name);
+    }
+    objectStore.createIndex(name, keyPath, option);
+  };
 }
 
 
@@ -61,12 +87,12 @@ function add(db, table) {
 }
 
 function put(db, table, modifier = d => d) {
-  return (item) => promisify(os(db, table, READ_WRITE).put(modifier(item)));
+  return (item, i) => promisify(os(db, table, READ_WRITE).put(modifier(item, i)));
 }
 
 export function os(db, table, permission) {
   if (tableExist(db, table))
-    return db.transaction(table, permission).objectStore(table);
+    return db.transaction([table], permission).objectStore(table);
   throw new Error(`Table ${table} is not exist`);
 }
 
@@ -84,7 +110,7 @@ export function updateList(db, table, modifier) {
 
 export function upgrade({ getFixtures, schema }) {
   return function(event) {
-    const { newVersion, oldVersion, target: { result } } = event;
+    const { newVersion, oldVersion, target: { result, transaction } } = event;
 
     const update = ({ name, modifier }) => db => updateList(db, name, modifier);
 
@@ -94,8 +120,18 @@ export function upgrade({ getFixtures, schema }) {
 
         if (typeof item.options !== 'undefined') {
           const objectStore = result.createObjectStore(item.name, item.options);
-          item.indexes.forEach(idx => {
-            objectStore.createIndex(idx.name, idx.keyPath, idx.option);
+          item.indexes.forEach(index => {
+            objectStore.createIndex(index.name, index.keyPath, index.option);
+          });
+        }
+
+        if (Array.isArray(item.updateIndexes)) {
+          const objectStore = transaction.objectStore(item.name);
+          item.updateIndexes.forEach(index => {
+            if (objectStore.indexNames.contains(index.name)) {
+              objectStore.deleteIndex(index.name);
+            }
+            objectStore.createIndex(index.name, index.keyPath, index.option);
           });
         }
 
@@ -103,14 +139,19 @@ export function upgrade({ getFixtures, schema }) {
           this.setAsync(db =>
             getFixtures({ name: item.fixture, pathname: global.location.pathname })
               .then(({ data: { name, values } }) => {
-                return iterator(values, (v) => os(db, name, READ_WRITE).add(v));
+                return iterator(values, os(db, name, READ_WRITE), 'add');
               }),
           );
+        }
+
+        if (typeof item.syncAction === 'function') {
+          item.syncAction.call(this, event, item.name);
         }
 
         if (typeof item.modifier === 'function') {
           this.setAsync(update(item));
         }
+
       });
     });
   };
@@ -150,50 +191,84 @@ export function getItem(table, indexName, value, idb = iDB) {
     );
 }
 
+export function getListByIndex(table, indexName, value, idb = iDB) {
+  return idb()
+    .then(db => promiSeq(
+      os(db, table, READ_ONLY)
+        .index(indexName)
+        .openCursor(IDBKeyRange.only(value)),
+      ));
+}
+
+export function getCard(set, key, idb = iDB) {
+  return idb()
+    .then(db =>
+      promisify(os(db, TABLE.DICTIONARY, READ_ONLY).get([set, key])),
+    );
+}
+
+export function getNeighbor(set, index, idb = iDB) {
+  const neighbor = el => el ? el.value : null;
+  return idb()
+    .then(db => {
+      const store = os(db, TABLE.DICTIONARY, READ_ONLY).index('index');
+      const upperBound = IDBKeyRange.only([set, index - 1]);
+      const lowerBound = IDBKeyRange.only([set, index + 1]);
+      return Promise.all([
+        promisify(store.openCursor(upperBound)).then(neighbor),
+        promisify(store.openCursor(lowerBound)).then(neighbor),
+      ]);
+    });
+}
+
 export function addItem(table, item, idb = iDB) {
   return idb()
     .then(db => add(db, table)(item));
 }
 
-function iterator(arr, actionFn, progress = () => null) {
-  const set = new Set(arr);
+function iterator(arr, objectStore, actionName,  progress = () => null) {
   return new Promise((resolve, reject) => {
-    let res = [];
-
-    const si = setInterval(() => { progress(res.length / arr.length); }, 300);
-
-    let count = set.size >= 4 ? 3 : set.size - 1; /** Count of thread - 1 */
-    const it = set.keys();
-
-    const nx = function(event) {
-      if (event) {
-        res = res.concat([event.target.result]);
-      }
-      const n = it.next();
-      if (!n.done) {
-        const storeItem = actionFn(n.value);
-        storeItem.onsuccess = nx;
-        storeItem.onerror = reject;
-        ++count;
-      } else if (count === 0) {
-        clearInterval(si);
-        progress(res.length / arr.length);
-        resolve(res);
-      }
-      --count;
-    };
-
-    for (let i = 0; i <= count; i++) {
-      nx();
-    }
-
+    threadAction(arr, objectStore, actionName, resolve, reject, progress);
   });
+}
+
+function threadAction(arr, objectStore, actionName, resolve, reject, progress) {
+  const set = new Set(arr);
+
+  let res = [];
+
+  const si = setInterval(() => { progress(res.length / arr.length); }, 300);
+
+  let count = set.size >= 6 ? 5 : set.size - 1; /** Count of thread - 1 */
+  const it = set.keys();
+
+  const nx = function(event) {
+    if (event) {
+      res = res.concat([event.target.result]);
+    }
+    const n = it.next();
+    if (!n.done) {
+      const storeItem = objectStore[actionName](n.value);
+      storeItem.onsuccess = nx;
+      storeItem.onerror = reject;
+      ++count;
+    } else if (count === 0) {
+      clearInterval(si);
+      progress(res.length / arr.length);
+      resolve(res);
+    }
+    --count;
+  };
+
+  for (let i = 0; i <= count; i++) {
+    nx();
+  }
 }
 
 export function addList(table, list, { idb = iDB, progress } = {}) {
   return idb()
     .then(db => {
-      return iterator(list, (v) => os(db, table, READ_WRITE).add(v), progress);
+      return iterator(list, os(db, table, READ_WRITE), 'add', progress);
     });
 }
 

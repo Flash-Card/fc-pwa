@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import I from 'immutable';
 import cx from 'classnames';
 import { Link } from 'react-router-dom';
+import { cardPath } from 'domain/router/helpers';
 import injectSheet from 'react-jss';
 import sheet from './sheet';
 
@@ -11,7 +12,6 @@ class SideBar extends React.Component {
   static propTypes = {
     classes: PropTypes.objectOf(PropTypes.string).isRequired,
     card: PropTypes.instanceOf(I.Map).isRequired,
-    pathMaker: PropTypes.func.isRequired,
     addToLexicon: PropTypes.func.isRequired,
     removeFromLexicon: PropTypes.func.isRequired,
     isRemembered: PropTypes.bool.isRequired,
@@ -27,17 +27,16 @@ class SideBar extends React.Component {
   };
 
   render() {
-    const { classes, card, pathMaker } = this.props;
-    const index = card.get('index');
-    const first = card.getIn(['set', 'meta', 'first']);
-    const last = card.getIn(['set', 'meta', 'last']);
+    const { classes, card } = this.props;
+    const prev = card.getIn(['meta', 'prev'], new I.List());
+    const next = card.getIn(['meta', 'next'], new I.List());
     return (
       <div className={classes.sidebar}>
         {
-          index - 1 < first  ? (
-            <span className={cx(classes.prev, classes.disabled)} />
+          prev.size ? (
+            <Link className={classes.prev} to={cardPath(prev)} />
           ) : (
-            <Link className={classes.prev} to={pathMaker(index - 1)} />
+            <span className={cx(classes.prev, classes.disabled)} />
           )
         }
         <button
@@ -48,10 +47,10 @@ class SideBar extends React.Component {
           <span className={classes.whitePin} />
         </button>
         {
-          index + 1 > last ? (
-            <span className={cx(classes.next, classes.disabled)} />
+          next.size ? (
+            <Link className={classes.next} to={cardPath(next)} />
           ) : (
-            <Link className={classes.next} to={pathMaker(index + 1)} />
+            <span className={cx(classes.next, classes.disabled)} />
           )
         }
       </div>
