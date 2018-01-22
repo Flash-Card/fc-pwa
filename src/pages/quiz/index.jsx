@@ -34,9 +34,12 @@ class QuizPage extends React.Component {
     size: PropTypes.number.isRequired,
   };
 
-  state = {
-    open: false,
-    size: this.props.size,
+  constructor(props) {
+    super();
+    this.state = {
+      open: false,
+    };
+    this.size = props.size;
   };
 
   flipHandler = () => {
@@ -54,7 +57,7 @@ class QuizPage extends React.Component {
   };
 
   get left() {
-    return this.state.size - this.props.size + 1;
+    return this.size - this.props.size;
   }
 
   render() {
@@ -64,7 +67,7 @@ class QuizPage extends React.Component {
       <div className="screen">
         {
           card.size ? [
-            <Info key="1" all={this.state.size} title="Quiz" index={this.left} />,
+            <Info key="1" all={this.size} title="Quiz" index={this.left} />,
             <Card key="2" card={card} types={types} open={isOpen} />,
             <SideBar key="3">
               <button
