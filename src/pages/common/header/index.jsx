@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import injectSheet from 'react-jss';
 import sheet from './sheet';
 import { menuToggle } from 'domain/ui';
+import SearchBox from '../searchBox';
 
 function Header({ classes, toggle }){
   return (
@@ -19,6 +20,7 @@ function Header({ classes, toggle }){
       <h1
         className={classes.logo}
       >FlashCards</h1>
+      <SearchBox />
     </header>
   );
 }

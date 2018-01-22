@@ -14,6 +14,10 @@ export const updateLexicon = asyncAction('dict/UPDATE_LEXICON');
 
 export const getDictItem = asyncAction('dict/GET_ITEM');
 
+export const search = asyncAction('dict/SEARCH');
+
+export const searchWithSpellCheck = asyncAction('dict/SEARCH_WITH_SPELL_CHECK');
+
 export const createCard = asyncAction('card/CREATE_CARD');
 
 export const editCard = asyncAction('card/EDIT_CARD');
