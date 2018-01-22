@@ -1,7 +1,7 @@
 import React from 'react';
 import I from 'immutable';
 import PropTypes from 'prop-types';
-import Field from 'redux-form/lib/Field';
+import { Field } from 'react-final-form';
 import cx from 'classnames';
 import Layout from './layout';
 import injectSheet from 'react-jss';

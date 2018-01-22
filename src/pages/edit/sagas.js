@@ -1,8 +1,7 @@
-import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 import * as Cards from 'domain/cards/sagas';
 import { routesById } from 'domain/router/routes';
-import actions from 'redux-form/lib/actions';
 
 const OWN_DICT = 'owner-dict';
 
@@ -31,11 +30,4 @@ export default function* (_, { params }) {
   yield takeEvery(Cards.action.editCard.success, changePath, params);
   yield takeEvery(Cards.action.createCard.success, changePath);
   yield call(Cards.ensureGetCard, params);
-  const card = yield select(Cards.selector.cardItem);
-  const item = card
-    .set('to_lexicon', true)
-    .toJS();
-  yield put(
-    actions.initialize('edit', item),
-  );
 };

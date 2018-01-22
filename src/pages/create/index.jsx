@@ -3,26 +3,30 @@ import PropTypes from 'prop-types';
 import I from 'immutable';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import reduxForm from 'redux-form/lib/reduxForm';
 import { typesList } from 'domain/cards';
 import { createCard } from 'domain/cards';
 import WordCard from 'components/Form/wordCard';
+
 class Create extends React.Component {
 
   static propTypes = {
     types: PropTypes.instanceOf(I.List).isRequired,
-    handleSubmit: PropTypes.func.isRequired,
-    pristine: PropTypes.bool,
+    onSubmit: PropTypes.func.isRequired,
+  };
+
+  onSubmit = (data, { reset }) => {
+    this.props.onSubmit(data);
+    reset();
   };
 
   render() {
-    const { types, handleSubmit, pristine } = this.props;
+    const { types } = this.props;
     return (
       <div className="screen">
         <WordCard
           types={types}
-          handleSubmit={handleSubmit}
-          pristine={pristine}
+          initialValues={{ values: [{ value: '' }], set: 'owner-dict' }}
+          onSubmit={this.onSubmit}
         />
       </div>
     );
@@ -32,10 +36,7 @@ class Create extends React.Component {
 export default compose(
   connect(state => ({
     types: typesList(state),
-  })),
-  reduxForm({
-    form: 'create',
-    initialValues: { values: [{ value: '' }], set: 'owner-dict' },
-    onSubmit: createCard.onSubmit,
+  }), {
+    onSubmit: createCard,
   }),
 )(Create);
