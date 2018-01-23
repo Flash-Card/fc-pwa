@@ -88,11 +88,20 @@ export const setsGlobal = (data, set) => {
   const setId = set.get('id');
   const cases = {
     'jsonFC': () => ({
-      payload: data.dictionary.map((e, index) => Object.assign({}, e, { set: setId, index })),
+      payload: data.dictionary.map((e, index) => Object.assign({}, e, {
+        set: setId,
+        keyName: e.toUpperCase(),
+        index,
+      })),
       set,
     }),
     'textLine': () => ({
-      payload: data.match(/[^\r\n]+/g).map((e, index) => ({ key: e, set: setId, index })),
+      payload: data.match(/[^\r\n]+/g).map((e, index) => ({
+        key: e,
+        set: setId,
+        keyName: e.toUpperCase(),
+        index,
+      })),
       set,
     }),
   };

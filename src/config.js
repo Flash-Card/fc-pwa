@@ -1,5 +1,5 @@
 export const DB_NAME = 'FlashCards';
-export const DB_VERSION = 7;
+export const DB_VERSION = 8;
 export const STORE_TABLES = ['types', 'lexicon', 'sets', 'env'];
 export const TABLES = {
   DICTIONARY: 'dictionary',

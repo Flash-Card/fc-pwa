@@ -68,4 +68,14 @@ export default {
     },
     fixture: 'fx07sets.json',
   }],
+  8: [{
+    name: 'dictionary',
+    syncAction({ target }, table) {
+      idb.updateIndex(table)(target, { name: 'keyName', keyPath: 'keyName', option: { unique: false } });
+    },
+    asyncAction(db) {
+      const mdf = (item) => ({ ...item, keyName: item.key.toUpperCase() });
+      return idb.updateList(db, 'dictionary', mdf);
+    },
+  }],
 };

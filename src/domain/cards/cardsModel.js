@@ -117,11 +117,11 @@ export const reducer = {
 
       case A.search.success:
         return state
-          .update('search', () => I.List(action.payload));
+          .set('search', I.fromJS(action.payload));
 
       case A.searchWithSpellCheck.success:
         return state
-          .update('spellSearch', () => I.List(action.payload));
+          .set('spellSearch', I.fromJS(action.payload));
 
       default:
         return state;

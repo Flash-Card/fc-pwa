@@ -1,12 +1,47 @@
+import mgf from './search.svg';
+import close from './close.svg';
+
 export default {
   searchInput: {
     width: '100%',
+    height: 30,
+    borderRadius: 4,
+    padding: [0, 8],
+    border: '0 none',
+    appearance: 'none',
   },
   searchIcon: {
-    maxWidth: 20,
-    flexGrow: 1,
+    width: 30,
+    height: 30,
+    flex: [0, 0, '30px'],
+    margin: [0, 5],
     cursor: 'pointer',
-    margin: [0, 10],
+    backgroundImage: ({ isOpen }) => `url("${isOpen ? close : mgf}")`,
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+    backgroundSize: [18, 18],
+  },
+  closeSearch: {
+    background: 'none',
+    position: 'relative',
+    '&:before, &:after': {
+      content: '""',
+      width: 25,
+      height: 2,
+      borderRadius: 2,
+      background: '#fff',
+      display: 'inline-block',
+      transformOrigin: '50%',
+      position: 'absolute',
+      top: 15,
+      left: 3,
+    },
+    '&:before': {
+      transform: 'rotate(135deg)',
+    },
+    '&:after': {
+      transform: 'rotate(45deg)',
+    },
   },
   searchWrapper: {
     display: 'flex',
@@ -16,6 +51,8 @@ export default {
     right: 0,
     top: 0,
     bottom: 0,
+    width: '100%',
+    overflow: ({ isOpen }) => isOpen ? 'visible' : 'hidden',
   },
   search: {
     display: 'flex',
@@ -23,41 +60,48 @@ export default {
     alignItems: 'center',
     height: '100%',
     zIndex: 2,
-    width: 40,
-    transition: '.3s width',
-    '&.open': {
-      background: 'rgba(21,21,23,.95)',
-      width: '100%',
-    },
+    width: '100%',
+    transition: '.2s transform linear',
+    willChange: 'transform',
+    transform: ({ isOpen }) => isOpen ? 'translateX(0%)' : 'translateX(calc(100% - 40px))',
+    background: 'rgba(21,21,23,.95)',
   },
-  closeSearch: {
+  open: {},
+  btnSearch: {
     margin: [0, 10],
+    flex: [0, 0, '30px'],
+    height: 30,
+    background: `#128fdc url("${mgf}") scroll no-repeat center`,
+    backgroundSize: [18, 18],
+    padding: 0,
   },
   inputWrapper: {
     width: '100%',
     position: 'relative',
   },
   dropDown: {
-    padding: [10, 5],
+    // padding: [10, 5],
     backgroundColor: '#fff',
     boxShadow: '0 0 4px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24)',
     position: 'absolute',
-    top: 22,
+    // top: 22,
     right: 0,
     left: 0,
-    '& li': {
-      padding: 5,
-      '&:hover': {
-        cursor: 'pointer',
-        backgroundColor: 'rgba(0, 0, 0, 0.24)',
-      },
+    '& li:nth-child(odd)': {
+      background: 'rgba(18, 143, 220, 0.2)',
     },
   },
   itemDropDown: {
-    display: 'flex',
-    justifyContent: 'space-between',
+    minHeight: 30,
+    padding: [3, 10],
+    width: '100%',
+    textAlign: 'left',
+    textDecoration: 'none',
+    color: '#000',
+    display: 'block',
   },
   setWord: {
-    fontSize: 10,
+    color: '#6b6b6a',
+    textAlign: 'right',
   },
 };

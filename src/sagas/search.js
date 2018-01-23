@@ -4,11 +4,18 @@ import * as idb from 'lib/db';
 import * as action from 'domain/cards/cardsActions';
 
 function* watchSearch({ payload }) {
-  const result = yield call(idb.searchByQuery, payload.word);
-  yield put({
-    type: action.search.success,
-    payload: result,
-  });
+  if (payload.word.length === 0) {
+    yield put({
+      type: action.search.success,
+      payload: [],
+    });
+  } else {
+    const result = yield call(idb.searchByQuery, payload.word.toUpperCase());
+    yield put({
+      type: action.search.success,
+      payload: result,
+    });
+  }
 }
 
 export default function* () {

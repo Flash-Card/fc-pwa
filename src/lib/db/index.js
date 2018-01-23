@@ -103,9 +103,28 @@ export function getList(db, table) {
 }
 
 export function updateList(db, table, modifier) {
-  const updater = put(db, table, modifier);
-  return promiSeq(os(db, table, READ_WRITE).openCursor())
-    .then(list => Promise.all(list.map(updater)));
+  return new Promise((resolve, reject) => {
+    let res = [];
+    const store = os(db, table, READ_WRITE).openCursor();
+
+    store.onsuccess = function() {
+      const cursor = this.result;
+      if (cursor) {
+        const request = cursor.update(modifier(cursor.value));
+        request.onsuccess = function() {
+          res = res.concat([this.result]);
+        };
+        cursor.continue();
+      } else {
+        resolve(res);
+      }
+    };
+
+    store.onerror = function() {
+      reject(this.error);
+    };
+
+  });
 }
 
 export function upgrade({ getFixtures, schema }) {
@@ -146,6 +165,10 @@ export function upgrade({ getFixtures, schema }) {
 
         if (typeof item.syncAction === 'function') {
           item.syncAction.call(this, event, item.name);
+        }
+
+        if (typeof item.asyncAction === 'function') {
+          this.setAsync(item.asyncAction);
         }
 
         if (typeof item.modifier === 'function') {
@@ -244,7 +267,7 @@ function threadAction(arr, objectStore, actionName, resolve, reject, progress) {
 
   const nx = function(event) {
     if (event) {
-      res = res.concat([event.target.result]);
+      res = res.concat([this.result]);
     }
     const n = it.next();
     if (!n.done) {
@@ -315,7 +338,7 @@ export function fillStore({ STORE_TABLES }, idb = iDB) {
 export function searchByQuery(query, idb = iDB) {
   return idb()
     .then(db => {
-      const store = os(db, 'dictionary', READ_ONLY).index('key');
+      const store = os(db, 'dictionary', READ_ONLY).index('keyName');
       return promiSeq(store.openCursor(IDBKeyRange.bound(query, query + '\uffff'), IDBCursor.PREV), 10);
     });
 }

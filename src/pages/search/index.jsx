@@ -17,11 +17,11 @@ class SearchResults extends Component {
     push: PropTypes.func.isRequired,
     searchWithSpellCheck: PropTypes.func.isRequired,
     location: PropTypes.instanceOf(I.Map).isRequired,
-  }
+  };
 
   componentDidMount() {
     this.searcherWorker = new Worker();
-    const term = this.props.location.get('query').get('term');
+    const term = this.props.location.getIn(['query', 'term']);
     if (term) {
       this.searcherWorker.postMessage(term);
       this.searcherWorker.addEventListener('message', (event) => {
@@ -31,8 +31,8 @@ class SearchResults extends Component {
   }
 
   componentWillReceiveProps(nexProps) {
-    const newTerm = nexProps.location.get('query').get('term');
-    if (newTerm && this.props.location.get('query').get('term') !== newTerm) {
+    const newTerm = nexProps.location.getIn(['query', 'term']);
+    if (newTerm && this.props.location.getIn(['query', 'term']) !== newTerm) {
       this.runSearchWorker(newTerm);
     }
   }
@@ -46,11 +46,11 @@ class SearchResults extends Component {
     this.searcherWorker.addEventListener('message', (event) => {
       this.props.searchWithSpellCheck(event.data);
     });
-  }
+  };
 
   searchWord = (key, set) => () => {
     this.props.push(routesById['/memoize/:set/:key'].path.pathMaker({ set, key }));
-  }
+  };
 
   render() {
     const { searchResults, classes } = this.props;
@@ -59,9 +59,13 @@ class SearchResults extends Component {
       <div className="screen">
         <ul className="inner">
           {searchResults.map(i => (
-            i.set.map((set, index) => (
-              <li key={index} className={classes.list} onClick={this.searchWord(i.key, set)}>
-                {i.key}
+            i.get('set').map((set, index) => (
+              <li
+                key={index}
+                className={classes.list}
+                onClick={this.searchWord(i.get('key'), set)}
+              >
+                {i.get('key')}
                 <span className={classes.setWord}>{set}</span>
               </li>
             ))
