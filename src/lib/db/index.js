@@ -129,30 +129,13 @@ export function updateList(db, table, modifier) {
 
 export function upgrade({ getFixtures, schema }) {
   return function(event) {
-    const { newVersion, oldVersion, target: { result, transaction } } = event;
+    const { newVersion, oldVersion } = event;
 
     const update = ({ name, modifier }) => db => updateList(db, name, modifier);
 
     arrayRange(newVersion).slice(oldVersion).forEach(idx => {
 
       schema[idx + 1].forEach(item => {
-
-        if (typeof item.options !== 'undefined') {
-          const objectStore = result.createObjectStore(item.name, item.options);
-          item.indexes.forEach(index => {
-            objectStore.createIndex(index.name, index.keyPath, index.option);
-          });
-        }
-
-        if (Array.isArray(item.updateIndexes)) {
-          const objectStore = transaction.objectStore(item.name);
-          item.updateIndexes.forEach(index => {
-            if (objectStore.indexNames.contains(index.name)) {
-              objectStore.deleteIndex(index.name);
-            }
-            objectStore.createIndex(index.name, index.keyPath, index.option);
-          });
-        }
 
         if (typeof item.fixture !== 'undefined') {
           this.setAsync(db =>

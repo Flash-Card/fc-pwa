@@ -90,7 +90,7 @@ export const setsGlobal = (data, set) => {
     'jsonFC': () => ({
       payload: data.dictionary.map((e, index) => Object.assign({}, e, {
         set: setId,
-        keyName: e.toUpperCase(),
+        keyName: e.key.toUpperCase(),
         index,
       })),
       set,

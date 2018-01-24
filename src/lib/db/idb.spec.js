@@ -79,7 +79,7 @@ describe('Indexed store', () => {
         expect(db.version).toBe(3);
         const os = idb.os(db, schema[1][0].name, 'readonly');
         expect(os.name).toEqual(schema[1][0].name);
-        expect(os.indexNames).toEqual(schema[1][0].indexes.map(e => e.name));
+        expect(os.indexNames).toEqual(['index', 'key']);
       });
   });
 
@@ -144,22 +144,6 @@ describe('Indexed store', () => {
         expect(l).toEqual(list);
       });
   });
-
-  // it('get specific list item', () => {
-  //   list = [
-  //     { key: 'test', set: 'own', index: 1 },
-  //     { key: 'test2', set: 'own', index: 2 },
-  //     { key: 'test3', set: 'foreign', index: 3 },
-  //   ];
-  //   return idb.addList('dictionary', list, { idb: iDBx })
-  //     .then(res => {
-  //       expect(res).toEqual([1, 2, 3]);
-  //       return idb.getItemsByIndex('dictionary', 'set', 'own', iDBx);
-  //     })
-  //     .then(res => {
-  //       console.log(res);
-  //     });
-  // });
 
   it('update item', () => {
     list = [{ key: 'test', index: 1 }, { key: 'test2', index: 10 }];
