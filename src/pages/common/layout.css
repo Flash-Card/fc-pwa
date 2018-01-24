@@ -27,6 +27,13 @@ b {
     font-weight: bold;
 }
 
+.root__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
 .screen {
     position: relative;
     min-height: 100%;

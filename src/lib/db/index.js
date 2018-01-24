@@ -131,8 +131,6 @@ export function upgrade({ getFixtures, schema }) {
   return function(event) {
     const { newVersion, oldVersion } = event;
 
-    const update = ({ name, modifier }) => db => updateList(db, name, modifier);
-
     arrayRange(newVersion).slice(oldVersion).forEach(idx => {
 
       schema[idx + 1].forEach(item => {
@@ -152,10 +150,6 @@ export function upgrade({ getFixtures, schema }) {
 
         if (typeof item.asyncAction === 'function') {
           this.setAsync(item.asyncAction);
-        }
-
-        if (typeof item.modifier === 'function') {
-          this.setAsync(update(item));
         }
 
       });

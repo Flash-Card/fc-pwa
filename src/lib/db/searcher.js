@@ -3,7 +3,7 @@ import SymSpell from './symSpell';
 let symspell;
 export function searcher(store, query) {
   if (!symspell) {
-    let symspell = new SymSpell({
+    symspell = new SymSpell({
       maxDistance: 1,
       verbosity: 2,
     });
