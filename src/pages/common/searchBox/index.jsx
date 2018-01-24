@@ -30,7 +30,7 @@ class SearchBox extends Component {
       showDropDown: false,
       query: this.state.isOpen ? '' : this.state.query,
     }, () => {
-      if (this.input) this.input.focus();
+      if (this.input && this.state.isOpen) setTimeout(() => { this.input.focus(); }, 300);
       if (this.state.isOpen) this.props.search({ word: '' });
     });
   };
@@ -61,6 +61,7 @@ class SearchBox extends Component {
         handleOpen={this.handleOpen}
         onChange={this.handleChange}
         spellSearch={this.handleRedirectToSearch}
+        inputRef={el => { this.input = el; }}
       />
     );
   }

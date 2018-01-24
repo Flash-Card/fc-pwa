@@ -17,10 +17,11 @@ class Search extends React.Component {
     handleOpen: PropTypes.func.isRequired,
     spellSearch: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
+    inputRef: PropTypes.func.isRequired,
   };
 
   render () {
-    const { classes, searchResults, query } = this.props;
+    const { classes, searchResults, query, inputRef } = this.props;
     return (
       <div className={classes.searchWrapper}>
         <div className={classes.search}>
@@ -30,7 +31,7 @@ class Search extends React.Component {
           />
           <div className={classes.inputWrapper}>
             <input
-              ref={el => { this.input = el; }}
+              ref={inputRef}
               className={classes.searchInput}
               type="search"
               value={query}
