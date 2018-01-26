@@ -4,8 +4,8 @@ import I from 'immutable';
 import cx from 'classnames';
 import sheet from './sheet';
 import injectSheet from 'react-jss';
-import { Link } from 'react-router-dom';
 import { routesById } from 'domain/router/routes';
+import Item from './item';
 
 
 class Search extends React.Component {
@@ -18,6 +18,19 @@ class Search extends React.Component {
     spellSearch: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     inputRef: PropTypes.func.isRequired,
+  };
+
+  static path(el) {
+    return routesById['/memoize/:set/:key'].path.pathMaker(el.toJS());
+  }
+
+  clean = () => {
+    this.props.onChange({ target: { value: '' } });
+  };
+
+  keyDownHandler = ({ keyCode, target: { value } }) => {
+    if (keyCode === 13 && value.length > 1) this.props.spellSearch();
+    if (keyCode === 27) this.props.handleOpen();
   };
 
   render () {
@@ -36,29 +49,27 @@ class Search extends React.Component {
               type="search"
               value={query}
               onChange={this.props.onChange}
+              onKeyDown={this.keyDownHandler}
             />
-            <ul className={classes.dropDown}>
-              {
-                searchResults.map(el => (
-                  <li key={`${el.get('key')}-${el.get('set')}`}>
-                    <Link
-                      className={classes.itemDropDown}
-                      onClick={() => this.props.onChange({ target: { value: '' }})}
-                      to={routesById['/memoize/:set/:key'].path.pathMaker(el.toJS())}
-                    >
-                      {el.get('key')}
-                      <div className={classes.setWord}>{el.get('set')}</div>
-                    </Link>
-                  </li>
-                ))
-              }
-            </ul>
           </div>
           <button
             className={cx('btn', classes.btnSearch)}
             onClick={this.props.spellSearch}
           />
         </div>
+        <ul className={classes.dropDown}>
+          {
+            searchResults.map(el =>
+              <Item
+                key={`${el.get('key')}-${el.get('set')}`}
+                classes={classes}
+                data={el}
+                onTransition={this.clean}
+                to={Search.path}
+              />,
+            )
+          }
+        </ul>
       </div>
     );
   }

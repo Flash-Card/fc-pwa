@@ -9,10 +9,11 @@ import sheet from './sheet';
 import { searchWithSpellCheck } from 'domain/cards';
 import { push } from 'react-router-redux';
 import { routesById } from 'domain/router/routes';
+import Item from './item';
 
 class SearchResults extends Component {
   static propTypes = {
-    searchResults: PropTypes.instanceOf(I.List).isRequired,
+    result: PropTypes.instanceOf(I.List).isRequired,
     classes: PropTypes.object.isRequired,
     push: PropTypes.func.isRequired,
     searchWithSpellCheck: PropTypes.func.isRequired,
@@ -48,28 +49,26 @@ class SearchResults extends Component {
     });
   };
 
-  searchWord = (key, set) => () => {
-    this.props.push(routesById['/memoize/:set/:key'].path.pathMaker({ set, key }));
+  searchWord = (key) => (set) => {
+    return routesById['/memoize/:set/:key'].path.pathMaker({ set, key });
   };
 
   render() {
-    const { searchResults, classes } = this.props;
+    const { result, classes } = this.props;
 
     return (
       <div className="screen">
-        <ul className="inner">
-          {searchResults.map(i => (
-            i.get('set').map((set, index) => (
-              <li
-                key={index}
-                className={classes.list}
-                onClick={this.searchWord(i.get('key'), set)}
-              >
-                {i.get('key')}
-                <span className={classes.setWord}>{set}</span>
-              </li>
+        <ul>
+          {
+            result.map((el, index) => (
+              <Item
+                key={`${el.get('key')}-${index}`}
+                classes={classes}
+                data={el}
+                to={this.searchWord(el.get('key'))}
+              />
             ))
-          ))}
+          }
         </ul>
       </div>
     );
@@ -77,7 +76,7 @@ class SearchResults extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  searchResults: state.searchResults.get('spellSearch'),
+  result: state.searchResults.get('spellSearch'),
   location: state.routing.get('location'),
 });
 

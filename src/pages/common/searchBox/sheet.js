@@ -81,6 +81,7 @@ export default {
   },
   dropDown: {
     // padding: [10, 5],
+    marginTop: 60,
     backgroundColor: '#fff',
     boxShadow: '0 0 4px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24)',
     position: 'absolute',
@@ -90,8 +91,10 @@ export default {
     '& li:nth-child(odd)': {
       background: 'rgba(18, 143, 220, 0.2)',
     },
+    maxHeight: '100vh',
+    overflowY: 'auto',
   },
-  itemDropDown: {
+  item: {
     minHeight: 30,
     padding: [3, 10],
     width: '100%',
@@ -103,5 +106,6 @@ export default {
   setWord: {
     color: '#6b6b6a',
     textAlign: 'right',
+    fontSize: 12,
   },
 };
