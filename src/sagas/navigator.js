@@ -19,8 +19,12 @@ function routeMatcher() {
           path: item.path.pathname,
         });
         if (match !== null) {
-          global.ga('set', 'page', item.title);
-          global.ga('send', 'pageview');
+          const track = {
+            page: window.location.pathname + window.location.search + window.location.hash,
+            title: item.title,
+          };
+          window.ga('set', track);
+          window.ga('send', 'pageview');
           if ('saga' in item && typeof item.saga === 'function') {
             const sagas = yield call(item.saga);
             task = yield fork(sagas.default, payload, match);
