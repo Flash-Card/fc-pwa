@@ -7,7 +7,8 @@ export default {
     alignItems: 'center',
     padding: [0, 15],
     zIndex: 99,
-    position: 'relative',
+    position: 'sticky',
+    top: 0,
     background: 'rgba(21,21,23,.95)',
   },
   menuBtn: {
