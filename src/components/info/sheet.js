@@ -5,6 +5,7 @@ export default {
     color: '#5b5b5b',
     display: 'flex',
     justifyContent: 'space-between',
+    whiteSpace: 'nowrap',
     padding: [5, 10],
     '& *': {
       display: 'inline-block',
