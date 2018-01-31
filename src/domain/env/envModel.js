@@ -9,7 +9,7 @@ export const reducer = {
 
       case A.signIn.success:
         return state
-          .set('user', action.payload)
+          .merge(action.payload)
           .set('isAuthorized', true);
 
       case A.signOut.success:

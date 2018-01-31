@@ -1,13 +1,9 @@
 import I from 'immutable';
-import {
-  srcArrToMapSerialize,
-  dstObjToObjSerialize,
-  dstObjToImSerialize,
-  createSerializer,
-  dstImToObjSerialize,
-  emptyList,
-} from 'lib/serialize';
+import * as sz from 'serialize';
+import { create as createSerializer } from 'serialize/lib/core';
 
+const emptyMap = new I.Map();
+const emptyList = new I.List();
 /**
  * Dictionary Card
  */
@@ -29,14 +25,14 @@ function cardImValues(v = []) {
   return new I.List(v.map(item));
 }
 
-export const cardItemImSerialize = dstObjToImSerialize({
+export const cardItemImSerialize = sz.dstObjToImSerialize({
   ...cardItem,
   values: v => ['values', cardImValues(v)],
-});
+}, emptyMap);
 
-export const cardItemDeSerialize = dstObjToObjSerialize(cardItem);
+export const cardItemDeSerialize = sz.dstObjToObjSerialize(cardItem);
 
-export const cadsToLexiconSerialize = dstImToObjSerialize({
+export const cadsToLexiconSerialize = sz.dstImToObjSerialize({
   key: v => ['key', v],
   values: v => ['values', (v || emptyList).toJS()],
 });
@@ -44,9 +40,9 @@ export const cadsToLexiconSerialize = dstImToObjSerialize({
 /** ========
  * Lexicon */
 
-export const lexiconSerialize = srcArrToMapSerialize({
+export const lexiconSerialize = sz.srcArrToMapSerialize({
   key: (v, data, i) => [data[i][v], lexiconItemImSerialize(data[i])],
-}, l => l.map(() => 'key'));
+}, emptyMap, l => l.map(() => 'key'));
 
 const lexiconItem = {
   ...createSerializer([
@@ -56,14 +52,14 @@ const lexiconItem = {
   meta: v => ['meta', I.fromJS(v)],
 };
 
-export const lexiconItemImSerialize = dstObjToImSerialize(lexiconItem);
+export const lexiconItemImSerialize = sz.dstObjToImSerialize(lexiconItem, emptyMap);
 
 /** ========
  * Sets */
 
-export const setsSerialize = srcArrToMapSerialize({
+export const setsSerialize = sz.srcArrToMapSerialize({
   id: (v, data, i) => [data[i][v], setsItemImSerialize(data[i])],
-});
+}, emptyMap);
 
 const setsItem = {
   ...createSerializer([
@@ -74,12 +70,12 @@ const setsItem = {
   ]),
 };
 
-export const setsItemImSerialize = dstObjToImSerialize({
+export const setsItemImSerialize = sz.dstObjToImSerialize({
   ...setsItem,
   meta: v => ['meta', I.fromJS(v)],
-});
+}, emptyMap);
 
-export const setsItemSerialize = dstObjToObjSerialize({
+export const setsItemSerialize = sz.dstObjToObjSerialize({
   ...setsItem,
   meta: v => ['meta', v],
 });
@@ -111,13 +107,13 @@ export const setsGlobal = (data, set) => {
 /** ======
  *  Type */
 
-export const typeSerialize = srcArrToMapSerialize({
+export const typeSerialize = sz.srcArrToMapSerialize({
   id: (v, data, i) => [data[i][v], I.fromJS(data[i])],
-});
+}, emptyMap);
 
 const typeItem = {
   id: (_, data) => ['id', data.title],
   title: v => ['title', v],
 };
 
-export const typeItemSerialize = dstObjToObjSerialize(typeItem);
+export const typeItemSerialize = sz.dstObjToObjSerialize(typeItem);

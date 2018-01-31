@@ -24,7 +24,8 @@
     "redux": "^3.7.2",
     "redux-saga": "^0.16.0",
     "redux-thunk": "^2.2.0",
-    "reselect": "^3.0.1"
+    "reselect": "^3.0.1",
+    "serialize": "https://github.com/Flash-Card/serialize"
   },
   "devDependencies": {
     "eslint-plugin-react": "^7.0.1",

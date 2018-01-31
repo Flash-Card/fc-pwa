@@ -4,7 +4,7 @@ import thunk from 'redux-thunk';
 import { routerMiddleware } from 'react-router-redux';
 import installDevTools from 'immutable-devtools';
 import createSagaMiddleware, { END } from 'redux-saga';
-import { dstExObjToObjSerialize } from 'lib/serialize';
+import { dstExObjToObjSerialize } from 'serialize';
 import {
   typeSerialize,
   lexiconSerialize,
@@ -14,7 +14,7 @@ import {
   envSerialize,
 } from 'domain/env/helpers';
 
-const __DEV__ = (process.env.NODE_ENV === 'production');
+const __DEV__ = !(process.env.NODE_ENV === 'production');
 
 installDevTools(Immutable);
 
@@ -31,7 +31,7 @@ export default function configureStore(history, state) {
   const initialState = stateSerialize(state);
   const sagaMiddleware = createSagaMiddleware();
 
-  if (!__DEV__) {
+  if (__DEV__) {
     const devEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
     if (typeof devEnhancers === 'function') {
       composeEnhancers = devEnhancers;

@@ -51,4 +51,5 @@ function method(method, url) {
 export default {
   fixtures: method('get', makeUrl`${'pathname'}db/${'name'}`),
   ajaxGet: method('get', makeUrl`${'url'}`),
+  auth: method('get', `${process.env.REACT_APP_CLOUD_API_HOST}/fc/auth`),
 };

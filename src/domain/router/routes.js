@@ -72,6 +72,20 @@ const routes = [
     restriction: false,
     saga: () => import('pages/search/sagas'),
   },
+  {
+    path: path`/auth`,
+    title: 'Auth',
+    component: () => import('pages/auth'),
+    restriction: ACL.MENU_AUTH,
+    // saga: () => import('pages/auth/sagas'),
+  },
+  {
+    path: path`/auth-cb`,
+    title: 'oAuth callback',
+    component: () => import('pages/auth'),
+    restriction: false,
+    saga: () => import('pages/auth/sagas'),
+  },
 ];
 
 function byId(arr) {

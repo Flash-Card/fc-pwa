@@ -1,6 +1,8 @@
 import I from 'immutable';
-import { srcArrToMapSerialize } from 'lib/serialize';
+import * as sz from 'serialize';
 
-export const envSerialize = srcArrToMapSerialize({
+const emptyMap = new I.Map();
+
+export const envSerialize = sz.srcArrToMapSerialize({
   key: (v, data, i) => [data[i][v], I.fromJS(data[i].value)],
-}, l => l.map(() => 'key'));
+}, emptyMap ,l => l.map(() => 'key'));
