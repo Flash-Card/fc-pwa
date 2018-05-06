@@ -30,6 +30,7 @@
   "devDependencies": {
     "eslint-plugin-react": "^7.0.1",
     "fake-indexeddb": "^2.0.3",
+    "flow-bin": "^0.71.0",
     "gh-pages": "^1.1.0",
     "immutable-devtools": "^0.0.7",
     "jest-immutable-matchers": "^1.5.0",
