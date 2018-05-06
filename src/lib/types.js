@@ -1,11 +1,11 @@
 /**
  * @flow
  */
-import I from 'immutable'
+import I from 'immutable';
 
 export type ActionCreator<P, A> = (P) => A
 
-type _Dispatch<A, _ : ActionCreator<*,A>> = (A) => Promise<*>
+type _Dispatch<A, _ : ActionCreator<*, A>> = (A) => Promise<*>
 
 export type Dispatch<AC> = _Dispatch<*, AC>
 
@@ -13,7 +13,7 @@ export type State = { [key: string]: I.Map }
 
 export type GetState = () => State
 
-type _Dispatched<P, R, _: ActionCreator<P,R>> = (P) => Promise<R>
+type _Dispatched<P, R, _: ActionCreator<P, R>> = (P) => Promise<R>
 
 export type Dispatched<AC> = _Dispatched<*, *, AC>
 

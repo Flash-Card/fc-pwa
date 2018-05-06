@@ -80,7 +80,7 @@ export default {
       idb.updateIndex(table)(target, { name: 'keyName', keyPath: 'keyName', option: { unique: false } });
     },
     asyncAction(db) {
-      const mdf = (item) => ({ ...item, keyName: item.key.toUpperCase() });
+      const mdf = item => ({ ...item, keyName: item.key.toUpperCase() });
       return idb.updateList(db, 'dictionary', mdf);
     },
   }],

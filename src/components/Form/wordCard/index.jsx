@@ -72,7 +72,8 @@ class Create extends React.Component {
                     type="submit"
                     className="btn btn_main"
                     disabled={pristine}
-                  >Ok</button>
+                  >Ok
+                  </button>
                 </div>
               )
             }

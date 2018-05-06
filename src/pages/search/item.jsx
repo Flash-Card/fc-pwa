@@ -18,11 +18,12 @@ class Item extends React.Component {
         <div className={classes.itemKey}>{data.get('key')}</div>
         {
           data.get('set').map(el =>
-            <Link
+            (<Link
               key={el}
               className={classes.link}
               to={to(el)}
-            >{el}</Link>,
+            >{el}
+             </Link>),
           )
         }
       </li>

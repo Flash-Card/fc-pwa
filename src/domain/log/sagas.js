@@ -4,7 +4,7 @@ import * as action from './logActions';
 import * as selector from './logSelector';
 import * as idb from 'lib/db';
 
-export { action, selector } ;
+export { action, selector };
 
 export function* ensureAddItem(data) {
   try {

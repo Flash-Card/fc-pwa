@@ -52,7 +52,7 @@ export default {
     top: 0,
     bottom: 0,
     width: '100%',
-    overflow: ({ isOpen }) => isOpen ? 'visible' : 'hidden',
+    overflow: ({ isOpen }) => (isOpen ? 'visible' : 'hidden'),
   },
   search: {
     display: 'flex',
@@ -63,7 +63,7 @@ export default {
     width: '100%',
     transition: '.2s transform linear',
     willChange: 'transform',
-    transform: ({ isOpen }) => isOpen ? 'translateX(0%)' : 'translateX(calc(100% - 40px))',
+    transform: ({ isOpen }) => (isOpen ? 'translateX(0%)' : 'translateX(calc(100% - 40px))'),
     background: 'rgba(21,21,23,.95)',
   },
   open: {},

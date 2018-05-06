@@ -10,10 +10,10 @@ export function checkArray(masks, value) {
 }
 
 const SW = {
-  'boolean': a => a,
-  'number': (a, r) => is(a, r),
-  'function': (a, r) => a(r),
-  'object': (a, r) => Array.isArray(a) ? checkArray(a, r) : false,
+  boolean: a => a,
+  number: (a, r) => is(a, r),
+  function: (a, r) => a(r),
+  object: (a, r) => (Array.isArray(a) ? checkArray(a, r) : false),
 };
 
 export function check(access_level, user_rights) {
@@ -38,7 +38,7 @@ export function createPolicies(dict, items) {
 
 function createMask(dictionary) {
   const merge = mergeMask(dictionary);
-  return element => {
+  return (element) => {
     if (Array.isArray(element)) return merge(element);
     return dictionary[element];
   };

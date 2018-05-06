@@ -35,7 +35,7 @@ export const myRestriction = selector(
 
 const policy = (...arr) => createPolicies(dictionary, arr);
 
-export const isGranted = (state) => (lvl) => check(lvl, myRestriction(state));
+export const isGranted = state => lvl => check(lvl, myRestriction(state));
 
 export { arrayFilter };
 

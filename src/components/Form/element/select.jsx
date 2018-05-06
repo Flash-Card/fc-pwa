@@ -24,10 +24,11 @@ function Select(props) {
         <option value="" />
         {
           options.map(e =>
-            <option
+            (<option
               key={e.get('id')}
               value={e.get('id')}
-            >{e.get('title')}</option>,
+            >{e.get('title')}
+             </option>),
           )
         }
       </Field>

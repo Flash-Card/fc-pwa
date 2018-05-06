@@ -30,4 +30,4 @@ export default function* (_, { params }) {
   yield takeEvery(Cards.action.editCard.success, changePath, params);
   yield takeEvery(Cards.action.createCard.success, changePath);
   yield call(Cards.ensureGetCard, params);
-};
+}

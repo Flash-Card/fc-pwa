@@ -3,12 +3,12 @@
 import * as I from 'immutable';
 import { createSelectorCreator, defaultMemoize } from 'reselect';
 
-export const peek = (...path: Array<string|number>) => (obj: I.Map<string, any>) => obj.getIn(path);
+export const peek = (...path: Array<string | number>) => (obj: I.Map<string, any>) => obj.getIn(path);
 
-export const peekOr = (path: Array<string|number>, def: any) => (obj: I.Map<string, any>) => obj.getIn(path, def);
+export const peekOr = (path: Array<string | number>, def: any) => (obj: I.Map<string, any>) => obj.getIn(path, def);
 
 function sThen(selector) {
-  return (state) => selector(this(state))(state);
+  return state => selector(this(state))(state);
 }
 
 function sMap(f) {

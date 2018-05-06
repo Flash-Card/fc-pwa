@@ -13,7 +13,7 @@ export const setsLoadedList = selector(setsList, s => s.filter(f => (f.get('prog
 export const lexicon = state => state.lexicon;
 export const lexiconList = selector(lexicon, l => l.toList());
 export const lexiconKeys = selector(lexiconList, l => l.map(e => e.get('key')));
-export const isCardinLexicon = selector(lexicon, cardItem, (l, c) =>  l.has(c.get('key')));
+export const isCardinLexicon = selector(lexicon, cardItem, (l, c) => l.has(c.get('key')));
 
 const quiz = state => state.quiz;
 export const quizList = selector(quiz, q => q.get('list'));

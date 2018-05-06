@@ -83,7 +83,7 @@ export const setsItemSerialize = sz.dstObjToObjSerialize({
 export const setsGlobal = (data, set) => {
   const setId = set.get('id');
   const cases = {
-    'jsonFC': () => ({
+    jsonFC: () => ({
       payload: data.dictionary.map((e, index) => Object.assign({}, e, {
         set: setId,
         keyName: e.key.toUpperCase(),
@@ -91,7 +91,7 @@ export const setsGlobal = (data, set) => {
       })),
       set,
     }),
-    'textLine': () => ({
+    textLine: () => ({
       payload: data.match(/[^\r\n]+/g).map((e, index) => ({
         key: e,
         set: setId,

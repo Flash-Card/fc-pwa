@@ -31,7 +31,7 @@ export function ensure({ api, action, serializer = d => d, putGen = put }, name 
 function makeUrl(strings, ...values) {
   return (args) => {
     let str = '';
-    for (let i=0; i < values.length; i++) {
+    for (let i = 0; i < values.length; i++) {
       str += strings[i];
       str += args[values[i]];
     }
@@ -41,7 +41,7 @@ function makeUrl(strings, ...values) {
 }
 
 function method(method, url) {
-  return (args) => axios({
+  return args => axios({
     method,
     url: typeof url === 'function' ? url(args) : url,
     ...args,

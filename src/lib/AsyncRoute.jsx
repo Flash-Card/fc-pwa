@@ -15,12 +15,12 @@ export default class AsyncRoute extends React.Component {
     Component: null,
   };
 
-  componentWillMount(){
+  componentWillMount() {
     this.cancelable = makeCancelable(
       this.props.import(),
     );
     this.cancelable.promise
-      .then(({ default: Component }) => this.setState({ Component }) );
+      .then(({ default: Component }) => this.setState({ Component }));
   }
 
   render() {
@@ -30,7 +30,7 @@ export default class AsyncRoute extends React.Component {
       <Route
         path={path}
         exact={exact}
-        render={(props) => Component ? <Component {...props} /> : null}
+        render={props => (Component ? <Component {...props} /> : null)}
       />
     );
   }

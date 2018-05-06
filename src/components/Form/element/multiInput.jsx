@@ -51,10 +51,11 @@ class MultiInput extends React.Component {
                     <option value="" hidden>Pick parts of speech</option>
                     {
                       options.map(e =>
-                        <option
+                        (<option
                           key={e.get('id')}
                           value={e.get('id')}
-                        >{e.get('title')}</option>,
+                        >{e.get('title')}
+                         </option>),
                       )
                     }
                   </Field>
@@ -72,7 +73,8 @@ class MultiInput extends React.Component {
             type="button"
             onClick={this.onAdd}
             className={classes.addBtn}
-          >+</button>
+          >+
+          </button>
         </div>
       </Layout>
     );

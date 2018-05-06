@@ -61,7 +61,7 @@ class SearchBox extends Component {
         handleOpen={this.handleOpen}
         onChange={this.handleChange}
         spellSearch={this.handleRedirectToSearch}
-        inputRef={el => { this.input = el; }}
+        inputRef={(el) => { this.input = el; }}
       />
     );
   }
@@ -72,10 +72,8 @@ const mapActionCreators = {
   push,
 };
 
-const mapStateToProps = (state) => {
-  return ({
-    searchResults: state.searchResults.get('search'),
-  });
-};
+const mapStateToProps = state => ({
+  searchResults: state.searchResults.get('search'),
+});
 
 export default connect(mapStateToProps, mapActionCreators)(SearchBox);

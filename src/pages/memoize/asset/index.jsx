@@ -44,7 +44,8 @@ class Asset extends React.Component {
               <Link
                 className="btn btn_regular"
                 to={cardPath(data.getIn(['meta', 'current'], data.getIn(['meta', 'first'])))}
-              >Go</Link>
+              >Go
+              </Link>
             ) : null
           }
         </div>

@@ -4,7 +4,7 @@ export const getDictionary = asyncAction('sets/GET_SET');
 
 export const updateSet = asyncAction('sets/UPDATE_SET');
 
-export const addSetItem = action('sets/ADD_ITEM', (action) => action);
+export const addSetItem = action('sets/ADD_ITEM', action => action);
 
 export const addToLexicon = asyncAction('dict/ADD_TO_LEXICON');
 

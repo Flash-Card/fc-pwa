@@ -5,6 +5,7 @@ import * as idb from 'lib/db';
 import * as action from './envActions';
 import * as selector from './envSelector';
 import { envSerialize } from './helpers';
+
 export { action, selector };
 
 export function* version() {
@@ -35,7 +36,8 @@ export function* ensureSignIn(params) {
 
     const envList = [
       {
-        key: 'user', value: {
+        key: 'user',
+        value: {
           access_token,
         },
       }, {

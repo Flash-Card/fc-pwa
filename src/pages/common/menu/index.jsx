@@ -17,7 +17,8 @@ function Menu({ list, classes, toggle }) {
                 to={e.path.pathname}
                 className={classes.link}
                 onClick={() => toggle(false)}
-              >{e.title}</NavLink>
+              >{e.title}
+              </NavLink>
             </li>
           ))
         }

@@ -8,6 +8,6 @@ export default function* () {
 function* searchWithSpellCheck({ payload }) {
   yield put({
     type: action.searchWithSpellCheck.success,
-    payload: payload,
+    payload,
   });
 }

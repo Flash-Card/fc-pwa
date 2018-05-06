@@ -58,13 +58,13 @@ export default {
   greenPin: {
     extend: [btn],
     backgroundImage: `url("${grinPin}")`,
-    transform: ({ isRemembered }) => isRemembered ? 'rotate(-45deg)' : 'rotate(0deg)',
+    transform: ({ isRemembered }) => (isRemembered ? 'rotate(-45deg)' : 'rotate(0deg)'),
   },
   whitePin: {
     extend: [btn],
     backgroundImage: `url("${pin}")`,
-    transform: ({ isRemembered }) => isRemembered ? 'rotate(-45deg)' : 'rotate(0deg)',
-    opacity: ({ isRemembered }) => isRemembered ? 0 : 1,
+    transform: ({ isRemembered }) => (isRemembered ? 'rotate(-45deg)' : 'rotate(0deg)'),
+    opacity: ({ isRemembered }) => (isRemembered ? 0 : 1),
   },
   disabled: {
     opacity: 0.5,

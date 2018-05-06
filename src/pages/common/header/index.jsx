@@ -7,7 +7,7 @@ import sheet from './sheet';
 import { menuToggle } from 'domain/ui';
 import SearchBox from '../searchBox';
 
-function Header({ classes, toggle }){
+function Header({ classes, toggle }) {
   return (
     <header className={classes.header}>
       <button
@@ -19,7 +19,8 @@ function Header({ classes, toggle }){
       </button>
       <h1
         className={classes.logo}
-      >FlashCards</h1>
+      >FlashCards
+      </h1>
       <SearchBox />
     </header>
   );

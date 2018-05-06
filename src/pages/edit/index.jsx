@@ -37,11 +37,13 @@ class EditCard extends React.Component {
               type="submit"
               className="btn btn_regular"
               disabled={pristine}
-            >Ok</button>
+            >Ok
+            </button>
             <Link
               className="btn btn_regular"
               to={routesById['/memoize/:set/:key'].path.pathMaker(card.toJS())}
-            >Cancel</Link>
+            >Cancel
+            </Link>
           </div>
         </WordCard>
       </div>

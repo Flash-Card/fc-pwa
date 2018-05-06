@@ -33,7 +33,7 @@ class Search extends React.Component {
     if (keyCode === 27) this.props.handleOpen();
   };
 
-  render () {
+  render() {
     const { classes, searchResults, query, inputRef } = this.props;
     return (
       <div className={classes.searchWrapper}>
@@ -60,13 +60,13 @@ class Search extends React.Component {
         <ul className={classes.dropDown}>
           {
             searchResults.map(el =>
-              <Item
+              (<Item
                 key={`${el.get('key')}-${el.get('set')}`}
                 classes={classes}
                 data={el}
                 onTransition={this.clean}
                 to={Search.path}
-              />,
+              />),
             )
           }
         </ul>

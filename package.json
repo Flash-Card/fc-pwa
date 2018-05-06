@@ -28,7 +28,10 @@
     "serialize": "https://github.com/Flash-Card/serialize"
   },
   "devDependencies": {
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-jest": "^21.15.1",
     "eslint-plugin-react": "^7.0.1",
+    "eslint-plugin-security": "^1.4.0",
     "fake-indexeddb": "^2.0.3",
     "flow-bin": "^0.71.0",
     "gh-pages": "^1.1.0",
@@ -47,153 +50,18 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "lint": "NODE_PATH=./src/ node_modules/.bin/eslint ./src --ext .js --ext .jsx",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
   },
   "homepage": "https://flash-card.github.io/fc-pwa/",
-  "eslintConfig": {
-    "extends": "react-app",
-    "plugins": [
-      "react"
-    ],
-    "parser": "babel-eslint",
-    "globals": {
-      "window": true,
-      "document": true
-    },
-    "rules": {
-      "jsx-quotes": [
-        "error",
-        "prefer-double"
-      ],
-      "quotes": [
-        "error",
-        "single",
-        {
-          "avoidEscape": true
-        }
-      ],
-      "key-spacing": [
-        "error",
-        {
-          "beforeColon": false,
-          "afterColon": true
-        }
-      ],
-      "eol-last": [
-        "error",
-        "always"
-      ],
-      "react/no-string-refs": 2,
-      "react/jsx-key": 2,
-      "react/jsx-indent": [
-        2,
-        2
-      ],
-      "react/jsx-indent-props": [
-        2,
-        2
-      ],
-      "react/jsx-boolean-value": [
-        "error",
-        "never"
-      ],
-      "react/jsx-max-props-per-line": [
-        "error",
-        {
-          "maximum": 1,
-          "when": "multiline"
-        }
-      ],
-      "space-before-function-paren": [
-        "error",
-        "never"
-      ],
-      "keyword-spacing": [
-        "error",
-        {
-          "before": true
-        }
-      ],
-      "no-empty-pattern": "error",
-      "object-curly-spacing": [
-        "error",
-        "always"
-      ],
-      "global-require": 0,
-      "no-underscore-dangle": 0,
-      "no-console": [
-        "warn",
-        {
-          "allow": [
-            "warn",
-            "error"
-          ]
-        }
-      ],
-      "react/require-default-props": 0,
-      "react/default-props-match-prop-types": [
-        "off",
-        {
-          "allowRequiredDefaults": false
-        }
-      ],
-      "react/prop-types": [
-        2,
-        {
-          "ignore": [],
-          "customValidators": [],
-          "skipUndeclared": false
-        }
-      ],
-      "react/no-unused-prop-types": 1,
-      "react/jsx-curly-spacing": [
-        "error",
-        "never",
-        {
-          "allowMultiline": true
-        }
-      ],
-      "react/jsx-filename-extension": [
-        1,
-        {
-          "extensions": [
-            ".js",
-            ".jsx"
-          ]
-        }
-      ],
-      "semi": [
-        "error",
-        "always"
-      ],
-      "comma-dangle": [
-        "error",
-        {
-          "arrays": "always-multiline",
-          "objects": "always-multiline",
-          "imports": "always-multiline",
-          "exports": "always-multiline",
-          "functions": "always-multiline"
-        }
-      ],
-      "no-unused-vars": [
-        "error",
-        {
-          "vars": "all",
-          "args": "after-used",
-          "ignoreRestSiblings": true
-        }
-      ]
-    },
-    "settings": {
-      "import/resolver": {
-        "node": {
-          "paths": [
-            "./src"
-          ]
-        }
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": [
+          "./src"
+        ]
       }
     }
   }

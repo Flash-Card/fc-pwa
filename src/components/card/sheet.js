@@ -29,7 +29,7 @@ export default {
     overflowY: 'auto',
     willChange: 'opacity',
     transition: '.3s opacity',
-    opacity: ({ open }) => open ? 1 : 0,
+    opacity: ({ open }) => (open ? 1 : 0),
   },
   value: {
     color: '#128fdc',

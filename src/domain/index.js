@@ -59,5 +59,5 @@ export default function configureStore(history, state) {
   store.runSaga = sagaMiddleware.run;
   store.close = () => store.dispatch(END);
   return store;
-};
+}
 

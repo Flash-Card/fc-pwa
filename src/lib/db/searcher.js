@@ -20,7 +20,7 @@ export function searcher(store, query) {
     });
 
     return setDictionary.then(() => symspell.search(query));
-  } else {
-   return symspell.search(query);
   }
+  return symspell.search(query);
+
 }

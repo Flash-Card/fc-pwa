@@ -1,4 +1,4 @@
-import I from "immutable";
+import I from 'immutable';
 import queryString from 'query-string';
 import { routesById } from './routes';
 

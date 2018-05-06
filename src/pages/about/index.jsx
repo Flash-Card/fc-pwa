@@ -26,7 +26,8 @@ class AboutPage extends React.Component {
               type="button"
               className="btn btn_warning"
               onClick={() => this.props.clearDB()}
-            >Clear database</button>
+            >Clear database
+            </button>
           </div>
         </div>
       </div>
@@ -35,6 +36,6 @@ class AboutPage extends React.Component {
 }
 
 export default compose(
-  connect((state) => ({ version: version(state) }), { clearDB }),
+  connect(state => ({ version: version(state) }), { clearDB }),
   injectSheet(sheet),
 )(AboutPage);

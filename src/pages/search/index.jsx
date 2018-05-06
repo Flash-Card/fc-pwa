@@ -49,9 +49,7 @@ class SearchResults extends Component {
     });
   };
 
-  searchWord = (key) => (set) => {
-    return routesById['/memoize/:set/:key'].path.pathMaker({ set, key });
-  };
+  searchWord = key => set => routesById['/memoize/:set/:key'].path.pathMaker({ set, key });
 
   render() {
     const { result, classes } = this.props;
@@ -75,7 +73,7 @@ class SearchResults extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   result: state.searchResults.get('spellSearch'),
   location: state.routing.get('location'),
 });

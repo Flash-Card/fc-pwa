@@ -12,9 +12,7 @@ const PARAMS = {
 
 class AuthPage extends React.Component {
 
-  search = (parasm) => {
-    return Object.keys(parasm).reduce((a, v) => `${a}&${v}=${parasm[v]}`, '');
-  };
+  search = parasm => Object.keys(parasm).reduce((a, v) => `${a}&${v}=${parasm[v]}`, '');
 
   render() {
     return (
@@ -24,7 +22,8 @@ class AuthPage extends React.Component {
             <a
               href={`https://github.com/login/oauth/authorize?${qs.stringify(PARAMS)}`}
               className="btn btn_main"
-            >Auth via GitHub</a>
+            >Auth via GitHub
+            </a>
           </div>
         </div>
       </div>

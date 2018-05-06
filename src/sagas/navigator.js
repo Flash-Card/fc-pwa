@@ -4,15 +4,14 @@ import { locationIsChange } from 'domain/router/RouterSelector';
 import { LOCATION_CHANGE } from 'react-router-redux';
 import { matchPath } from 'react-router-dom';
 
-
 function routeMatcher() {
 
   let task;
 
   return function* ({ payload }) {
-    if ( yield select(locationIsChange)) {
+    if (yield select(locationIsChange)) {
       if (task) yield cancel(task);
-      for (let item of routes) {
+      for (const item of routes) {
         const match = matchPath(payload.pathname, {
           exact: ('exact' in item) ? item.exact : true,
           strict: false,

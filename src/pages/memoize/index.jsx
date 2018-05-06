@@ -27,11 +27,11 @@ class Catalog extends React.Component {
         <ul>
           {
             sets.map(e =>
-              <Asset
+              (<Asset
                 key={e.get('id')}
                 data={e}
                 getDictionary={() => this.props.getDictionary(e)}
-              />,
+              />),
             )
           }
         </ul>

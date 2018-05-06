@@ -46,7 +46,7 @@ export default {
     width: '100%',
     minHeight: '100%',
     height: '100%',
-    overflow: ({ menuStatus }) => menuStatus ? 'hidden' : 'auto',
+    overflow: ({ menuStatus }) => (menuStatus ? 'hidden' : 'auto'),
   },
   slider: {
     minHeight: 'calc(100% - 60px)',
@@ -58,7 +58,7 @@ export default {
     transform: menuSlider,
     backgroundColor: '#fff',
     '& > .screen': {
-      pointerEvents: ({ menuStatus }) => menuStatus ? 'none' : 'auto',
+      pointerEvents: ({ menuStatus }) => (menuStatus ? 'none' : 'auto'),
     },
   },
   overlay: {

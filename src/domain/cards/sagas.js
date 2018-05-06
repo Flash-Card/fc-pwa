@@ -14,7 +14,7 @@ import {
   setsItemImSerialize,
 } from './helpers';
 
-export { action, selector } ;
+export { action, selector };
 
 export const ensureGetDictionary = ensure({
   api: Api.ajaxGet,

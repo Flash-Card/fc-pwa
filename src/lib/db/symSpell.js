@@ -15,14 +15,13 @@
  * Wolf Garbe
  */
 
-const DEFAULT_MAX_DISTANCE = 2,
-  DEFAULT_VERBOSITY = 2;
+const DEFAULT_MAX_DISTANCE = 2;
+const DEFAULT_VERBOSITY = 2;
 
 function createDictionaryItem(value) {
   const suggestions = new Set();
 
-  if (typeof value === 'number')
-    suggestions.add(value);
+  if (typeof value === 'number') { suggestions.add(value); }
 
   return {
     suggestions,
@@ -55,8 +54,7 @@ function edits(word, distance, max, deletes) {
       if (!deletes.has(deletedItem)) {
         deletes.add(deletedItem);
 
-        if (distance < max)
-          edits(deletedItem, distance, max, deletes);
+        if (distance < max) { edits(deletedItem, distance, max, deletes); }
       }
     }
   }
@@ -94,8 +92,7 @@ function damerauLevenshtein(source, target) {
   H[0][0] = INF;
 
   for (i = 0; i <= m; i++) {
-    if (!H[i + 1])
-      H[i + 1] = [];
+    if (!H[i + 1]) { H[i + 1] = []; }
     H[i + 1][1] = i;
     H[i + 1][0] = INF;
   }
@@ -111,8 +108,7 @@ function damerauLevenshtein(source, target) {
   for (i = 0, l = st.length; i < l; i++) {
     letter = st[i];
 
-    if (!sd.has(letter))
-      sd.set(letter, 0);
+    if (!sd.has(letter)) { sd.set(letter, 0); }
   }
 
   // Iterating
@@ -126,13 +122,12 @@ function damerauLevenshtein(source, target) {
       if (source[i - 1] === target[j - 1]) {
         H[i + 1][j + 1] = H[i][j];
         DB = j;
-      }
-      else {
+      } else {
         H[i + 1][j + 1] = Math.min(
-            H[i][j],
-            H[i + 1][j],
-            H[i][j + 1],
-          ) + 1;
+          H[i][j],
+          H[i + 1][j],
+          H[i][j + 1],
+        ) + 1;
       }
 
       H[i + 1][j + 1] = Math.min(
@@ -189,8 +184,7 @@ export default class SymSpell {
 
       this.dictionary[word.key] = item;
 
-      if (word.key.length > this.maxLength)
-        this.maxLength = word.key.length;
+      if (word.key.length > this.maxLength) { this.maxLength = word.key.length; }
     }
 
     if (item.count === 1) {
@@ -199,7 +193,7 @@ export default class SymSpell {
 
       const deletes = edits(word.key, 0, this.maxDistance);
 
-      deletes.forEach(deletedItem => {
+      deletes.forEach((deletedItem) => {
         let target = this.dictionary[deletedItem];
 
         if (target !== undefined) {
@@ -219,8 +213,7 @@ export default class SymSpell {
               deletedItem,
             );
           }
-        }
-        else {
+        } else {
           this.dictionary[deletedItem] = number;
         }
       });
@@ -251,14 +244,12 @@ export default class SymSpell {
         verbosity < 2 &&
         suggestions.length > 0 &&
         length - candidate.length > suggestions[0].distance
-      )
-        break;
+      ) { break; }
 
       item = dictionary[candidate];
 
       if (item !== undefined) {
-        if (typeof item === 'number')
-          item = createDictionaryItem(item);
+        if (typeof item === 'number') { item = createDictionaryItem(item); }
 
         if (item.count > 0 && !suggestionSet.has(candidate)) {
           suggestionSet.add(candidate);
@@ -273,17 +264,15 @@ export default class SymSpell {
           suggestions.push(suggestItem);
 
           // Another early termination
-          if (verbosity < 2 && length - candidate.length === 0)
-            break;
+          if (verbosity < 2 && length - candidate.length === 0) { break; }
         }
 
         // Iterating over the item's suggestions
-        item.suggestions.forEach(index => {
-          let suggestion = words[index];
+        item.suggestions.forEach((index) => {
+          const suggestion = words[index];
 
           // Do we already have this suggestion?
-          if (suggestionSet.has(suggestion))
-            return;
+          if (suggestionSet.has(suggestion)) { return; }
 
           suggestionSet.add(suggestion);
 
@@ -293,29 +282,27 @@ export default class SymSpell {
           if (input !== suggestion) {
             if (suggestion.length === candidate.length) {
               distance = length - candidate.length;
-            }
-            else if (length === candidate.length) {
+            } else if (length === candidate.length) {
               distance = suggestion.length - candidate.length;
-            }
-            else {
+            } else {
               let ii = 0,
                 jj = 0;
 
               const l = suggestion.length;
 
               while (
-              ii < l &&
+                ii < l &&
               ii < length &&
               suggestion[ii] === input[ii]
-                ) {
+              ) {
                 ii++;
               }
 
               while (
-              jj < l - ii &&
+                jj < l - ii &&
               jj < length &&
               suggestion[l - jj - 1] === input[length - jj - 1]
-                ) {
+              ) {
                 jj++;
               }
 
@@ -324,8 +311,7 @@ export default class SymSpell {
                   suggestion.substr(ii, l - ii - jj),
                   input.substr(ii, length - ii - jj),
                 );
-              }
-              else {
+              } else {
                 distance = damerauLevenshtein(suggestion, input);
               }
             }
@@ -364,8 +350,7 @@ export default class SymSpell {
 
         if (verbosity < 2 &&
           suggestions.length > 0 &&
-          length - candidate.length >= suggestions[0].distance)
-          continue;
+          length - candidate.length >= suggestions[0].distance) { continue; }
 
         for (let i = 0, l = candidate.length; i < l; i++) {
           const deletedItem = (

@@ -40,7 +40,7 @@ class QuizPage extends React.Component {
       open: false,
     };
     this.size = props.size;
-  };
+  }
 
   flipHandler = () => {
     const { flip, card } = this.props;
@@ -96,7 +96,8 @@ class QuizPage extends React.Component {
                 type="button"
                 className="btn btn_main"
                 onClick={() => this.props.newQuiz()}
-              >Try one more time</button>
+              >Try one more time
+              </button>
             </div>
           )
         }
@@ -113,7 +114,7 @@ class QuizPage extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
   card: quizCurrentItem(state),
   types: typesById(state),
   size: quizList(state).size,
@@ -124,7 +125,7 @@ export default compose(
   connect(mapStateToProps, {
     flip: negative,
     next: nextCard,
-    positive: positive,
+    positive,
     newQuiz,
   }),
   injectSheet(sheet),

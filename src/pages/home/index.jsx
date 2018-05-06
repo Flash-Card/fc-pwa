@@ -12,20 +12,23 @@ import sheet from './sheet.js';
 
 function Home(props) {
   const { isGranted, classes, sets } = props;
-  if (!isGranted(ACL.SETS_IS_LOADED)) return (
-    <div className="screen">
-      <div className="inner">
+  if (!isGranted(ACL.SETS_IS_LOADED)) {
+    return (
+      <div className="screen">
         <div className="inner">
-          <div className="btn__group">
-            <Link
-              to="/memoize"
-              className="btn btn_main"
-            >Choice and load Sets</Link>
+          <div className="inner">
+            <div className="btn__group">
+              <Link
+                to="/memoize"
+                className="btn btn_main"
+              >Choice and load Sets
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
   return (
     <div className="screen">
       <div className="inner">
@@ -36,7 +39,8 @@ function Home(props) {
                 to="/quiz"
                 key="fragment-1"
                 className="btn btn_main"
-              >Go to quiz</Link>,
+              >Go to quiz
+              </Link>,
               <div key="fragment-2">or</div>,
             ] : null
           }

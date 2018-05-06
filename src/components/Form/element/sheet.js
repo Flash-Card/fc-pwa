@@ -1,4 +1,4 @@
-export default  {
+export default {
   addBtn: {
     backgroundColor: '#128fdc',
     width: 30,

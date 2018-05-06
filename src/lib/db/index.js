@@ -11,7 +11,7 @@ export const TABLE = CONFIG.TABLES;
 
 /**
  * helpers
- **/
+ * */
 
 function rejectify(request, reject) {
   request.onerror = function() {
@@ -72,7 +72,7 @@ export function updateIndex(table) {
 
 /**
  * DB helpers
- **/
+ * */
 
 function tableExist(db, table) {
   const osn = db.objectStoreNames;
@@ -83,7 +83,7 @@ function tableExist(db, table) {
 }
 
 function add(db, table) {
-  return (item) => promisify(os(db, table, READ_WRITE).add(item));
+  return item => promisify(os(db, table, READ_WRITE).add(item));
 }
 
 function put(db, table, modifier = d => d) {
@@ -91,8 +91,7 @@ function put(db, table, modifier = d => d) {
 }
 
 export function os(db, table, permission) {
-  if (tableExist(db, table))
-    return db.transaction([table], permission).objectStore(table);
+  if (tableExist(db, table)) { return db.transaction([table], permission).objectStore(table); }
   throw new Error(`Table ${table} is not exist`);
 }
 
@@ -131,16 +130,14 @@ export function upgrade({ getFixtures, schema }) {
   return function(event) {
     const { newVersion, oldVersion } = event;
 
-    arrayRange(newVersion).slice(oldVersion).forEach(idx => {
+    arrayRange(newVersion).slice(oldVersion).forEach((idx) => {
 
-      schema[idx + 1].forEach(item => {
+      schema[idx + 1].forEach((item) => {
 
         if (typeof item.fixture !== 'undefined') {
           this.setAsync(db =>
             getFixtures({ name: item.fixture, pathname: global.location.pathname })
-              .then(({ data: { name, values } }) => {
-                return iterator(values, os(db, name, READ_WRITE), 'add');
-              }),
+              .then(({ data: { name, values } }) => iterator(values, os(db, name, READ_WRITE), 'add')),
           );
         }
 
@@ -170,7 +167,7 @@ export function OpenDB(config, onUpgrade) {
   request.onupgradeneeded = onUpgrade.bind(this);
 
   return promisify(request)
-    .then(db => {
+    .then((db) => {
       if (async.length) {
         return Promise.all(async.map(fn => fn(db))).then(() => db);
       }
@@ -180,7 +177,7 @@ export function OpenDB(config, onUpgrade) {
 
 /**
  *
- **/
+ * */
 
 const iDB = (getFixtures = Api.fixtures, schema = SCHEMA) => new OpenDB(CONFIG, upgrade({ getFixtures, schema }));
 
@@ -197,7 +194,7 @@ export function getListByIndex(table, indexName, value, idb = iDB) {
       os(db, table, READ_ONLY)
         .index(indexName)
         .openCursor(IDBKeyRange.only(value)),
-      ));
+    ));
 }
 
 export function getCard(set, key, idb = iDB) {
@@ -208,9 +205,9 @@ export function getCard(set, key, idb = iDB) {
 }
 
 export function getNeighbor(set, index, idb = iDB) {
-  const neighbor = el => el ? el.value : null;
+  const neighbor = el => (el ? el.value : null);
   return idb()
-    .then(db => {
+    .then((db) => {
       const store = os(db, TABLE.DICTIONARY, READ_ONLY).index('index');
       const upperBound = IDBKeyRange.only([set, index - 1]);
       const lowerBound = IDBKeyRange.only([set, index + 1]);
@@ -226,7 +223,7 @@ export function addItem(table, item, idb = iDB) {
     .then(db => add(db, table)(item));
 }
 
-function iterator(arr, objectStore, actionName,  progress = () => null) {
+function iterator(arr, objectStore, actionName, progress = () => null) {
   return new Promise((resolve, reject) => {
     threadAction(arr, objectStore, actionName, resolve, reject, progress);
   });
@@ -267,9 +264,7 @@ function threadAction(arr, objectStore, actionName, resolve, reject, progress) {
 
 export function addList(table, list, { idb = iDB, progress } = {}) {
   return idb()
-    .then(db => {
-      return iterator(list, os(db, table, READ_WRITE), 'add', progress);
-    });
+    .then(db => iterator(list, os(db, table, READ_WRITE), 'add', progress));
 }
 
 export function updateItem(table, item, idb = iDB) {
@@ -293,7 +288,7 @@ export function version(idb = iDB) {
 
 export function clean(idb = iDB) {
   return idb()
-    .then(db => {
+    .then((db) => {
       db.close();
       return promisify(global.indexedDB.deleteDatabase(CONFIG.DB_NAME));
     });
@@ -302,11 +297,11 @@ export function clean(idb = iDB) {
 export function fillStore({ STORE_TABLES }, idb = iDB) {
   const tables = STORE_TABLES;
   return idb()
-    .then(db => {
+    .then((db) => {
       const isExist = t => tableExist(db, t);
       const tList = t => getList(db, t);
       return Promise.all(
-        tables.reduce((A, t) => isExist(t) ? A.concat([tList(t)]) : A, []),
+        tables.reduce((A, t) => (isExist(t) ? A.concat([tList(t)]) : A), []),
       );
     })
     .then(list => list.reduce((A, V, I) => ({ ...A, [tables[I]]: V }), {}));
@@ -314,15 +309,15 @@ export function fillStore({ STORE_TABLES }, idb = iDB) {
 
 export function searchByQuery(query, idb = iDB) {
   return idb()
-    .then(db => {
+    .then((db) => {
       const store = os(db, 'dictionary', READ_ONLY).index('keyName');
-      return promiSeq(store.openCursor(IDBKeyRange.bound(query, query + '\uffff'), IDBCursor.PREV), 10);
+      return promiSeq(store.openCursor(IDBKeyRange.bound(query, `${query}\uffff`), IDBCursor.PREV), 10);
     });
 }
 
 export function searchWithSpellCheck(word, idb = iDB) {
   return idb()
-    .then(db => {
+    .then((db) => {
       const store = os(db, 'dictionary', READ_ONLY);
       return searcher(store, word);
     });

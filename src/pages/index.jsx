@@ -49,12 +49,12 @@ class App extends React.Component {
           <Switch>
             {
               routes.map((e, i) =>
-                <AsyncRoute
+                (<AsyncRoute
                   key={i + e.title}
                   path={e.path.pathname}
                   exact={e.exact}
                   import={e.component}
-                />,
+                />),
               )
             }
           </Switch>
