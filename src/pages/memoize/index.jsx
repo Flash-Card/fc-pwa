@@ -1,23 +1,21 @@
+// @flow
 import React from 'react';
-import PropTypes from 'prop-types';
-import I from 'immutable';
-import { compose } from 'redux';
+import { is, type List, type RecordOf } from 'immutable';
+import { compose, type Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { getDictionary, setsList } from 'domain/cards';
+import type { DictSet } from 'domain/cards/type.js.flow';
 import Asset from './asset';
-import injectSheet from 'react-jss';
-import sheet from './sheet';
 
-class Catalog extends React.Component {
+type Props = {
+  getDictionary: Dispatch<getDictionary>,
+  sets: List<RecordOf<DictSet>>,
+}
 
-  static propTypes = {
-    classes: PropTypes.objectOf(PropTypes.string).isRequired,
-    getDictionary: PropTypes.func.isRequired,
-    sets: PropTypes.instanceOf(I.List).isRequired,
-  };
+class Catalog extends React.Component<Props> {
 
   shouldComponentUpdate(nextProps) {
-    return !I.is(this.props.sets, nextProps.sets);
+    return !is(this.props.sets, nextProps.sets);
   }
 
   render() {
@@ -28,7 +26,7 @@ class Catalog extends React.Component {
           {
             sets.map(e =>
               (<Asset
-                key={e.get('id')}
+                key={e.id}
                 data={e}
                 getDictionary={() => this.props.getDictionary(e)}
               />),
@@ -46,5 +44,4 @@ const mapStateToProps = state => ({
 
 export default compose(
   connect(mapStateToProps, { getDictionary }),
-  injectSheet(sheet),
 )(Catalog);

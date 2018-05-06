@@ -2,26 +2,27 @@ import { combineReducers, createStore, compose, applyMiddleware } from 'redux';
 import Immutable from 'immutable';
 import thunk from 'redux-thunk';
 import { routerMiddleware } from 'react-router-redux';
-import installDevTools from 'immutable-devtools';
+import installDevTools from 'immutable-devtools'; // eslint-disable-line import/no-extraneous-dependencies
 import createSagaMiddleware, { END } from 'redux-saga';
 import { dstExObjToObjSerialize } from 'serialize';
 import {
   typeSerialize,
   lexiconSerialize,
   setsSerialize,
+  setsFactory,
 } from 'domain/cards/helpers';
 import {
   envSerialize,
 } from 'domain/env/helpers';
 
-const __DEV__ = !(process.env.NODE_ENV === 'production');
+const __DEV__ = (process.env.NODE_ENV === 'development');
 
 installDevTools(Immutable);
 
 const stateSerialize = dstExObjToObjSerialize({
   types: v => ['types', typeSerialize(v)],
   lexicon: v => ['lexicon', lexiconSerialize(v)],
-  sets: v => ['sets', setsSerialize(v)],
+  sets: v => ['sets', setsFactory(v)],
   env: v => ['env', envSerialize(v)],
 });
 

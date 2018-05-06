@@ -1,19 +1,19 @@
-import I from 'immutable';
-import * as A from './cardsActions.js';
+import { Map, fromJS } from 'immutable';
 import * as UI from 'domain/ui/uiActions';
 import * as Env from 'domain/env/envActions';
+import * as A from './cardsActions';
 
-const emptyMap = new I.Map();
+const emptyMap = new Map();
 
 const Sets = emptyMap;
 const Cards = emptyMap;
 const Types = emptyMap;
 const Lexicon = emptyMap;
-const Quiz = I.fromJS({
+const Quiz = fromJS({
   list: [],
   current: 0,
 });
-const SearchResults = I.fromJS({
+const SearchResults = fromJS({
   search: [],
   spellSearch: [],
 });
@@ -117,11 +117,11 @@ export const reducer = {
 
       case A.search.success:
         return state
-          .set('search', I.fromJS(action.payload));
+          .set('search', fromJS(action.payload));
 
       case A.searchWithSpellCheck.success:
         return state
-          .set('spellSearch', I.fromJS(action.payload));
+          .set('spellSearch', fromJS(action.payload));
 
       default:
         return state;

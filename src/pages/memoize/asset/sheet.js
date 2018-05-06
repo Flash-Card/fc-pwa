@@ -47,5 +47,3 @@ export default {
     transition: '0.3s transform linear',
   },
 };
-
-// background: ({ progress }) => `linear-gradient(to right, rgba(18,143,220,0.5) 0%, rgba(18,143,220,0.5) ${progress}%, transparent ${progress}%, transparent 100%)`,

@@ -1,0 +1,34 @@
+// @flow
+import type { RecordOf, Map, List } from 'immutable';
+
+type SetsSrcType = 'textLine' | 'jsonFC';
+
+export type RawSetMetaType = {|
+  description: string,
+  type: SetsSrcType,
+  url: string,
+  length?: number,
+  first?: Array<string>,
+  current?: Array<string>,
+|};
+
+export type RawDictSet = {|
+  id: string,
+  title: string,
+  isOwn: boolean,
+  progress: number,
+  meta: RawSetMetaType,
+|};
+
+export type SetMetaType = {|
+  ...RawSetMetaType,
+  first: List<string>,
+  current: List<string>,
+|};
+
+export type DictSet = {|
+  ...RawDictSet,
+  meta: RecordOf<SetMetaType>,
+|};
+
+export type DictSetsStore = Map<string, RecordOf<DictSet>>;
