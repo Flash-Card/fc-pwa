@@ -1,0 +1,26 @@
+.container {
+  text-align: center;
+  padding: 5px;
+  font-size: 20px;
+  padding-top: 130%;
+  position: relative;
+}
+.link {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  // -webkit-tap-highlight-color: #ee693f;
+  background-color: #f69454;
+  border-radius: 4px;
+}
+.content {
+  color: #fcfdfe;
+  user-select: none;
+}

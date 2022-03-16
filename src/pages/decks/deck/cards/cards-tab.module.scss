@@ -1,0 +1,31 @@
+.container {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 15px;
+}
+.bar {
+  display: flex;
+  justify-content: space-between;
+  & button {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    border: 1px solid #739f3d;
+    transition: 0.2s all ease-in-out;
+    -webkit-tap-highlight-color: transparent;
+    &:disabled {
+      opacity: 0.3;
+      filter: grayscale(1);
+    }
+    &.prev {
+      background: url('./prev.svg') scroll no-repeat center / contain;
+    }
+    &.next {
+      background: url('./prev.svg') scroll no-repeat center / contain;
+      transform: rotate(180deg);
+    }
+    &.flip {
+      background: url('./flip.svg') scroll no-repeat center / contain;
+    }
+  }
+}

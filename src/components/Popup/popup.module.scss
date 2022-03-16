@@ -1,0 +1,25 @@
+.container {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0 none;
+}
+
+.popup {
+  border: 1px solid #dee2e6;
+  background: #fff;
+  border-radius: 4px;
+  position: relative;
+}
+.overflow {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}

@@ -1,0 +1,9 @@
+.container {
+  padding: 5px;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 30px;
+}
+.title {
+  font-size: 24px;
+}

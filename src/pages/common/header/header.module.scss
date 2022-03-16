@@ -1,0 +1,74 @@
+.container {
+  width: 100%;
+  height: 60px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.12), 0 2px 4px rgba(0, 0, 0, 0.24);
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  z-index: 99;
+  background: var(--second-color);
+  gap: 20px;
+  justify-content: flex-start;
+}
+.title {
+  color: var(--fouth-color);
+  font-size: 22px;
+}
+.burger {
+  width: 40px;
+  height: 40px;
+  position: relative;
+  &::before, &::after, & > span {
+    content: '';
+    background-color: var(--fouth-color);
+    width: 100%;
+    height: 2px;
+    border-radius: 1px;
+    display: block;
+    position: absolute;
+    transition: 0.3s transform, opacity ease-in-out;
+    will-change: transform opacity;
+  }
+  &::after {
+    bottom: 6px;
+  }
+  &::before {
+    top: 6px;
+  }
+  &.open {
+    &::after {
+      transform: translateY(-13px) rotate(45deg);
+    }
+    &::before {
+      transform: translateY(13px) rotate(-45deg);
+    }
+    & > span {
+      opacity: 0;
+    }
+  }
+}
+.menu {
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  & > * {
+    transition: 0.3s transform ease-in-out;
+    transform: translate3d(100%, 0, 0);
+    pointer-events: all;
+  }
+  &.open > * {
+    transform: translate3d(0, 0, 0);
+  }
+}
+.home {
+  width: 35px;
+  height: 60px;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  background: url('./home.svg') scroll no-repeat center / contain;
+}

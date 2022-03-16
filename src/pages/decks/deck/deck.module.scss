@@ -1,0 +1,15 @@
+.title {
+  font-size: 20px;
+}
+
+.container {
+  padding: 10px;
+  display: grid;
+  gap: 15px;
+  grid-template-rows: auto auto 1fr;
+  // https://webkit.org/blog/7929/designing-websites-for-iphone-x/
+  @supports(padding: max(0px)) {
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+}
+

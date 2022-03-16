@@ -1,0 +1,23 @@
+.container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  background-color: var(--first-color);
+}
+
+.link {
+  color: var(--fouth-color);
+  font-size: 18px;
+  display: block;
+  padding: 0 10px;
+  height: 40px;
+  line-height: 40px;
+  text-decoration: none;
+  &.active {
+    background-color: var(--fouth-color);
+    color: var(--first-color);
+  }
+}

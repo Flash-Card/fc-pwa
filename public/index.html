@@ -1,20 +1,12 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-      ga('create', (window.location.host !== 'localhost:3000' ? 'UA-112771616-1' : 'UA-112752961-1'), 'auto');
-      ga('send', 'pageview');
-    </script>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+    <meta name='viewport' content='initial-scale=1, viewport-fit=cover'>
     <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap&subset=cyrillic" rel="stylesheet">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
-    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <title>Flash Card</title>
   </head>
   <body>
@@ -24,5 +16,6 @@
     <div id="root">
       <div class="root__loading">Loading...</div>
     </div>
+    <div id="modalRoot"></div>
   </body>
 </html>

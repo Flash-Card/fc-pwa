@@ -1,0 +1,35 @@
+.container {
+  height: 100%;
+  position: relative;
+  background-color: transparent;
+}
+
+.warapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+}
+
+.front {
+  --card-background: #739f3d;
+}
+
+.back {
+  transform: rotateY(180deg);
+  --card-background: #f69454;
+}
+
+.flip .warapper {
+  transform: rotateY(180deg);
+}

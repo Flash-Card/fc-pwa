@@ -1,0 +1,32 @@
+.field {
+  width: 100%;
+  appearance: none;
+  border: none;
+  border-bottom: 1px solid #739f3d;
+  outline: none;
+  text-align: center;
+  padding: 0 8px 2px;
+  font-size: 20px;
+  color: #739f3d;
+}
+
+.group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  width: 100%;
+  font-size: 20px;
+  text-align: center;
+  color: #fff;
+  height: 50px;
+  border-radius: 4px;
+  margin-top: 20px;
+  &.done {
+    background-color: #739f3d;
+  }
+  &.skip {
+    background-color: #ee693f;
+  }
+}
