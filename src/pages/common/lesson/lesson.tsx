@@ -1,9 +1,8 @@
-import { FC, memo, useCallback, useState, useRef, useMemo } from 'react';
+import { FC, memo, useCallback, useState, useRef, useReducer } from 'react';
 import { Form, FormRenderProps } from 'react-final-form';
-import { useKeyboard } from 'lib/useKeyboard';
-import { ModalPortal, Popup } from 'components/Popup';
 import { CardSlider } from 'components/Card'
 import { LessonForm } from './form';
+import { LessonContainer } from './container';
 import { quiz, compare } from './helpers';
 import { IQuestion, IAnswer, IState } from './types';
 import styles from './lesson.module.scss';
@@ -13,65 +12,62 @@ interface IProps {
   onClose(): void;
 }
 
+const DELLAY_AFTER_ANSWER = 1500;
+
 const Lesson: FC<IProps> = ({ lesson, onClose }) => {
 
-  const { refPropxy } = useKeyboard();
   const refq = useRef(quiz(lesson));
-  const [currentItem, setCurrentItem] = useState<IState>(() => ({ item: refq.current.next(true).value }));
+  const [state, setState] = useState<IState>(() => ({ item: refq.current.next(true).value }));
+
+  const handleComplete = useCallback(
+    () => {
+      onClose();
+    },
+    [onClose],
+  );
 
   const handleAnswer = useCallback(
     (res) => {
-      const status = compare(res.answer, currentItem.item.answer)
-      const { done, value } = refq.current.next(status);
-      if (done) {
-        onClose();
-      } else {
-        setCurrentItem({
-          item: value,
-          status,
-        });
-      }
+      const status = compare(res.answer, state.item.answer);
+      setState((s) => ({ ...s, status }));
+      setTimeout(
+        () => {
+          const { done, value } = refq.current.next(status);
+          if (done) {
+            handleComplete();
+          } else {
+            setState({ item: value });
+          }
+        },
+        DELLAY_AFTER_ANSWER,
+      );
     },
-    [currentItem],
+    [setState, state],
   );
 
   const renderForm = useCallback(
     ({ handleSubmit, form }: FormRenderProps<IAnswer>) => (
       <LessonForm
         handleSubmit={handleSubmit}
-        lesson={currentItem.item}
+        lesson={state.item}
         form={form}
       />
     ),
-    [currentItem],
+    [state],
   );
 
   return (
-    <ModalPortal>
-      <Popup
-        name='Lesson'
-        className={styles.container}
-        refProxy={el => { refPropxy(el?.parentElement); }}
-      >
-        <div className={styles.header}>
-          <button
-            type='button'
-            className={styles.close}
-            onClick={onClose}
-            tabIndex={-1}
-          />
-        </div>
-        <div className={styles.content}>
-          <CardSlider id={currentItem.item.question}>
-            <div className={styles.card}>{currentItem.item.question}</div>
-          </CardSlider>
-          <Form
-            onSubmit={handleAnswer}
-            render={renderForm}
-          />
-        </div>
-      </Popup>
-    </ModalPortal>
+    <LessonContainer onClose={onClose}>
+      <div className={styles.content}>
+        <CardSlider id={state.item.question} status={state.status}>
+          <div className={styles.card}>{state.item.question}</div>
+        </CardSlider>
+        <Form
+          onSubmit={handleAnswer}
+          render={renderForm}
+        />
+      </div>
+    </LessonContainer>
   );
 }
 

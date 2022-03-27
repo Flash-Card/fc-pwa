@@ -1,7 +1,7 @@
-import { FC, memo, useEffect } from 'react';
+import { FC, memo, ReactNode, useCallback, useEffect } from 'react';
 import cx from 'classnames';
 import { FormApi } from 'final-form';
-import { Field } from 'react-final-form';
+import { Field, FieldRenderProps } from 'react-final-form';
 import { IQuestion, IAnswer } from '../types';
 import styles from './form.module.scss';
 
@@ -13,27 +13,24 @@ interface IProps {
 
 const LessonForm: FC<IProps> = ({ handleSubmit, lesson, form }) => {
 
-  useEffect(
-    () => {
-      form.reset();
-    },
-    [lesson],
-  )
+  const renderField = useCallback(
+    ({ input }: FieldRenderProps<string>): ReactNode => (
+      <input
+        className={styles.field}
+        {...input}
+        placeholder="Enter the answer"
+        autoCapitalize="off"
+        autoFocus
+      />
+    ),
+    [],
+  );
+
+  useEffect(() => { form.reset(); }, [lesson]);
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <Field
-        name='answer'
-        render={({ input }) => (
-          <input
-            className={styles.field}
-            {...input}
-            placeholder="Enter the answer"
-            autoCapitalize="off"
-            autoFocus
-          />
-        )}
-      />
+      <Field name='answer' render={renderField} />
       <div className={styles.group}>
         <button className={cx(styles.btn, styles.skip)} type="button">I don't know</button>
         <button className={cx(styles.btn, styles.done)} type='submit'>Ok</button>
