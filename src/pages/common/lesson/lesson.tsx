@@ -12,7 +12,7 @@ interface IProps {
   onClose(): void;
 }
 
-const DELLAY_AFTER_ANSWER = 1500;
+const DELLAY_AFTER_ANSWER = 1800;
 
 const Lesson: FC<IProps> = ({ lesson, onClose }) => {
 

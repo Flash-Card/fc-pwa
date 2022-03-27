@@ -28,13 +28,12 @@ const Slider: FC<IProps> = ({ children, id, status }) => {
     function* (el: HTMLDivElement | null): Generator<any, any, any> {
       const st: boolean = yield;
       const [face, text] = getColors(st);
-      el?.style.setProperty('--face-color', face);
-      const ch = yield el?.style.setProperty('--text-color', text);
+      const ch = yield updateStyle(el, `--face-color: ${face}; --text-color: ${text}`);
       yield updateStyle(el, `--face-color: ${face}; --text-color: ${text}; transition-duration: 0.001s; transform: translate3d(-100%, 0, 0)`);
       yield updateStyle(el, `--face-color: ${face}; --text-color: ${text}; transition-duration: 0.001s; transform: translate3d(0, 0, 0)`);
       yield updateStyle(el, `--face-color: ${face}; --text-color: ${text}; transition-duration: 0.9s; transform: translate3d(-100%, 0, 0)`);
       setCard(ch);
-      updateStyle(el, 'transition-duration: 0.001s; transform: translate3d(0, 0, 0)');
+      yield updateStyle(el, 'transition-duration: 0.001s; transform: translate3d(0, 0, 0)');
     },
     [],
   );
@@ -44,6 +43,7 @@ const Slider: FC<IProps> = ({ children, id, status }) => {
   useEffect(
     () => {
       if (id !== data.current.id) {
+        data.current.id = id;
         data.current.gen.next(children);
       }
     },
@@ -53,7 +53,7 @@ const Slider: FC<IProps> = ({ children, id, status }) => {
   useEffect(
     () => {
       if (typeof status !== 'undefined' && item.current ) {
-        data.current = { id, gen: seq(item.current) };
+        data.current.gen = seq(item.current);
         data.current.gen.next();
         data.current.gen.next(status);
       }
@@ -61,7 +61,7 @@ const Slider: FC<IProps> = ({ children, id, status }) => {
     [status],
   );
 
-  const handleTransition = useCallback<TransitionEventHandler<HTMLDivElement>>(
+  const handleTransition = useCallback(
     () => {
       data.current.gen.next();
     },
