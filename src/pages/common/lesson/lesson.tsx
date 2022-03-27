@@ -1,77 +1,74 @@
-import { FC, memo, useCallback, useMemo, useState, useEffect, useRef } from 'react';
-import { Form } from 'react-final-form';
-import { subscribe, isSupported } from 'on-screen-keyboard-detector';
+import { FC, memo, useCallback, useState, useRef, useMemo } from 'react';
+import { Form, FormRenderProps } from 'react-final-form';
+import { useKeyboard } from 'lib/useKeyboard';
 import { ModalPortal, Popup } from 'components/Popup';
+import { CardSlider } from 'components/Card'
 import { LessonForm } from './form';
+import { quiz, compare } from './helpers';
+import { IQuestion, IAnswer, IState } from './types';
 import styles from './lesson.module.scss';
-
-interface IQuestion {
-  question: string;
-  answer: string;
-}
 
 interface IProps {
   lesson: ReadonlyArray<IQuestion>;
-  onClose(): void,
+  onClose(): void;
 }
 
 const Lesson: FC<IProps> = ({ lesson, onClose }) => {
-  const [current, setCurrent] = useState<number>(0);
-  const container = useRef<HTMLElement | null>();
 
-  const { question } = useMemo(
-    () => lesson[current],
-    [current, lesson],
-  );
+  const { refPropxy } = useKeyboard();
+  const refq = useRef(quiz(lesson));
+  const [currentItem, setCurrentItem] = useState<IState>(() => ({ item: refq.current.next(true).value }));
 
   const handleAnswer = useCallback(
-    ({ answer }) => {
-      console.log(answer);
-    },
-    [],
-  );
-
-  const keybordHandler = useCallback(
-    (visibility: 'visible' | 'hidden') => {
-      if (visibility === 'visible' && container.current) {
-        const height = visualViewport.height;
-        window.scrollTo(0, 0)
-        container.current.style.height = height + 'px';
-      }
-      if (visibility === 'hidden' && container.current) {
-        container.current.removeAttribute('style');
+    (res) => {
+      const status = compare(res.answer, currentItem.item.answer)
+      const { done, value } = refq.current.next(status);
+      if (done) {
+        onClose();
+      } else {
+        setCurrentItem({
+          item: value,
+          status,
+        });
       }
     },
-    [],
+    [currentItem],
   );
 
-  const refPropxy = useCallback(
-    (el: HTMLDivElement) => {
-      container.current = el?.parentElement;
-    },
-    [],
+  const renderForm = useCallback(
+    ({ handleSubmit, form }: FormRenderProps<IAnswer>) => (
+      <LessonForm
+        handleSubmit={handleSubmit}
+        lesson={currentItem.item}
+        form={form}
+      />
+    ),
+    [currentItem],
   );
-
-  useEffect(() => {
-    if (isSupported()) {
-      var unsubscribe = subscribe(keybordHandler);
-    }
-    return () => {
-      if (typeof unsubscribe === 'function') {
-        unsubscribe();
-      }
-    }
-  }, []);
 
   return (
     <ModalPortal>
-      <Popup name='Lesson' className={styles.container} refProxy={refPropxy}>
+      <Popup
+        name='Lesson'
+        className={styles.container}
+        refProxy={el => { refPropxy(el?.parentElement); }}
+      >
         <div className={styles.header}>
-          <button type='button' className={styles.close} onClick={onClose} tabIndex={-1} />
+          <button
+            type='button'
+            className={styles.close}
+            onClick={onClose}
+            tabIndex={-1}
+          />
         </div>
         <div className={styles.content}>
-          <div className={styles.card}>{question}</div>
-          <Form onSubmit={handleAnswer} component={LessonForm} />
+          <CardSlider id={currentItem.item.question}>
+            <div className={styles.card}>{currentItem.item.question}</div>
+          </CardSlider>
+          <Form
+            onSubmit={handleAnswer}
+            render={renderForm}
+          />
         </div>
       </Popup>
     </ModalPortal>

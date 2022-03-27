@@ -1,13 +1,24 @@
-import { FC, memo } from 'react';
+import { FC, memo, useEffect } from 'react';
 import cx from 'classnames';
+import { FormApi } from 'final-form';
 import { Field } from 'react-final-form';
+import { IQuestion, IAnswer } from '../types';
 import styles from './form.module.scss';
 
 interface IProps {
   handleSubmit(): void;
+  lesson: IQuestion;
+  form: FormApi<IAnswer>;
 }
 
-const LessonForm: FC<IProps> = ({ handleSubmit }) => {
+const LessonForm: FC<IProps> = ({ handleSubmit, lesson, form }) => {
+
+  useEffect(
+    () => {
+      form.reset();
+    },
+    [lesson],
+  )
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>

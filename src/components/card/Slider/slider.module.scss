@@ -1,0 +1,19 @@
+.wrapper {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+}
+.prev {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  transition: 0.9s transform ease-in-out;
+  background: #fff;
+}
+.next {
+  display: flex;
+  width: 100%;
+}

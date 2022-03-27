@@ -34,6 +34,8 @@
   display: grid;
   gap: 20px;
   grid-template-rows: 1fr auto;
+  --face-color: #fff;
+  --text-color: #ee693f;
   @supports(padding: max(0px)) {
     padding-bottom: max(5px, env(safe-area-inset-bottom));
   }
@@ -45,8 +47,9 @@
   border: 1px solid #ee693f;
   border-radius: 10px;
   font-size: 40px;
-  color: #ee693f;
+  color: var(--text-color);
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--face-color);
 }
