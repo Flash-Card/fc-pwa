@@ -1,4 +1,7 @@
 import set from 'lodash/fp/set';
+import compose from 'lodash/fp/compose';
+import update from 'lodash/fp/update';
+
 import { TDecks, Action, EActionType } from './types';
 
 const initialDecks: TDecks = {
@@ -8,21 +11,25 @@ const initialDecks: TDecks = {
     cards: {
       v001: {
         id: 'v001',
+        deckId: 'verbs01',
         front: 'be',
         back: 'was were been',
       },
       v002: {
         id: 'v002',
+        deckId: 'verbs01',
         front: 'go',
         back: 'went gone',
       },
       v003: {
         id: 'v003',
+        deckId: 'verbs01',
         front: 'do',
         back: 'did done',
       },
       v004: {
         id: 'v004',
+        deckId: 'verbs01',
         front: 'have',
         back: 'had had',
       },
@@ -45,6 +52,12 @@ export const reducer = {
 
       case EActionType.ADD_DECK: {
         return set(action.payload.id)(action.payload)(state);
+      }
+
+      case EActionType.ADD_CARD: {
+        return update([action.payload.deckId, 'cards'])(
+          set(action.payload.id)(action.payload)
+        )(state);
       }
 
       default:

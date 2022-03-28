@@ -1,11 +1,11 @@
-import { FC, memo, useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { Form } from 'react-final-form';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
 import { addDeck } from 'domain/decks';
 import { useAppDispatch } from 'domain/index';
 import styles from './create-deck.module.scss';
-import FormDeck from '../form';
+import { FormDeck } from '../form';
 
 const CreateDeck = () => {
 
@@ -28,7 +28,7 @@ const CreateDeck = () => {
         component={FormDeck}
       />
     </div>
-  )
+  );
 }
 
 export default memo(CreateDeck);
