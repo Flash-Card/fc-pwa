@@ -1,11 +1,11 @@
 import { FC, memo, useReducer, useMemo, useCallback } from 'react';
-import { ICards } from 'domain/decks';
+import { ICard } from 'domain/decks';
 import { FlipCard, Card } from 'components/Card';
 import { reducer, initialArg, TDackReducer, EDackActionType } from './reducer';
 import styles from './cards-tab.module.scss';
 
 interface IProps {
-  cards: ReadonlyArray<ICards>;
+  cards: ReadonlyArray<ICard>;
 }
 
 const CardsTab: FC<IProps> = ({ cards }) => {

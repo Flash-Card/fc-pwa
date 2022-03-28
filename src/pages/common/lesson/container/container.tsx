@@ -4,17 +4,18 @@ import { useKeyboard } from 'lib/useKeyboard';
 import styles from './container.module.scss';
 
 interface IProps {
+  name: string;
   onClose(): void;
   children: ReactNode
 }
 
-const Container: FC<IProps> = ({ onClose, children }) => {
+const Container: FC<IProps> = ({ onClose, children, name }) => {
   const { refPropxy } = useKeyboard();
 
   return (
     <ModalPortal>
       <Popup
-        name='Lesson'
+        name={name}
         className={styles.container}
         refProxy={el => { refPropxy(el?.parentElement); }}
       >

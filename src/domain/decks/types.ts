@@ -1,6 +1,7 @@
 
-export interface ICards {
+export interface ICard {
   id: string;
+  deckId: string;
   front: string;
   back: string;
 }
@@ -9,7 +10,7 @@ export interface IDeckItem {
   id: string;
   name: string;
   description?: string;
-  cards?: Record<string, ICards>;
+  cards?: Record<string, ICard>;
 }
 
 export type TDecks = Record<string, IDeckItem>;
@@ -26,4 +27,9 @@ export interface IAddDeck {
   payload: IDeckItem;
 }
 
-export type Action = IAddDeck;
+export interface IAddCard {
+  type: typeof EActionType.ADD_CARD;
+  payload: ICard;
+}
+
+export type Action = IAddDeck | IAddCard;

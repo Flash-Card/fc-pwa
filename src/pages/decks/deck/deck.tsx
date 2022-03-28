@@ -1,5 +1,5 @@
 import { memo, useCallback } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Link } from 'react-router-dom';
 import { CardsTab } from './cards';
 import { LessonsTab } from './lessons'
 import { TabHead } from 'components/Tab';
@@ -28,7 +28,10 @@ const Deck = () => {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>{deck.name}</h2>
+      <header className={styles.header}>
+        <h2 className={styles.title}>{deck.name}</h2>
+        <Link to="add" className={styles.add} />
+      </header>
       <TabHead
         data={TABS}
         getPath={getPath}

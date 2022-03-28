@@ -54,7 +54,7 @@ const Lesson: FC<IProps> = ({ lesson, onClose }) => {
   );
 
   return (
-    <LessonContainer onClose={onClose}>
+    <LessonContainer onClose={onClose} name="Lesson">
       <div className={styles.content}>
         <CardSlider id={state.item.question} status={state.status}>
           <div className={styles.card}>{state.item.question}</div>
