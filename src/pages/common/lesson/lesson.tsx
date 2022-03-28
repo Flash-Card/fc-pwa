@@ -2,7 +2,7 @@ import { FC, memo, useCallback, useState, useRef } from 'react';
 import { Form, FormRenderProps } from 'react-final-form';
 import { CardSlider } from 'components/Card'
 import { LessonForm } from './form';
-import { LessonContainer } from './container';
+import { Container } from 'pages/common/container';
 import { quiz, compare } from './helpers';
 import { IQuestion, IAnswer, IState } from './types';
 import styles from './lesson.module.scss';
@@ -54,7 +54,7 @@ const Lesson: FC<IProps> = ({ lesson, onClose }) => {
   );
 
   return (
-    <LessonContainer onClose={onClose} name="Lesson">
+    <Container onClose={onClose} name="Lesson">
       <div className={styles.content}>
         <CardSlider id={state.item.question} status={state.status}>
           <div className={styles.card}>{state.item.question}</div>
@@ -64,7 +64,7 @@ const Lesson: FC<IProps> = ({ lesson, onClose }) => {
           render={renderForm}
         />
       </div>
-    </LessonContainer>
+    </Container>
   );
 }
 

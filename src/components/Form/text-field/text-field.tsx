@@ -7,10 +7,10 @@ interface IProps extends FieldRenderProps<string> {
   title: string;
 }
 
-const TextField: FC<IProps> = ({ input, title }) => {
+const TextField: FC<IProps> = ({ input, title, meta, ...rest }) => {
   return (
     <Layout id={input.id} title={title} >
-      <input {...input} className={styles.field} />
+      <input {...input} {...rest} className={styles.field} />
     </Layout>
   )
 }

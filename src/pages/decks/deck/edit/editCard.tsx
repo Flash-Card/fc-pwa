@@ -1,36 +1,32 @@
 import { FC, memo, useCallback } from 'react';
 import { Form } from 'react-final-form';
-import { nanoid } from 'nanoid';
 import { useAppDispatch } from 'domain/index';
 import { addCard, ICard } from 'domain/decks';
 import { Container } from 'pages/common/container';
-import { useDeck } from '../useDeck';
 import { FormCard } from '../../form';
-import styles from './create-card.module.scss';
 
 type TFormData = Pick<ICard, 'back' | 'front'>;
 
 interface IProps {
-  onComplete(id: string): void;
-  onCancel(): void;
+  item: ICard;
+  onComplete(): void;
 }
 
-const CreateCard: FC<IProps> = ({ onCancel, onComplete }) => {
+const EditCard: FC<IProps> = ({ item, onComplete }) => {
   const dispatch = useAppDispatch();
-  const { deck } = useDeck();
 
   const handleSubmit = useCallback(
     (values: TFormData) => {
-      const id = nanoid(6);
-      dispatch(addCard({ ...values, id, deckId: deck.id }));
-      onComplete(id);
+      dispatch(addCard({ ...item, ...values }));
+      onComplete();
     },
     [onComplete, dispatch],
   );
 
   return (
-    <Container onClose={onCancel} name="Create Card">
+    <Container onClose={onComplete} name="Edit card" >
       <Form
+        initialValues={item}
         onSubmit={handleSubmit}
         component={FormCard}
       />
@@ -38,4 +34,4 @@ const CreateCard: FC<IProps> = ({ onCancel, onComplete }) => {
   );
 }
 
-export default memo(CreateCard);
+export default memo(EditCard);
