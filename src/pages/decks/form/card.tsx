@@ -3,7 +3,6 @@ import { Field, FormRenderProps } from 'react-final-form';
 import { TextField } from 'components/Form';
 import styles from './form.module.scss';
 
-
 interface IProps {
   front: string;
   back: string;
@@ -12,8 +11,8 @@ interface IProps {
 const FormCard: FC<FormRenderProps<IProps>> = ({ handleSubmit }) => {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <Field name='front' component={TextField} title='Front' />
-      <Field name='back' component={TextField} title='Back' />
+      <Field name='front' component={TextField} title='Front' autoCapitalize="off" />
+      <Field name='back' component={TextField} title='Back' autoCapitalize="off" />
       <button type='submit' className={styles.btn}>Ok</button>
     </form>
   )
