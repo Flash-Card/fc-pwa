@@ -1,4 +1,4 @@
-import { FC, memo, useCallback, useState, useRef, useReducer } from 'react';
+import { FC, memo, useCallback, useState, useRef } from 'react';
 import { Form, FormRenderProps } from 'react-final-form';
 import { CardSlider } from 'components/Card'
 import { LessonForm } from './form';
@@ -27,20 +27,17 @@ const Lesson: FC<IProps> = ({ lesson, onClose }) => {
   );
 
   const handleAnswer = useCallback(
-    (res) => {
+    (res: IAnswer) => {
       const status = compare(res.answer, state.item.answer);
       setState((s) => ({ ...s, status }));
-      setTimeout(
-        () => {
-          const { done, value } = refq.current.next(status);
-          if (done) {
-            handleComplete();
-          } else {
-            setState({ item: value });
-          }
-        },
-        DELLAY_AFTER_ANSWER,
-      );
+      setTimeout(() => {
+        const { done, value } = refq.current.next(status);
+        if (done) {
+          handleComplete();
+        } else {
+          setState({ item: value });
+        }
+      }, DELLAY_AFTER_ANSWER);
     },
     [setState, state],
   );

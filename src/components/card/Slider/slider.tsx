@@ -1,4 +1,4 @@
-import { FC, memo, ReactNode, TransitionEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, memo, ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import styles from './slider.module.scss';
 
 interface IProps {
