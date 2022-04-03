@@ -1,12 +1,15 @@
-import { memo, useMemo, useState, useCallback } from 'react';
+import { FC, memo, useMemo, useState, useCallback } from 'react';
 import { Lesson } from 'pages/common/lesson';
-import { useDeck } from '../useDeck';
 import styles from './lessons-tab.module.scss';
+import { ICard } from 'domain/decks';
 
 const CARDS_IN_LESSON = 3;
 
-const LessonsTab = () => {
-  const { cards } = useDeck();
+interface IProps {
+  cards: ReadonlyArray<ICard>;
+}
+
+const LessonsTab: FC<IProps> = ({ cards }) => {
 
   const [lessonIndex, setLessonIndex] = useState<number>();
 

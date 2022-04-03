@@ -6,7 +6,6 @@ import { addCard, ICard } from 'domain/decks';
 import { Container } from 'pages/common/container';
 import { useDeck } from '../useDeck';
 import { FormCard } from '../../form';
-import styles from './create-card.module.scss';
 
 type TFormData = Pick<ICard, 'back' | 'front'>;
 

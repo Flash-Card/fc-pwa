@@ -1,11 +1,11 @@
 import { FC, memo, useCallback } from 'react';
 import { Form } from 'react-final-form';
 import { useAppDispatch } from 'domain/index';
-import { addCard, ICard } from 'domain/decks';
+import { updateCard, ICard } from 'domain/decks';
 import { Container } from 'pages/common/container';
 import { FormCard } from '../../form';
 
-type TFormData = Pick<ICard, 'back' | 'front'>;
+type TFormData = Omit<ICard, 'id' | 'deckId'>;
 
 interface IProps {
   item: ICard;
@@ -17,7 +17,7 @@ const EditCard: FC<IProps> = ({ item, onComplete }) => {
 
   const handleSubmit = useCallback(
     (values: TFormData) => {
-      dispatch(addCard({ ...item, ...values }));
+      dispatch(updateCard({ ...item, ...values }));
       onComplete();
     },
     [onComplete, dispatch],
