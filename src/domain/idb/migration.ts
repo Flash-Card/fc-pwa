@@ -1,8 +1,6 @@
 import * as C from './constants';
 
 export default function requestUpgrade(this: IDBOpenDBRequest, ev: IDBVersionChangeEvent): any {
-  // const fixtures = [];
-  console.log(ev, '((((())))');
   if (ev.oldVersion < 1) {
     const osDecks = this.result.createObjectStore(
       C.TABLE.decks.name, {
@@ -10,10 +8,22 @@ export default function requestUpgrade(this: IDBOpenDBRequest, ev: IDBVersionCha
         autoIncrement: false,
       }
     );
+    osDecks.createIndex(
+      C.TABLE.decks.index.id,
+      C.TABLE.decks.index.id, {
+        unique: true
+      }
+    )
     const osCards = this.result.createObjectStore(
       C.TABLE.cards.name, {
         keyPath: C.TABLE.decks.index.id,
         autoIncrement: false,
+      }
+    );
+    osCards.createIndex(
+      C.TABLE.cards.index.id,
+      C.TABLE.cards.index.id, {
+        unique: false,
       }
     );
     osCards.createIndex(
@@ -23,5 +33,4 @@ export default function requestUpgrade(this: IDBOpenDBRequest, ev: IDBVersionCha
       }
     );
   }
-  // return fixtures;
 };

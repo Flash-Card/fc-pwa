@@ -1,6 +1,6 @@
 import { FC, memo, useCallback, useState, useRef } from 'react';
 import { Form, FormRenderProps } from 'react-final-form';
-import { CardSlider } from 'components/Card'
+import { CardSlider } from 'components/card';
 import { LessonForm } from './form';
 import { Container } from 'pages/common/container';
 import { quiz, compare } from './helpers';

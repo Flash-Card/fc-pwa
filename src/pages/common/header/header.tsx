@@ -27,6 +27,12 @@ const Header: FC<IProps> = () => {
           >
           <span />
         </button> */}
+        <div className={styles.version}>
+          V
+          {
+            require('../../../../package.json').version
+          }
+        </div>
       </header>
       {/* <div className={cx(styles.menu, { [styles.open]: menuStatus })}>
         <Menu />
