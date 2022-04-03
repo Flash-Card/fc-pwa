@@ -8,6 +8,7 @@ import {
 } from 'redux';
 import thunk from 'redux-thunk';
 import { AppState, Action } from './types';
+import idMiddleware from 'domain/idb/middlware';
 
 const __DEV__ = (process.env.NODE_ENV === 'development');
 
@@ -40,6 +41,7 @@ export default async function configureStore(): Promise<Store<AppState>> {
     composeEnhancers(
       applyMiddleware(
         thunk,
+        idMiddleware(),
       ),
     ),
   );

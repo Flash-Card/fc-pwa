@@ -12,6 +12,9 @@ export enum EDackActionType {
   FLIP = 'FLIP',
   START_EDIT = 'START_EDIT',
   FINISH_EDIT = 'FINISH_EDIT',
+  DELETE = 'DELETE',
+  HIDE = 'HIDE',
+  SHOW = 'SHOW',
 }
 
 export interface IDackAction {

@@ -58,7 +58,7 @@ const Deck = () => {
         ) : null
       }
       <Routes>
-        <Route index element={<LessonsTab />} />
+        <Route index element={<LessonsTab cards={cards} />} />
         <Route path='cards' element={<CardsTab cards={cards} />} />
       </Routes>
     </div>

@@ -1,10 +1,15 @@
-import { FC, memo, useCallback } from 'react';
+import { FC, memo, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAppSelector } from 'domain/index';
+import { useAppSelector, useAppDispatch } from 'domain/index';
+import { getDeckListRequest } from 'domain/decks';
 import { Grid } from 'components/Grid';
 import styles from './decks.module.scss';
 
 const Decks: FC = () => {
+
+  const disptch = useAppDispatch();
+
+  useEffect(() => { disptch(getDeckListRequest()); }, []);
   
   const decks = useAppSelector(state => Object.values(state.decks).map(e => ({ title: e.name, ...e })));
 
@@ -13,7 +18,7 @@ const Decks: FC = () => {
   return (
     <>
       <Grid list={decks} createPath={createPath} />
-      <Link to='/deck/add' className={styles.add}>Add Deck</Link>
+      <Link to='/deck/add' className={styles.add}>Create new Deck</Link>
     </>
   );
 }
