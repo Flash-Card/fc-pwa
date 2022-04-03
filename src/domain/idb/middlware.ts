@@ -2,6 +2,7 @@ import { Dispatch, MiddlewareAPI, Store } from 'redux';
 import CDB from './db';
 import * as C from './constants';
 import { Action, AppState } from '../types';
+import { EEventsTag, enrichException } from 'lib/logger';
 import {
   EActionType,
   IDeckItem,
@@ -33,7 +34,7 @@ export default function idMiddleware() {
             if (decks) dispatch(getDeckListSuccess(decks));
           })
           .catch((err) => {
-            console.log(err, 'GET_DECK_LIST_FAILURE');
+            enrichException(err, action, EEventsTag.IDB);
           });
         break;
         
@@ -43,7 +44,7 @@ export default function idMiddleware() {
             if (deck) dispatch(getDeckSuccess(deck));
           })
           .catch((err) => {
-            console.log(err, 'GET_DECK_FAILURE');
+            enrichException(err, action.payload, EEventsTag.IDB);
           });
         break;
 

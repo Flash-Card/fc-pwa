@@ -1,9 +1,10 @@
 import { FC, memo, useReducer, useMemo, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import cx from 'classnames';
+import get from 'lodash/get';
 import { useAppDispatch } from 'domain/index';
 import { updateCard, deleteCard, ICard } from 'domain/decks';
-import { FlipCard, Card } from 'components/Card';
+import { FlipCard, Card } from 'components/card';
 import { MorePic, IPickerItem } from 'components/MorePick';
 import { EditCard } from '../edit';
 import { reducer, getInitialState, TDackReducer, EDackActionType } from './reducer';
@@ -39,11 +40,11 @@ const CardsTab: FC<IProps> = ({ cards }) => {
     [dispatch],
   );
 
-  const card = useMemo<ICard>(() => cards[state.count], [cards, state.count]);
+  const card = useMemo<ICard>(() => get(cards, state.count, {} as ICard), [cards, state.count]);
 
   const item = useMemo(
     () => {
-      return card && {
+      return card.id && {
         front: (<Card text={card.front}/>),
         back: (<Card text={card.back}/>),
         hasPrev: state.count > 0,
@@ -69,7 +70,7 @@ const CardsTab: FC<IProps> = ({ cards }) => {
   );
 
   const options = useMemo(
-    () => OPTIONS.filter(f => f.value !== (card.hidden ? EDackActionType.HIDE : EDackActionType.SHOW)),
+    () => OPTIONS.filter(f => f.value !== (card?.hidden ? EDackActionType.HIDE : EDackActionType.SHOW)),
     [card],
   );
 
