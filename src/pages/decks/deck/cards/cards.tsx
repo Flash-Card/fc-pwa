@@ -36,7 +36,11 @@ const CardsTab: FC<IProps> = ({ cards }) => {
   );
 
   useEffect(
-    () => { dispatch(setCounter(getIndexByHash(cards, hash))); },
+    () => {
+      if (hash.length) {
+        dispatch(setCounter(getIndexByHash(cards, hash)));
+      }
+    },
     [hash, cards],
   );
 
