@@ -42,12 +42,18 @@ const Lesson: FC<IProps> = ({ lesson, onClose }) => {
     [setState, state],
   );
 
+  const handleSkip = useCallback(
+    () => handleAnswer({ answer: '' }),
+    [handleAnswer],
+  );
+
   const renderForm = useCallback(
     ({ handleSubmit, form }: FormRenderProps<IAnswer>) => (
       <LessonForm
         handleSubmit={handleSubmit}
         lesson={state.item}
         form={form}
+        onSkip={handleSkip}
       />
     ),
     [state],

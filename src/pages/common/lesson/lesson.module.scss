@@ -20,4 +20,8 @@
   justify-content: center;
   align-items: center;
   background-color: var(--face-color);
+  word-break: break-word;
+  hyphens: auto;
+  word-wrap: break-word;
+  text-align: center;
 }
