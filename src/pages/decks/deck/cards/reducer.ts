@@ -15,11 +15,24 @@ export enum EDackActionType {
   DELETE = 'DELETE',
   HIDE = 'HIDE',
   SHOW = 'SHOW',
+  SET_COUNTER = 'SET_COUNTER',
 }
 
-export interface IDackAction {
-  type: EDackActionType;
+interface ISetCounter {
+  type: typeof EDackActionType.SET_COUNTER;
+  payload: number;
 }
+
+export function setCounter(counter: number): ISetCounter {
+  return {
+    type: EDackActionType.SET_COUNTER,
+    payload: counter,
+  }
+}
+
+export type IDackAction = {
+  type: Exclude<EDackActionType, EDackActionType.SET_COUNTER>;
+} | ISetCounter;
 
 export type TDackReducer = Reducer<IDeckState, IDackAction>;
 
@@ -35,6 +48,8 @@ export function reducer(state: IDeckState, action: IDackAction) {
       return { ...state, isEdit: true };
     case EDackActionType.FINISH_EDIT:
       return { ...state, isEdit: false };
+    case EDackActionType.SET_COUNTER:
+      return { ...state, count: action.payload }
     default:
       throw new Error();
   }
