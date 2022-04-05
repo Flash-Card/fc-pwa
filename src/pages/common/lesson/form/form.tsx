@@ -9,9 +9,10 @@ interface IProps {
   handleSubmit(): void;
   lesson: IQuestion;
   form: FormApi<IAnswer>;
+  onSkip(): void;
 }
 
-const LessonForm: FC<IProps> = ({ handleSubmit, lesson, form }) => {
+const LessonForm: FC<IProps> = ({ handleSubmit, lesson, form, onSkip }) => {
 
   const renderField = useCallback(
     ({ input }: FieldRenderProps<string>): ReactNode => (
@@ -32,7 +33,11 @@ const LessonForm: FC<IProps> = ({ handleSubmit, lesson, form }) => {
     <form onSubmit={handleSubmit} className={styles.form}>
       <Field name='answer' render={renderField} />
       <div className={styles.group}>
-        <button className={cx(styles.btn, styles.skip)} type="button">I don't know</button>
+        <button
+          className={cx(styles.btn, styles.skip)}
+          type="button"
+          onClick={onSkip}
+        >I don't know</button>
         <button className={cx(styles.btn, styles.done)} type='submit'>Ok</button>
       </div>
     </form>

@@ -10,4 +10,8 @@
   outline-offset: -10px;
   background-color: var(--card-background);
   color: #fcfdfe;
+  word-break: break-word;
+  padding: 15px;
+  hyphens: auto;
+  word-wrap: break-word;
 }

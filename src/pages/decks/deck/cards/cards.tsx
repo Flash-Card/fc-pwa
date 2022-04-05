@@ -1,4 +1,4 @@
-import { FC, memo, useReducer, useMemo, useCallback } from 'react';
+import { FC, memo, useReducer, useMemo, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import cx from 'classnames';
 import get from 'lodash/get';
@@ -7,7 +7,7 @@ import { updateCard, deleteCard, ICard } from 'domain/decks';
 import { FlipCard, Card } from 'components/card';
 import { MorePic, IPickerItem } from 'components/MorePick';
 import { EditCard } from '../edit';
-import { reducer, getInitialState, TDackReducer, EDackActionType } from './reducer';
+import { reducer, getInitialState, TDackReducer, EDackActionType, setCounter } from './reducer';
 import styles from './cards-tab.module.scss';
 
 interface IProps {
@@ -35,8 +35,17 @@ const CardsTab: FC<IProps> = ({ cards }) => {
     getInitialState(getIndexByHash(cards, hash)),
   );
 
+  useEffect(
+    () => { dispatch(setCounter(getIndexByHash(cards, hash))); },
+    [hash, cards],
+  );
+
   const action = useCallback(
-    (type: EDackActionType) => () => dispatch({ type }),
+    (type: EDackActionType) => () => {
+      if (type !== EDackActionType.SET_COUNTER) {
+        dispatch({ type });
+      }
+    },
     [dispatch],
   );
 
@@ -51,7 +60,7 @@ const CardsTab: FC<IProps> = ({ cards }) => {
         hasNext: state.count < (cards.length - 1),
       }
     },
-    [card, state.count],
+    [card, state.count, cards],
   );
 
   const handleChange = useCallback(
