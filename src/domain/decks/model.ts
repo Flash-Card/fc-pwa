@@ -1,5 +1,4 @@
 import set from 'lodash/fp/set';
-import compose from 'lodash/fp/compose';
 import update from 'lodash/fp/update';
 import omit from 'lodash/fp/omit';
 import { arrayToRecord } from 'lib/dataAdapters';
@@ -66,6 +65,11 @@ export const reducer = {
 
       case EActionType.ADD_DECK:
         return set(action.payload.id)(action.payload)(state);
+
+      case EActionType.UPDATE_DECK:
+        return update(action.payload.id)(
+          ({ cards }) => ({ ...action.payload, cards })
+        )(state);
 
       case EActionType.ADD_CARD:
       case EActionType.UPDATE_CARD:

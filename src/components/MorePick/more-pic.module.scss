@@ -2,7 +2,9 @@
   appearance: none;
   width: 20px;
   height: 40px;
-  background: url('./more-vert.svg') scroll no-repeat center transparent;
+  mask-image: url('./more-vert.svg');
+  mask-size: cover;
+  mask-position: center center;
   background-size: cover;
   border: 0 none;
   outline: none;

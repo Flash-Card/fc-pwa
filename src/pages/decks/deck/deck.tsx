@@ -1,8 +1,8 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { TabHead } from 'components/Tab';
 import { CardsTab } from './cards';
 import { LessonsTab } from './lessons'
-import { TabHead } from 'components/Tab';
 import { useDeck } from './useDeck';
 import { CreateCard } from './create';
 import styles from './deck.module.scss';
@@ -15,7 +15,7 @@ const TABS = [
 
 const Deck = () => {
 
-  const { cards, deck } = useDeck();
+  const { cards, deck, actionSelector, editForm } = useDeck();
   const navigate = useNavigate();
 
   const [isCreating, setState] = useState<boolean>(false);
@@ -40,11 +40,19 @@ const Deck = () => {
     [cards],
   );
 
+  const deckSelector = useMemo(
+    () => actionSelector(styles.more),
+    [actionSelector],
+  );
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <h2 className={styles.title}>{deck.name}</h2>
-        <button type="button" className={styles.add} onClick={toggleCreate} />
+        <div className={styles.buttons}>
+          {deckSelector}
+          <button type="button" className={styles.add} onClick={toggleCreate} />
+        </div>
       </header>
       <TabHead
         data={TABS}
@@ -56,6 +64,9 @@ const Deck = () => {
         isCreating ? (
           <CreateCard onCancel={toggleCreate} onComplete={handleComplete} />
         ) : null
+      }
+      {
+        editForm
       }
       <Routes>
         <Route index element={<LessonsTab cards={cards} />} />

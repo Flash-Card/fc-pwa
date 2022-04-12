@@ -53,7 +53,7 @@ export default function idMiddleware() {
         break;
 
       case EActionType.DELETE_DECK:
-        Idb.deleteItem(C.TABLE.decks.name, action.payload);
+        Idb.deleteDeck(action.payload);
         break;
     }
     return next(action);
