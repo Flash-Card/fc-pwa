@@ -19,4 +19,26 @@ export default class CDB extends IDB {
     const cards = await promisifyRequest<ICard[]>(osCards.getAll(id));
     return ({ ...deck, cards: arrayToRecord(cards, 'id') });
   }
+
+  deleteDeck = async (id: string): Promise<void> => {
+    const idb = await this.open();
+    const transaction = idb.transaction([C.TABLE.decks.name, C.TABLE.cards.name], EMode.READWRITE);
+    transaction.oncomplete = () => { idb.close(); };
+    const osDecks = transaction.objectStore(C.TABLE.decks.name);
+    const osCards = transaction.objectStore(C.TABLE.cards.name);
+    await promisifyRequest(osDecks.delete(id));
+    return new Promise((resolve, reject) => {
+      const req = osCards.index(C.TABLE.cards.index.deckId).openKeyCursor(IDBKeyRange.only(id));
+      req.onerror = (err) => reject(err);
+      req.onsuccess = function() {
+        const cursor = req.result;
+        if (cursor) {
+          osCards.delete(cursor.primaryKey);
+          cursor.continue();
+        } else {
+          resolve();
+        }
+      }
+    });
+  }
 }
