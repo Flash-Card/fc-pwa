@@ -20,6 +20,10 @@ export default function idMiddleware() {
         Idb.addItem(C.TABLE.decks.name, action.payload);
         break;
 
+      case EActionType.UPDATE_DECK:
+        Idb.updateItem(C.TABLE.decks.name, action.payload);
+        break;
+
       case EActionType.ADD_CARD:
         Idb.addItem(C.TABLE.cards.name, action.payload);
         break;
