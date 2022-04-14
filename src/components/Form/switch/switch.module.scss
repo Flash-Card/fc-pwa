@@ -5,7 +5,10 @@
   --switc-height: 20px;
 }
 .input {
+  opacity: 0.1;
+  position: absolute;
   appearance: none;
+  -webkit-tap-highlight-color: transparent;
   & + .label {
     position: relative;
     padding-left: calc(var(--switc-width) + 10px);
