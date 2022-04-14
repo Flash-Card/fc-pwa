@@ -4,6 +4,12 @@ import { BrowserRouter } from "react-router-dom";
 import { configureStore } from './domain';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
+function onUpdate(data: any) {
+  if(window.confirm('New wesion is available' + JSON.stringify(data))) {
+    window.location.reload();
+  }
+}
+
 
 import App from './pages';
 
@@ -25,4 +31,4 @@ async function flashCardApp() {
 }
 
 flashCardApp();
-serviceWorkerRegistration.register();
+serviceWorkerRegistration.register({ onUpdate });

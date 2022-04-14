@@ -4,12 +4,12 @@ import { FieldRenderProps } from 'react-final-form';
 import styles from './text-field.module.scss';
 
 interface IProps extends FieldRenderProps<string> {
-  title: string;
+  label: string;
 }
 
-const TextField: FC<IProps> = ({ input, title, meta, ...rest }) => {
+const TextField: FC<IProps> = ({ input, label, meta, ...rest }) => {
   return (
-    <Layout id={input.id} title={title} >
+    <Layout id={input.id} title={label} >
       <input {...input} {...rest} className={styles.field} />
     </Layout>
   )

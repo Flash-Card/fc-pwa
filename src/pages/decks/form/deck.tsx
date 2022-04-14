@@ -11,8 +11,8 @@ interface IProps {
 const FormDeck: FC<IProps> = ({ handleSubmit }) => {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <Field name='name' component={TextField} title='Name' />
-      <Field name='decription' component={TextField} title='Decription' />
+      <Field name='name' component={TextField} label='Name' />
+      <Field name='decription' component={TextField} label='Decription' />
       <button type='submit' className={styles.btn}>Ok</button>
     </form>
   )
