@@ -1,0 +1,45 @@
+.label {
+  display: inline-block;
+  font-size: 18px;
+  --switc-width: 40px;
+  --switc-height: 20px;
+}
+.input {
+  appearance: none;
+  & + .label {
+    position: relative;
+    padding-left: calc(var(--switc-width) + 10px);
+    &::before, &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      border-radius: calc(var(--switc-height) / 2);
+      margin: auto;
+      height: var(--switc-height);
+      transition: 0.3s all ease-in-out;
+    }
+    &::before {
+      background: #E5E5E5;
+      border: 1px solid #E5E5E5;
+      width: var(--switc-width);
+    }
+    &::after {
+      background: #CBCBCB;
+      width: var(--switc-height);
+    }
+  }
+  &:checked ~ .label {
+    &::before {
+      background: #CBCBCB;
+    }
+    &::after {
+      background: #646464;
+      transform: translate3d(calc(var(--switc-width) - var(--switc-height)), 0, 0);
+    }
+  }
+  &:focus + .label::before {
+    border-color: #CBCBCB;
+  }
+}
