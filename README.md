@@ -10,7 +10,7 @@ If you want to try the project as is go to the [main page](https://cards-mem.web
 # nano ~/.ssh/config
 ```
 
-```yaml
+```
 Host github.com-fishbone
 	HostName github.com
 	User git
