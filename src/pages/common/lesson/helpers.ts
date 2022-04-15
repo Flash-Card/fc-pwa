@@ -12,6 +12,9 @@ export function* quiz<T>(list: ReadonlyArray<T>): Generator<T, any, boolean> {
   }
 }
 
-export function compare<T extends string>(a: T, b: T): boolean {
+export function compare<T extends string>(a: T | unknown, b: T): boolean {
+  if (typeof a === 'string' && typeof b === 'string') {
+    return a.trim() === b.trim();
+  }
   return a === b;
 }

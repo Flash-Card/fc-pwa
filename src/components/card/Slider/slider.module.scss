@@ -19,3 +19,58 @@
   display: flex;
   width: 100%;
 }
+
+.posetive {
+  --face-color: #739f3d;
+  --text-color: #fff;
+}
+  
+.negative {
+  --face-color: #ee693f;
+  --text-color: #fff;
+}
+
+.appear {
+
+}
+
+.appearActive {
+
+}
+
+.appearDone {
+
+}
+
+.enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.enterActive {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.enterDone {
+
+}
+
+.exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.exitActive {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.exitDone {
+
+}
+
+.enterActive,
+.exitActive {
+  transition: opacity 500ms, transform 500ms;
+}
