@@ -1,6 +1,7 @@
 .label {
   display: inline-block;
   font-size: 18px;
+  -webkit-tap-highlight-color: transparent;
   --switc-width: 40px;
   --switc-height: 20px;
 }
@@ -8,7 +9,6 @@
   opacity: 0.1;
   position: absolute;
   appearance: none;
-  -webkit-tap-highlight-color: transparent;
   & + .label {
     position: relative;
     padding-left: calc(var(--switc-width) + 10px);
