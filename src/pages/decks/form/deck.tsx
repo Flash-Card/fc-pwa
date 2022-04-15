@@ -3,7 +3,6 @@ import { Field } from 'react-final-form';
 import { TextField } from 'components/Form';
 import styles from './form.module.scss';
 
-
 interface IProps {
   handleSubmit(): void;
 }
