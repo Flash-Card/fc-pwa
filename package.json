@@ -1,6 +1,6 @@
 {
   "name": "flash-card-pwa",
-  "version": "2.1.3",
+  "version": "2.2.0",
   "private": true,
   "dependencies": {
     "@sentry/browser": "^6.19.3",
