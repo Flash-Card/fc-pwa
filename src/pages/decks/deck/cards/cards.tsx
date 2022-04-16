@@ -7,18 +7,20 @@ import { updateCard, deleteCard, ICard } from 'domain/decks';
 import { FlipCard, Card } from 'components/card';
 import { MorePic, IPickerItem } from 'components/MorePick';
 import { EditCard } from '../edit';
-import { reducer, getInitialState, TDackReducer, EDackActionType, setCounter } from './reducer';
+import { TransferCard } from '../transfer';
+import { reducer, getInitialState, TDackReducer, ECardActionType, setCounter } from './reducer';
 import styles from './cards-tab.module.scss';
 
 interface IProps {
   cards: ReadonlyArray<ICard>;
 }
 
-const OPTIONS: ReadonlyArray<IPickerItem<EDackActionType>> = [
-  { value: EDackActionType.START_EDIT, title: 'Edit Card' },
-  { value: EDackActionType.DELETE, title: 'Delete Card' },
-  { value: EDackActionType.HIDE, title: 'Hide Card' },
-  { value: EDackActionType.SHOW, title: 'Show Card' },
+const OPTIONS: ReadonlyArray<IPickerItem<ECardActionType>> = [
+  { value: ECardActionType.START_EDIT, title: 'Edit Card' },
+  { value: ECardActionType.DELETE, title: 'Delete Card' },
+  { value: ECardActionType.START_TRANSFER, title: 'Transfer Card to:' },
+  { value: ECardActionType.HIDE, title: 'Hide Card' },
+  { value: ECardActionType.SHOW, title: 'Show Card' },
 ]
 
 function getIndexByHash(list: ReadonlyArray<ICard>, hash: string): number {
@@ -45,8 +47,8 @@ const CardsTab: FC<IProps> = ({ cards }) => {
   );
 
   const action = useCallback(
-    (type: EDackActionType) => () => {
-      if (type !== EDackActionType.SET_COUNTER) {
+    (type: ECardActionType) => () => {
+      if (type !== ECardActionType.SET_COUNTER) {
         dispatch({ type });
       }
     },
@@ -68,12 +70,12 @@ const CardsTab: FC<IProps> = ({ cards }) => {
   );
 
   const handleChange = useCallback(
-    (item: IPickerItem<EDackActionType>) => {
-      if (item.value === EDackActionType.DELETE) {
+    (item: IPickerItem<ECardActionType>) => {
+      if (item.value === ECardActionType.DELETE) {
         disp(deleteCard(card));
-      } else if (item.value === EDackActionType.HIDE) {
+      } else if (item.value === ECardActionType.HIDE) {
         disp(updateCard({ ...card, hidden: true }));
-      } else if (item.value === EDackActionType.SHOW) {
+      } else if (item.value === ECardActionType.SHOW) {
         disp(updateCard({ ...card, hidden: false }));
       } else {
         action(item.value)();
@@ -83,7 +85,7 @@ const CardsTab: FC<IProps> = ({ cards }) => {
   );
 
   const options = useMemo(
-    () => OPTIONS.filter(f => f.value !== (card?.hidden ? EDackActionType.HIDE : EDackActionType.SHOW)),
+    () => OPTIONS.filter(f => f.value !== (card?.hidden ? ECardActionType.HIDE : ECardActionType.SHOW)),
     [card],
   );
 
@@ -97,9 +99,9 @@ const CardsTab: FC<IProps> = ({ cards }) => {
               <MorePic list={options} onSelect={handleChange} className={styles.pick} />
             </div>
             <div className={styles.bar}>
-              <button type='button' className={styles.prev} disabled={!item.hasPrev} onClick={action(EDackActionType.DECREMENT)} />
-              <button type='button' className={styles.flip} onClick={action(EDackActionType.FLIP)} />
-              <button type='button' className={styles.next} disabled={!item.hasNext} onClick={action(EDackActionType.INCREMENT)} />
+              <button type='button' className={styles.prev} disabled={!item.hasPrev} onClick={action(ECardActionType.DECREMENT)} />
+              <button type='button' className={styles.flip} onClick={action(ECardActionType.FLIP)} />
+              <button type='button' className={styles.next} disabled={!item.hasNext} onClick={action(ECardActionType.INCREMENT)} />
             </div>
           </>
         ) : (
@@ -113,7 +115,15 @@ const CardsTab: FC<IProps> = ({ cards }) => {
         state.isEdit ? (
           <EditCard
             item={card}
-            onComplete={action(EDackActionType.FINISH_EDIT)}
+            onComplete={action(ECardActionType.FINISH_EDIT)}
+          />
+        ) : null
+      }
+      {
+        state.isTransfering ? (
+          <TransferCard
+            item={card}
+            onComplete={action(ECardActionType.FINISH_TRANSFER)}
           />
         ) : null
       }

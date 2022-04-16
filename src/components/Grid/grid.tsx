@@ -1,21 +1,22 @@
-import { FC, memo } from 'react';
-import Card from './card/card';
+import { FC, memo, ReactNode } from 'react';
 import styles from './grid.module.scss';
 
-export interface IGrid {
-  list: Array<{ title: string, id: string }>;
-  createPath(id: string): string;
+export interface IGrid<T> {
+  list: Array<T>;
+  renderItem(data: T): ReactNode;
 }
 
-interface IProps extends IGrid {}
+type TProps<T = { id: string }> = IGrid<T>;
 
-const Grid: FC<IProps> = ({ list, createPath }) => {
+const Grid: FC<TProps> = ({ list, renderItem }) => {
   return (
     <ul className={styles.container}>
       {
         list.map(e => 
-          <li key={e.title} className={styles.item}>
-            <Card {...e} path={createPath(e.id)} />
+          <li key={e.id} className={styles.item}>
+            {
+              renderItem(e)
+            }
           </li>
         )
       }
