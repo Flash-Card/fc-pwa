@@ -1,21 +1,20 @@
 import { FC, memo } from 'react';
-import { Link } from 'react-router-dom';
 import styles from './card.module.scss';
 
 interface IProps {
   title: string;
-  id: string;
-  path: string;
+  onClick(): void;
 }
 
-const Card: FC<IProps> = ({ title, path }) => {
+const CardButton: FC<IProps> = ({ title, onClick }) => {
+
   return (
     <div className={styles.container}>
-      <Link className={styles.link} to={path}>
+      <button className={styles.link} onClick={onClick}>
         <div className={styles.content}>{title}</div>
-      </Link>
+      </button>
     </div>
   );
 }
 
-export default memo(Card);
+export default memo(CardButton);
