@@ -7,22 +7,23 @@ const CARDS_IN_LESSON = 3;
 
 interface IProps {
   cards: ReadonlyArray<ICard>;
+  cardsInLesson?: number;
 }
 
-const LessonsTab: FC<IProps> = ({ cards }) => {
+const LessonsTab: FC<IProps> = ({ cards, cardsInLesson = CARDS_IN_LESSON }) => {
 
   const [lessonIndex, setLessonIndex] = useState<number>();
 
   const list = useMemo(
-    () => [...Array(Math.ceil(cards.length / CARDS_IN_LESSON)).keys()],
+    () => [...Array(Math.ceil(cards.length / cardsInLesson)).keys()],
     [cards],
   );
 
   const lesson = useCallback(
     (index: number) => {
-      const from = (index - 1) * CARDS_IN_LESSON;
+      const from = (index - 1) * cardsInLesson;
       return cards
-        .slice(from, from + CARDS_IN_LESSON)
+        .slice(from, from + cardsInLesson)
         .map(e => ({ question: e.front, answer: e.back }));
     },
     [cards],

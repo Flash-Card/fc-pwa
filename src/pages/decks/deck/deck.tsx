@@ -69,7 +69,7 @@ const Deck = () => {
         editForm
       }
       <Routes>
-        <Route index element={<LessonsTab cards={cards} />} />
+        <Route index element={<LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />} />
         <Route path='cards' element={<CardsTab cards={cards} />} />
       </Routes>
     </div>

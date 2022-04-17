@@ -1,6 +1,7 @@
 import { FC, memo, useCallback, useMemo } from 'react';
 import { Form } from 'react-final-form';
 import omit from 'lodash/fp/omit';
+import get from 'lodash/get';
 import { useAppDispatch } from 'domain/index';
 import { EActionType, IDeckItem } from 'domain/decks';
 import { Container } from 'pages/common/container';
@@ -18,10 +19,14 @@ const EditDeck: FC<IProps> = ({ onComplete, item }) => {
   const metaDeck = useMemo(() => omit('cards')(item), [item]);
 
   const handleSubmit = useCallback(
-    (values) => {
+    (values: IDeckItem) => {
       dispatch({
         type: EActionType.UPDATE_DECK,
-        payload: { ...metaDeck, ...values },
+        payload: {
+          ...metaDeck,
+          ...values,
+          cardsInLesson: Number(get(values, 'cardsInLesson', 3)),
+        },
       });
       onComplete();
     },
