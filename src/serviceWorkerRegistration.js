@@ -72,9 +72,7 @@ function registerValidSW(swUrl, config) {
                   'tabs for this page are closed. See https://cra.link/PWA.'
               );
 
-              if (window.confirm('New wesion is available, Reload?')) {
-                window.location.reload();
-              }
+              window.alert('New wesion is available. Pleas restart the application');
 
               // Execute callback
               if (config && config.onUpdate) {
