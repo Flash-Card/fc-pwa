@@ -4,9 +4,10 @@ export interface IDeckState {
   flip: boolean;
   count: number;
   isEdit: boolean;
+  isTransfering: boolean;
 }
 
-export enum EDackActionType {
+export enum ECardActionType {
   INCREMENT = 'INCREMENT',
   DECREMENT = 'DECREMENT',
   FLIP = 'FLIP',
@@ -16,40 +17,46 @@ export enum EDackActionType {
   HIDE = 'HIDE',
   SHOW = 'SHOW',
   SET_COUNTER = 'SET_COUNTER',
+  START_TRANSFER = 'START_TRANSFER',
+  FINISH_TRANSFER = 'FINISH_TRANSFER',
 }
 
 interface ISetCounter {
-  type: typeof EDackActionType.SET_COUNTER;
+  type: typeof ECardActionType.SET_COUNTER;
   payload: number;
 }
 
 export function setCounter(counter: number): ISetCounter {
   return {
-    type: EDackActionType.SET_COUNTER,
+    type: ECardActionType.SET_COUNTER,
     payload: counter,
   }
 }
 
 export type IDackAction = {
-  type: Exclude<EDackActionType, EDackActionType.SET_COUNTER>;
+  type: Exclude<ECardActionType, ECardActionType.SET_COUNTER>;
 } | ISetCounter;
 
 export type TDackReducer = Reducer<IDeckState, IDackAction>;
 
 export function reducer(state: IDeckState, action: IDackAction) {
   switch (action.type) {
-    case EDackActionType.INCREMENT:
+    case ECardActionType.INCREMENT:
       return { ...state, count: state.count + 1, flip: false };
-    case EDackActionType.DECREMENT:
+    case ECardActionType.DECREMENT:
       return { ...state, count: state.count - 1, flip: false };
-    case EDackActionType.FLIP:
+    case ECardActionType.FLIP:
       return { ...state, flip: !state.flip };
-    case EDackActionType.START_EDIT:
+    case ECardActionType.START_EDIT:
       return { ...state, isEdit: true };
-    case EDackActionType.FINISH_EDIT:
+    case ECardActionType.FINISH_EDIT:
       return { ...state, isEdit: false };
-    case EDackActionType.SET_COUNTER:
-      return { ...state, count: action.payload }
+    case ECardActionType.SET_COUNTER:
+      return { ...state, count: action.payload };
+    case ECardActionType.START_TRANSFER:
+      return { ...state, isTransfering: true };
+    case ECardActionType.FINISH_TRANSFER:
+      return { ...state, isTransfering: false };
     default:
       throw new Error();
   }
@@ -59,6 +66,7 @@ export const initialArg: IDeckState = {
   count: 0,
   flip: false,
   isEdit: false,
+  isTransfering: false,
 }
 
 export function getInitialState(idx: number) {

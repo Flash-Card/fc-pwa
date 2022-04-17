@@ -2,7 +2,8 @@ import { memo, useCallback } from 'react';
 import { Form } from 'react-final-form';
 import { nanoid } from 'nanoid';
 import { useNavigate } from 'react-router-dom';
-import { addDeck } from 'domain/decks';
+import get from 'lodash/get';
+import { addDeck, IDeckItem } from 'domain/decks';
 import { useAppDispatch } from 'domain/index';
 import styles from './create-deck.module.scss';
 import { FormDeck } from '../form';
@@ -13,8 +14,14 @@ const CreateDeck = () => {
   const dispatch = useAppDispatch();
 
   const handleSubmit = useCallback(
-    (values) => {
-      dispatch(addDeck({ ...values, id: nanoid(6) }));
+    (values: IDeckItem) => {
+      dispatch(
+          addDeck({
+          ...values,
+          id: nanoid(6),
+          cardsInLesson: Number(get(values, 'cardsInLesson', 3)),
+        }),
+      );
       navigate('/');
     },
     [navigate, dispatch],

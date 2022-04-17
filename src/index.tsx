@@ -4,7 +4,6 @@ import { BrowserRouter } from "react-router-dom";
 import { configureStore } from './domain';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
-
 import App from './pages';
 
 async function flashCardApp() {

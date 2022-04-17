@@ -10,6 +10,7 @@ export interface ICard {
 export interface IDeckItem {
   id: string;
   name: string;
+  cardsInLesson?: number;
   description?: string;
   cards?: Record<string, ICard>;
 }
