@@ -6,6 +6,9 @@ import { useAppDispatch } from 'domain/index';
 import { updateCard, deleteCard, ICard } from 'domain/decks';
 import { FlipCard, Card } from 'components/card';
 import { MorePic, IPickerItem } from 'components/MorePick';
+import { ViewBar, EStatus } from 'components/ViewBar';
+import { Condition } from 'components/Tab';
+import ViewList from './List';
 import { EditCard } from '../edit';
 import { TransferCard } from '../transfer';
 import { reducer, getInitialState, TDackReducer, ECardActionType, setCounter } from './reducer';
@@ -89,21 +92,44 @@ const CardsTab: FC<IProps> = ({ cards }) => {
     [card],
   );
 
+  const propgress = useCallback(
+    (st: EStatus) => st === EStatus.GRID ? (
+      <div className={styles.propgress}>{state.count + 1} from {cards.length}</div>
+    ) : null,
+    [state, cards],
+  );
+
   return (
     <div className={styles.container}>
       {
         item ? (
-          <>
-            <div className={cx(styles.card, { [styles.hidden]: card.hidden })}>
-              <FlipCard front={item.front} back={item.back} isFlipped={state.flip} />
-              <MorePic list={options} onSelect={handleChange} className={styles.pick} />
-            </div>
-            <div className={styles.bar}>
-              <button type='button' className={styles.prev} disabled={!item.hasPrev} onClick={action(ECardActionType.DECREMENT)} />
-              <button type='button' className={styles.flip} onClick={action(ECardActionType.FLIP)} />
-              <button type='button' className={styles.next} disabled={!item.hasNext} onClick={action(ECardActionType.INCREMENT)} />
-            </div>
-          </>
+          <ViewBar
+            defaultStatus={EStatus.GRID}
+            getTitle={propgress}
+          >
+            {
+              (st, fn) => (
+                <>
+                  <Condition when={st === EStatus.GRID}>
+                    <>
+                      <div className={cx(styles.card, { [styles.hidden]: card.hidden })}>
+                        <FlipCard front={item.front} back={item.back} isFlipped={state.flip} />
+                        <MorePic list={options} onSelect={handleChange} className={styles.pick} />
+                      </div>
+                      <div className={styles.bar}>
+                        <button type='button' className={styles.prev} disabled={!item.hasPrev} onClick={action(ECardActionType.DECREMENT)} />
+                        <button type='button' className={styles.flip} onClick={action(ECardActionType.FLIP)} />
+                        <button type='button' className={styles.next} disabled={!item.hasNext} onClick={action(ECardActionType.INCREMENT)} />
+                      </div>
+                    </>
+                  </Condition>
+                  <Condition when={st === EStatus.LIST}>
+                    <ViewList list={cards} onChange={fn(EStatus.GRID)} />
+                  </Condition>
+                </>
+              )
+            }
+          </ViewBar>
         ) : (
           <div className={styles.empty}>
             <p>It's still empty here.</p>
@@ -111,22 +137,18 @@ const CardsTab: FC<IProps> = ({ cards }) => {
           </div>
         )
       }
-      {
-        state.isEdit ? (
-          <EditCard
-            item={card}
-            onComplete={action(ECardActionType.FINISH_EDIT)}
-          />
-        ) : null
-      }
-      {
-        state.isTransfering ? (
-          <TransferCard
-            item={card}
-            onComplete={action(ECardActionType.FINISH_TRANSFER)}
-          />
-        ) : null
-      }
+      <Condition when={state.isEdit}>
+        <EditCard
+          item={card}
+          onComplete={action(ECardActionType.FINISH_EDIT)}
+        />
+      </Condition>
+      <Condition when={state.isTransfering}>
+        <TransferCard
+          item={card}
+          onComplete={action(ECardActionType.FINISH_TRANSFER)}
+        />
+      </Condition>
     </div>
   );
 }

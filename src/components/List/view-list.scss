@@ -1,0 +1,23 @@
+.view-list {
+  &__wrapper {
+    overflow-y: auto;
+    height: 100%;
+    position: relative;
+  }
+  &__container {
+    position: relative;
+  }
+  &__item {
+  }
+  &__link {
+    text-decoration: none;
+    color: var(--fifth-color);
+    font-size: 20px;
+    line-height: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    width: 100%;
+  }
+}

@@ -1,0 +1,36 @@
+.view-bar {
+  &__container {
+    display: flex;
+    height: 30px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__btn-group {
+    display: flex;
+    position: relative;
+    gap: 15px;
+    margin-left: auto;
+    flex: 0 0 auto;
+  }
+  &__btn {
+    padding: 0;
+    border: 0 none;
+    width: 30px;
+    height: 30px;
+    mask-size: cover;
+    opacity: 0.8;
+    filter: grayscale(1);
+    transition: 0.4s all ease-in-out;
+    background-color: var(--fifth-color);
+    &_list {
+      mask-image: url('./list.svg');
+    }
+    &_grid {
+      mask-image: url('./grid.svg');
+    }
+    &_active {
+      opacity: 1;
+      filter: none;
+    }
+  }
+}
