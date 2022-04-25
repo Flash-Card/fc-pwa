@@ -1,10 +1,12 @@
 import { Reducer } from 'react';
+import { nanoid } from 'nanoid';
 
 export interface IDeckState {
   flip: boolean;
   count: number;
   isEdit: boolean;
   isTransfering: boolean;
+  key: string;
 }
 
 export enum ECardActionType {
@@ -23,13 +25,19 @@ export enum ECardActionType {
 
 interface ISetCounter {
   type: typeof ECardActionType.SET_COUNTER;
-  payload: number;
+  payload: {
+    count: number;
+    key: string;
+  };
 }
 
-export function setCounter(counter: number): ISetCounter {
+export function setCounter(count: number): ISetCounter {
   return {
     type: ECardActionType.SET_COUNTER,
-    payload: counter,
+    payload: {
+      count,
+      key: nanoid(6),
+    },
   }
 }
 
@@ -52,7 +60,7 @@ export function reducer(state: IDeckState, action: IDackAction) {
     case ECardActionType.FINISH_EDIT:
       return { ...state, isEdit: false };
     case ECardActionType.SET_COUNTER:
-      return { ...state, count: action.payload };
+      return { ...state, ...action.payload };
     case ECardActionType.START_TRANSFER:
       return { ...state, isTransfering: true };
     case ECardActionType.FINISH_TRANSFER:
@@ -67,6 +75,7 @@ export const initialArg: IDeckState = {
   flip: false,
   isEdit: false,
   isTransfering: false,
+  key: nanoid(6),
 }
 
 export function getInitialState(idx: number) {

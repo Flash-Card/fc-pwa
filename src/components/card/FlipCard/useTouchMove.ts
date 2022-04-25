@@ -3,18 +3,30 @@ import { useCallback, useRef, TouchEvent, Touch} from 'react';
 interface IUseTouch {
   onChange?(shift: number): void;
   threshold?: number;
+  onTap?(): void;
 }
 
-export const useTouchMove = <T extends HTMLElement>({ onChange, threshold = (1/3) }: IUseTouch) => {
+interface IPosition {
+  timeStamp: number;
+  clientX: number;
+  // clientY: number;
+  // screenX: number;
+  // screenY: number;
+  // radiusX: number;
+  // radiusY: number;
+};
+
+export const useTouchMove = <T extends HTMLElement>({ onChange, threshold = (1/3), onTap }: IUseTouch) => {
 
   const container = useRef<T>(null);
-  const start = useRef<Touch>();
+  const start = useRef<IPosition>();
   const current = useRef<Touch>();
 
   const onTouchStart = useCallback(
-    ({ targetTouches }: TouchEvent<T>) => {
+    ({ targetTouches, timeStamp }: TouchEvent<T>) => {
       if (targetTouches.length === 1) {
-        start.current = targetTouches[0];
+        const { clientX } = targetTouches[0];
+        start.current = { clientX, timeStamp };
       }
     },
     [],
@@ -23,8 +35,8 @@ export const useTouchMove = <T extends HTMLElement>({ onChange, threshold = (1/3
   const updatePosition = useCallback(
     () => {
       if (start.current && container.current && current.current) {
-        const delta = start.current.clientX - current.current.clientX;
-        container.current.style.transform = `translateX(${-delta}px)`;
+        const deltaX = start.current.clientX - current.current.clientX;
+        container.current.style.transform = `translate3d(${-deltaX}px, 0, 0)`;
       }
     },
     [],
@@ -41,13 +53,18 @@ export const useTouchMove = <T extends HTMLElement>({ onChange, threshold = (1/3
   );
 
   const onTouchEnd = useCallback(
-    () => {
+    ({ timeStamp }) => {
+      if (start.current && typeof onTap === 'function') {
+        if (timeStamp - start.current.timeStamp < 200) {
+          onTap();
+        }
+      }
       if (start.current && current.current) {
         const delta = start.current.clientX - current.current.clientX;
         if (typeof onChange === 'function' && Math.abs(delta) > window.innerWidth * threshold) {
           onChange(delta / Math.abs(delta));
         } else if (container.current) {
-          container.current.style.transform = `translateX(0px)`;
+          container.current.style.transform = `translate3d(0, 0, 0)`;
         }
         start.current = undefined;
       }

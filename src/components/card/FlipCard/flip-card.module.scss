@@ -1,6 +1,13 @@
-.container {
+.main {
   height: 100%;
   position: relative;
+}
+.container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   background-color: transparent;
   will-change: transform;
 }
@@ -33,4 +40,51 @@
 
 .flip .warapper {
   transform: rotateY(180deg);
+}
+
+.appear {
+  // opacity: 0;
+}
+
+.appearActive {
+  // opacity: 1;
+
+}
+
+.appearDone {
+}
+
+.enter {
+  opacity: 0;
+  // transform: translateX(-100%);
+}
+
+.enterActive {
+  opacity: 1;
+  // transform: translateX(0%);
+}
+
+.enterDone {
+
+}
+
+.exit {
+  opacity: 1;
+  // transform: translateX(0%);
+}
+
+.exitActive {
+  opacity: 0;
+  // transform: translateX(100%);
+}
+
+.exitDone {
+  // opacity: 0;
+}
+
+.appear,
+.enterActive,
+.appearActive,
+.exitActive {
+  transition: opacity 300ms, transform 300ms;
 }

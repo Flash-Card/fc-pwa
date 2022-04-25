@@ -99,6 +99,14 @@ const CardsTab: FC<IProps> = ({ cards }) => {
     [state, cards],
   );
 
+  const handlSetCard = useCallback(
+    (i: 1 | -1) => {
+      const index = Math.min(Math.max(state.count + i, 0), cards.length - 1);
+      dispatch(setCounter(index));
+    },
+    [state, cards, dispatch],
+  )
+
   return (
     <div className={styles.container}>
       {
@@ -111,17 +119,18 @@ const CardsTab: FC<IProps> = ({ cards }) => {
               (st, fn) => (
                 <>
                   <Condition when={st === EStatus.GRID}>
-                    <>
-                      <div className={cx(styles.card, { [styles.hidden]: card.hidden })}>
-                        <FlipCard front={item.front} back={item.back} isFlipped={state.flip} />
+                    <div className={cx(styles.card, { [styles.hidden]: card.hidden })}>
+                      <FlipCard
+                        id={state.key + card.id}
+                        front={item.front}
+                        back={item.back}
+                        isFlipped={state.flip}
+                        onChange={handlSetCard}
+                        onFlip={action(ECardActionType.FLIP)}
+                      >
                         <MorePic list={options} onSelect={handleChange} className={styles.pick} />
-                      </div>
-                      <div className={styles.bar}>
-                        <button type='button' className={styles.prev} disabled={!item.hasPrev} onClick={action(ECardActionType.DECREMENT)} />
-                        <button type='button' className={styles.flip} onClick={action(ECardActionType.FLIP)} />
-                        <button type='button' className={styles.next} disabled={!item.hasNext} onClick={action(ECardActionType.INCREMENT)} />
-                      </div>
-                    </>
+                      </FlipCard>
+                    </div>
                   </Condition>
                   <Condition when={st === EStatus.LIST}>
                     <ViewList list={cards} onChange={fn(EStatus.GRID)} />
