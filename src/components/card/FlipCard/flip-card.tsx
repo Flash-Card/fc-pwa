@@ -1,21 +1,44 @@
-import { FC, memo } from 'react';
+import { FC, memo, useEffect, useRef, ReactElement } from 'react';
+import { SwitchTransition, CSSTransition } from "react-transition-group";
 import cx from 'classnames';
+import { useTouchMove } from './useTouchMove';
 import styles from './flip-card.module.scss';
 
 interface IProps {
   front: string | JSX.Element;
   back: string | JSX.Element;
   isFlipped?: boolean;
+  id: string;
+  onChange(nc: 1 | -1): void;
+  children?: ReactElement;
+  onFlip(): void;
 }
 
-const FlipCard: FC<IProps> = ({ front, back, isFlipped }) => {
+const FlipCard: FC<IProps> = ({ id, front, back, isFlipped, onChange, children, onFlip }) => {
+  
+  const { ref, ...props } = useTouchMove<HTMLDivElement>({ onChange, threshold: 0.5, onTap: onFlip });
+
   return (
-    <div className={cx(styles.container, { [styles.flip]: isFlipped })}>
-      <div className={styles.warapper}>
-        <div className={cx(styles.content, styles.front)}>{front}</div>
-        <div className={cx(styles.content, styles.back)}>{back}</div>
-      </div>
-    </div>
+    <SwitchTransition mode='out-in'>
+      <CSSTransition
+        key={id}
+        addEndListener={(node, done) => {
+          node.addEventListener("transitionend", done, false);
+        }}
+        classNames={{ ...styles }}
+      >
+        <div
+          ref={ref}
+          className={cx(styles.container, { [styles.flip]: isFlipped })}
+          >
+          <div className={styles.warapper} {...props}>
+            <div className={cx(styles.content, styles.front)}>{front}</div>
+            <div className={cx(styles.content, styles.back)}>{back}</div>
+          </div>
+          { children }
+        </div>  
+      </CSSTransition>
+    </SwitchTransition>
   );
 }
 
