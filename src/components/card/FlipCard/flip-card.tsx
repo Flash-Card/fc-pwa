@@ -16,7 +16,7 @@ interface IProps {
 
 const FlipCard: FC<IProps> = ({ id, front, back, isFlipped, onChange, children, onFlip }) => {
   
-  const { ref, ...props } = useTouchMove<HTMLDivElement>({ onChange, threshold: 0.5, onTap: onFlip });
+  const { ref, ...props } = useTouchMove<HTMLDivElement>({ onChange, threshold: 0.38, onTap: onFlip });
 
   return (
     <SwitchTransition mode='out-in'>
