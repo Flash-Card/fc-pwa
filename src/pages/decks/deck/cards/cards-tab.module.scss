@@ -35,7 +35,6 @@
   position: relative;
   will-change: opacity;
   transition: 0.3s opacity ease-in-out;
-  overflow: auto;
   &.hidden {
     opacity: 0.4;
   }
