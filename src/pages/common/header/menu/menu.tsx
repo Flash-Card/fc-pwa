@@ -9,7 +9,7 @@ interface IProps {
 const Menu: FC<IProps> = () => {
 
   const handleLink = useCallback(
-    ({ isActive }) => cx(styles.link, { [styles.active]: isActive }),
+    ({ isActive }: { isActive: boolean }) => cx(styles.link, { [styles.active]: isActive }),
     [],
   );
 

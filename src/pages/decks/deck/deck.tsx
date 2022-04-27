@@ -7,7 +7,12 @@ import { useDeck } from './useDeck';
 import { CreateCard } from './create';
 import styles from './deck.module.scss';
 
-const TABS = [
+interface ITab {
+  id: string;
+  title: string;
+}
+
+const TABS: ReadonlyArray<ITab> = [
   { id: '', title: 'Lesson' },
   { id: 'cards', title: 'Cards' },
   { id: 'quiz', title: 'Quiz' },
@@ -23,7 +28,7 @@ const Deck = () => {
   const toggleCreate = useCallback(() => setState(s => !s), [useState]);
 
   const handleComplete = useCallback(
-    (id) => {
+    (id: string) => {
       setState(false);
       navigate(`cards#${id}`);
     },
@@ -31,12 +36,12 @@ const Deck = () => {
   );
 
   const getPath = useCallback(
-    ({ id: tabId }) => [tabId].join('/'),
+    ({ id: tabId }: ITab) => [tabId].join('/'),
     [],
   );
 
   const getTitle = useCallback(
-    ({ title, id }) => id === 'cards' ? `${title} (${cards.length})` : title,
+    ({ title, id }: ITab) => id === 'cards' ? `${title} (${cards.length})` : title,
     [cards],
   );
 
