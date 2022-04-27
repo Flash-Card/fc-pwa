@@ -14,3 +14,7 @@
     bottom: max(5px, env(safe-area-inset-bottom));
   }
 }
+.wrapper {
+  overflow: hidden;
+  height: 100%;
+}
