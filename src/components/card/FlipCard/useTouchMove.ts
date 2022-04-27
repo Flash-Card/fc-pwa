@@ -55,7 +55,7 @@ export const useTouchMove = <T extends HTMLElement>({ onChange, threshold = (1/3
   const onTouchEnd = useCallback(
     ({ timeStamp }) => {
       if (start.current && typeof onTap === 'function') {
-        if (timeStamp - start.current.timeStamp < 200) {
+        if (timeStamp - start.current.timeStamp < 180) {
           onTap();
         }
       }
@@ -66,8 +66,9 @@ export const useTouchMove = <T extends HTMLElement>({ onChange, threshold = (1/3
         } else if (container.current) {
           container.current.style.transform = `translate3d(0, 0, 0)`;
         }
-        start.current = undefined;
       }
+      start.current = undefined;
+      current.current = undefined;
     },
     [onChange],
   );

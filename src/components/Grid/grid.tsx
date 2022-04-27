@@ -1,5 +1,5 @@
 import { FC, memo, ReactNode } from 'react';
-import styles from './grid.module.scss';
+import './grid.scss';
 
 export interface IGrid<T> {
   list: Array<T>;
@@ -10,10 +10,10 @@ type TProps<T = { id: string }> = IGrid<T>;
 
 const Grid: FC<TProps> = ({ list, renderItem }) => {
   return (
-    <ul className={styles.container}>
+    <ul className="grid__container">
       {
         list.map(e => 
-          <li key={e.id} className={styles.item}>
+          <li key={e.id} className="grid__item">
             {
               renderItem(e)
             }

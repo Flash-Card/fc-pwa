@@ -1,4 +1,4 @@
-import { FC, memo, useEffect, useRef, ReactElement } from 'react';
+import { FC, memo, ReactElement } from 'react';
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import cx from 'classnames';
 import { useTouchMove } from './useTouchMove';
@@ -32,11 +32,11 @@ const FlipCard: FC<IProps> = ({ id, front, back, isFlipped, onChange, children, 
           className={cx(styles.container, { [styles.flip]: isFlipped })}
           >
           <div className={styles.warapper} {...props}>
-            <div className={cx(styles.content, styles.front)}>{front}</div>
-            <div className={cx(styles.content, styles.back)}>{back}</div>
+            <div className={cx(styles.side, styles.front)}>{front}</div>
+            <div className={cx(styles.side, styles.back)}>{back}</div>
           </div>
           { children }
-        </div>  
+        </div>
       </CSSTransition>
     </SwitchTransition>
   );

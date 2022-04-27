@@ -16,5 +16,5 @@ export function compare<T extends string>(a: T | unknown, b: T): boolean {
   if (typeof a === 'string' && typeof b === 'string') {
     return a.trim() === b.trim();
   }
-  return a === b;
+  return a === b.trim();
 }
