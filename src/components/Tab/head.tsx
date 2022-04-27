@@ -13,7 +13,7 @@ interface IProps<T> {
 function TabHead<T>({ data, getPath, getTitle, getKey }: IProps<T>) {
 
   const getClassName = useCallback(
-    ({ isActive }) => cx(styles.tab, { [styles.active]: isActive }),
+    ({ isActive }: { isActive: boolean }) => cx(styles.tab, { [styles.active]: isActive }),
     [],
   );
 

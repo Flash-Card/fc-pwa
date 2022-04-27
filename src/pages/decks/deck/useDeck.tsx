@@ -8,7 +8,12 @@ import { EditDeck } from '../edit';
 
 const defaultDeck = {} as IDeckItem;
 
-const actionList = [
+interface IActionItem {
+  value: string;
+  title: string;
+}
+
+const actionList: ReadonlyArray<IActionItem> = [
   { value: 'edit', title: 'Edit Deck' },
   { value: 'delete', title: 'Delete Deck' }
 ]
@@ -35,7 +40,7 @@ export function useDeck() {
   );
 
   const handleSelect = useCallback(
-    ({ value }) => {
+    ({ value }: IActionItem) => {
       if (value === 'delete') {
         dispatch({ type: EActionType.DELETE_DECK, payload: deck.id });
         nvigate('/', { replace: true });

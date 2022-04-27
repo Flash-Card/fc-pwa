@@ -53,7 +53,7 @@ export const useTouchMove = <T extends HTMLElement>({ onChange, threshold = (1/3
   );
 
   const onTouchEnd = useCallback(
-    ({ timeStamp }) => {
+    ({ timeStamp }: TouchEvent<T>) => {
       if (start.current && typeof onTap === 'function') {
         if (timeStamp - start.current.timeStamp < 180) {
           onTap();
