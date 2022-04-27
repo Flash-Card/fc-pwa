@@ -6,8 +6,7 @@
   }
   &__container {
     position: relative;
-  }
-  &__item {
+    overflow-y: auto;
   }
   &__link {
     text-decoration: none;

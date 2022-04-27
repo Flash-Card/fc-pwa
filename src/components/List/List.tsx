@@ -1,4 +1,4 @@
-import { FC, memo, ReactElement } from 'react';
+import { memo, ReactElement } from 'react';
 import './view-list.scss';
 
 interface IListProps<T> {
@@ -13,15 +13,13 @@ function List<T>({
   getKey,
 }: IListProps<T>): ReactElement {
   return (
-    <div className='view-list__wrapper'>
-      <ul className='view-list__container'>
-        {
-          list.map(el => (
-            <li key={getKey(el)} className='view-list__item'>{renderItem(el)}</li>
-            ))
-          }
-      </ul>
-    </div>
+    <ul className='view-list__container'>
+      {
+        list.map(el => (
+          <li key={getKey(el)} className='view-list__item'>{renderItem(el)}</li>
+          ))
+        }
+    </ul>
   );
 }
 
