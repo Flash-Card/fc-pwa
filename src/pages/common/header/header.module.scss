@@ -9,6 +9,8 @@
   background: var(--second-color);
   gap: 20px;
   justify-content: flex-start;
+  position: sticky;
+  top: 0;
 }
 .version {
   color: #fff;
