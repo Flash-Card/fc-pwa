@@ -1,6 +1,6 @@
 import { FC, memo, useMemo } from 'react';
 import { Field } from 'react-final-form';
-import { TextField, SelectField } from 'components/Form';
+import { TextField, SelectField, TextAreaField } from 'components/Form';
 import styles from './form.module.scss';
 
 interface IProps {
@@ -16,6 +16,7 @@ const FormDeck: FC<IProps> = ({ handleSubmit }) => {
 
   const sortOptions = useMemo(
     () => [
+      { value: 'id', label: 'unsorted' },
       { value: 'front', label: 'Front' },
       { value: 'back', label: 'Back' },
     ],
@@ -41,7 +42,7 @@ const FormDeck: FC<IProps> = ({ handleSubmit }) => {
         getLabel={(o: IOption) => o.label}
         getValue={(o: IOption) => o.value}
       />
-      <Field name='decription' component={TextField} label='Decription' />
+      <Field name='decription' component={TextAreaField} label='Decription' />
       <button type='submit' className={styles.btn}>Ok</button>
     </form>
   )

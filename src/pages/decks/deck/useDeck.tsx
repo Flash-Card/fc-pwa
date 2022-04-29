@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ValidationErrors } from 'final-form';
 import get from 'lodash/get';
 import { useAppSelector, useAppDispatch } from 'domain/index';
-import { IDeckItem, ICard, getDeckRequest, EActionType } from 'domain/decks';
+import { IDeckItem, ICard, getDeckRequest, EActionType, addCard } from 'domain/decks';
 import { MorePic } from 'components/MorePick';
 import { EditDeck } from '../edit';
 import { sortCart, cardValidation } from './helpers';
@@ -75,6 +74,11 @@ export function useDeck() {
 
   const validateCard = useCallback(cardValidation(cards), [cards]);
 
+  const addCardHandler = useCallback(
+    (card: ICard) => dispatch(addCard(card)),
+    [dispatch],
+  )
+
   return {
     deck,
     cards,
@@ -82,5 +86,6 @@ export function useDeck() {
     actionSelector,
     editForm,
     validateCard,
+    addCard: addCardHandler,
   };
 }
