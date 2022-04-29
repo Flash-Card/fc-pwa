@@ -1,8 +1,7 @@
 import { FC, memo, useCallback } from 'react';
 import { Form } from 'react-final-form';
 import { nanoid } from 'nanoid';
-import { useAppDispatch } from 'domain/index';
-import { addCard, ICard } from 'domain/decks';
+import { ICard } from 'domain/decks';
 import { Container } from 'pages/common/container';
 import { useDeck } from '../useDeck';
 import { FormCard } from '../../form';
@@ -15,16 +14,15 @@ interface IProps {
 }
 
 const CreateCard: FC<IProps> = ({ onCancel, onComplete }) => {
-  const dispatch = useAppDispatch();
-  const { deck, validateCard } = useDeck();
+  const { deck, validateCard, addCard } = useDeck();
 
   const handleSubmit = useCallback(
     (values: TFormData) => {
       const id = nanoid(6);
-      dispatch(addCard({ ...values, id, deckId: deck.id }));
+      addCard({ ...values, id, deckId: deck.id });
       onComplete(id);
     },
-    [onComplete, dispatch],
+    [onComplete, addCard],
   );
 
   return (
