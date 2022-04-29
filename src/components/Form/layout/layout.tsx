@@ -1,5 +1,5 @@
 import { FC, memo, ReactNode } from 'react';
-import styles from './layout.module.scss';
+import './layout.scss';
 
 interface IProps {
   children: ReactNode;
@@ -9,9 +9,9 @@ interface IProps {
 
 const Layout: FC<IProps> = ({ children, id, title }) => {
   return (
-    <div className={styles.conatiner}>
-      <div className={styles.wrapper}>
-        <label htmlFor={id} className={styles.label}>{title}</label>
+    <div className="form-field">
+      <div className="form-field__wrapper">
+        <label htmlFor={id} className="form-field__label">{title}</label>
       </div>
       {children}
     </div>

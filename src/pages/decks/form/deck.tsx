@@ -1,13 +1,27 @@
-import { FC, memo } from 'react';
+import { FC, memo, useMemo } from 'react';
 import { Field } from 'react-final-form';
-import { TextField } from 'components/Form';
+import { TextField, SelectField } from 'components/Form';
 import styles from './form.module.scss';
 
 interface IProps {
   handleSubmit(): void;
 }
 
+interface IOption {
+  value: string;
+  label: string;
+}
+
 const FormDeck: FC<IProps> = ({ handleSubmit }) => {
+
+  const sortOptions = useMemo(
+    () => [
+      { value: 'front', label: 'Front' },
+      { value: 'back', label: 'Back' },
+    ],
+    [],
+  );
+
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <Field name='name' component={TextField} label='Name' />
@@ -18,6 +32,14 @@ const FormDeck: FC<IProps> = ({ handleSubmit }) => {
         inputMode="numeric"
         type='number'
         min={3}
+      />
+      <Field
+        name='sortBy'
+        component={SelectField}
+        label='Sort By'
+        options={sortOptions}
+        getLabel={(o: IOption) => o.label}
+        getValue={(o: IOption) => o.value}
       />
       <Field name='decription' component={TextField} label='Decription' />
       <button type='submit' className={styles.btn}>Ok</button>

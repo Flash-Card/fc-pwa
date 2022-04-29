@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import get from 'lodash/get';
+import sortBy from 'lodash/sortBy';
 import { useAppSelector, useAppDispatch } from 'domain/index';
 import { IDeckItem, ICard, getDeckRequest, EActionType } from 'domain/decks';
 import { MorePic } from 'components/MorePick';
@@ -18,6 +19,12 @@ const actionList: ReadonlyArray<IActionItem> = [
   { value: 'delete', title: 'Delete Deck' }
 ]
 
+function sortCart<C extends ICard>(field?: 'front' | 'back'): (l: ReadonlyArray<C>) => ReadonlyArray<C> {
+  if (typeof field === 'undefined') return (list: ReadonlyArray<C>) => list;
+  const sort = (a: C, b: C) => a[field].localeCompare(b[field]);
+  return (list: ReadonlyArray<C>) => list.slice().sort(sort);
+}
+
 export function useDeck() {
 
   const { id } = useParams<{id: string}>();
@@ -33,9 +40,10 @@ export function useDeck() {
     },
     [id, dispatch],
   );
+
   
   const cards = useMemo<ReadonlyArray<ICard>>(
-    () => Object.values(get(deck, 'cards', {})),
+    () => sortCart(deck.sortBy)(Object.values(get(deck, 'cards', {}))),
     [deck],
   );
 
