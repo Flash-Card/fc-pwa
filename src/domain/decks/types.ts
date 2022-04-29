@@ -13,6 +13,7 @@ export interface IDeckItem {
   cardsInLesson?: number;
   description?: string;
   cards?: Record<string, ICard>;
+  sortBy?: 'front' | 'back';
 }
 
 export type TDecks = Record<string, IDeckItem>;

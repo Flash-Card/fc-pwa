@@ -12,6 +12,8 @@ export const TABLE = {
     index: {
       id: 'id',
       deckId: 'deckId',
+      front: 'front',
+      back: 'back',
     }
   },
 }

@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { ValidationErrors } from 'final-form';
 import get from 'lodash/get';
 import { useAppSelector, useAppDispatch } from 'domain/index';
 import { IDeckItem, ICard, getDeckRequest, EActionType } from 'domain/decks';
 import { MorePic } from 'components/MorePick';
 import { EditDeck } from '../edit';
+import { sortCart, cardValidation } from './helpers';
 
 const defaultDeck = {} as IDeckItem;
 
@@ -33,9 +35,10 @@ export function useDeck() {
     },
     [id, dispatch],
   );
+
   
   const cards = useMemo<ReadonlyArray<ICard>>(
-    () => Object.values(get(deck, 'cards', {})),
+    () => sortCart(deck.sortBy)(Object.values(get(deck, 'cards', {}))),
     [deck],
   );
 
@@ -70,11 +73,14 @@ export function useDeck() {
     [isEditDeck, deck],
   );
 
+  const validateCard = useCallback(cardValidation(cards), [cards]);
+
   return {
     deck,
     cards,
     id,
     actionSelector,
     editForm,
+    validateCard,
   };
 }

@@ -1,0 +1,31 @@
+.form-field {
+  &_error {
+    .form-field__field {
+      border-bottom-color: #D42B3A;
+      color: #D42B3A;
+    }
+  }
+  &__label {
+    margin-bottom: 5px;
+    display: block;
+    font-size: 18px;
+    color: #646464;
+  }
+  &__field {
+    width: 100%;
+    height: 40px;
+    font-size: 18px;
+    border: 1px solid transparent;
+    border-bottom-color: #739f3d;
+    appearance: none;
+    padding: 8px;
+    outline: none;
+    &_text {
+      padding: 8px;
+    }
+  }
+  &__error-message {
+    font-size: 14px;
+    color: #D42B3A;
+  }
+}

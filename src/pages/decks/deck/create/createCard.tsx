@@ -16,7 +16,7 @@ interface IProps {
 
 const CreateCard: FC<IProps> = ({ onCancel, onComplete }) => {
   const dispatch = useAppDispatch();
-  const { deck } = useDeck();
+  const { deck, validateCard } = useDeck();
 
   const handleSubmit = useCallback(
     (values: TFormData) => {
@@ -29,7 +29,8 @@ const CreateCard: FC<IProps> = ({ onCancel, onComplete }) => {
 
   return (
     <Container onClose={onCancel} name="Create Card">
-      <Form
+      <Form<ICard>
+        validate={validateCard}
         onSubmit={handleSubmit}
         component={FormCard}
       />

@@ -9,7 +9,7 @@ interface IProps extends FieldRenderProps<string> {
 
 const TextAreaField: FC<IProps> = ({ input, label, meta, ...rest }) => {
   return (
-    <Layout id={input.id} title={label} >
+    <Layout id={input.id} title={label} meta={meta}>
       <textarea {...input} {...rest} className={styles.field} />
     </Layout>
   )
