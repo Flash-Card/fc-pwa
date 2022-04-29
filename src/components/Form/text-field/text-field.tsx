@@ -1,6 +1,6 @@
 import { FC, memo } from 'react';
 import Layout from '../layout/layout';
-import { FieldRenderProps } from 'react-final-form';
+import { FieldRenderProps, FieldMetaState } from 'react-final-form';
 
 interface IProps extends FieldRenderProps<string> {
   label: string;
@@ -8,7 +8,7 @@ interface IProps extends FieldRenderProps<string> {
 
 const TextField: FC<IProps> = ({ input, label, meta, ...rest }) => {
   return (
-    <Layout id={input.id} title={label} >
+    <Layout id={input.id} title={label} meta={meta} >
       <input
         {...input}
         {...rest}

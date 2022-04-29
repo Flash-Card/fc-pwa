@@ -1,16 +1,10 @@
 import { FC, memo } from 'react';
 import { Field, FormRenderProps } from 'react-final-form';
 import { TextField, TextAreaField, SwitchField } from 'components/Form';
+import { ICard } from 'domain/decks';
 import styles from './form.module.scss';
 
-interface IProps {
-  front: string;
-  back: string;
-  note?: string;
-  hidden?: boolean;
-}
-
-const FormCard: FC<FormRenderProps<IProps>> = ({ handleSubmit }) => {
+const FormCard: FC<FormRenderProps<ICard>> = ({ handleSubmit }) => {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <Field name='front' component={TextField} label='Front' autoCapitalize="off" />

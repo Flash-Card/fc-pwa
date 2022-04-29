@@ -10,9 +10,9 @@ interface ISelectProps<T> extends FieldRenderProps<string> {
   getValue(o: T): string;
 }
 
-const SelectField = <T, >({ options, getLabel, getValue, ...props }: ISelectProps<T>) => {
+const SelectField = <T, >({ options, getLabel, getValue, meta, ...props }: ISelectProps<T>) => {
   return (
-    <Layout id={props.id} title={props.label}>
+    <Layout id={props.id} title={props.label} meta={meta}>
       <select className='form-field__field' {...props.input}>
         {
           options.map(o => (
