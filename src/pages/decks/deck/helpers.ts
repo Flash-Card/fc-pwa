@@ -14,7 +14,12 @@ export function sortCart<C extends ICard>(field?: 'front' | 'back'): (l: Readonl
 
 type TVR = NonNullable<ValidationErrors>;
 
-type TCondition<V> = (v: V) => boolean
+type TCondition<V> = (v: V) => boolean;
+
+const prepareValue = <T>(v: T) => {
+  if (typeof v === 'string') return v.trim();
+  return v;
+}
 
 function enrichErrorFactory<T extends Record<K, any>, K extends keyof T>(values: T) {
   return (field: K, condition: TCondition<T[K]>, message: string) => (err: TVR) => {
@@ -30,8 +35,11 @@ export function cardValidation<T extends ICard>(cards: ReadonlyArray<T>) {
   return (values: T): ValidationErrors => {
     const enrichError = enrichErrorFactory<ICard, 'front' | 'back'>(values);
     return compose(
+      // (err) => { console.log(err); return err },
       enrichError('front', (v) => front.includes((v || '').trim()), 'Already exist'),
       enrichError('back', (v) => back.includes((v || '').trim()), 'Already exist'),
+      enrichError('front', (v) => typeof v === 'undefined', 'Must be not empty'),
+      enrichError('back', (v) => typeof v === 'undefined', 'Must be not empty'),
     )({});
   };
 }
