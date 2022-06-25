@@ -1,35 +1,3 @@
-.wrapper {
-  position: relative;
-  overflow: hidden;
-  display: flex;
-}
-.prev {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  will-change: transform;
-  transition-timing-function: ease-in-out;
-  transition-property: transform;
-  background: #fff;
-}
-.next {
-  display: flex;
-  width: 100%;
-}
-
-.posetive {
-  --face-color: #739f3d;
-  --text-color: #fff;
-}
-  
-.negative {
-  --face-color: #ee693f;
-  --text-color: #fff;
-}
-
 .appear {
 
 }
@@ -50,6 +18,7 @@
 .enterActive {
   opacity: 1;
   transform: translateX(0%);
+  transition: opacity 500ms, transform 500ms;
 }
 
 .enterDone {
@@ -64,13 +33,9 @@
 .exitActive {
   opacity: 0;
   transform: translateX(100%);
+  transition: opacity 500ms, transform 500ms;
 }
 
 .exitDone {
 
-}
-
-.enterActive,
-.exitActive {
-  transition: opacity 500ms, transform 500ms;
 }

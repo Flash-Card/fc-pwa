@@ -30,7 +30,7 @@ export default async function configureStore(): Promise<Store<AppState>> {
     }
   }
 
-  const reducers: Reducer<AppState> = combineReducers<AppState>({
+  const reducers: Reducer<AppState> = combineReducers<AppState, Action>({
     ...require('./env').reducer,
     ...require('./decks').reducer,
   });
