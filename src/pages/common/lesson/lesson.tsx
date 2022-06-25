@@ -63,7 +63,10 @@ const Lesson: FC<IProps> = ({ lesson, onClose }) => {
     <Container onClose={onClose} name="Lesson">
       <div className={styles.content}>
         <CardSlider id={state.item.question} status={state.status}>
-          <div className={styles.card}>{state.item.question}</div>
+          <div className={styles.card}>
+            <div className={styles.question}>{state.item.question}</div>
+            <div className={styles.answer}>{state.item.answer}</div>
+          </div>
         </CardSlider>
         <Form
           onSubmit={handleAnswer}

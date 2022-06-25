@@ -17,6 +17,7 @@
   color: var(--text-color);
   border: 1px solid currentColor;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: var(--face-color);
@@ -24,4 +25,15 @@
   hyphens: auto;
   word-wrap: break-word;
   text-align: center;
+}
+
+.answer {
+  font-size: 20px;
+  margin: 15px 0;
+  opacity: 0;
+  opacity: 0;
+}
+
+:global(.fc-slider--negative) .answer {
+  opacity: 1;
 }

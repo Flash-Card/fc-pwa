@@ -2,6 +2,7 @@ import { FC, memo, ReactNode, useMemo } from 'react';
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import cx from 'classnames';
 import styles from './slider.module.scss';
+import './styles.scss';
 
 interface IProps {
   id: string;
@@ -12,15 +13,15 @@ interface IProps {
 const Slider: FC<IProps> = ({ children, id, status }) => {
 
   const wclass = useMemo(
-    () => cx(styles.prev, {
-      [styles.posetive]: status === true,
-      [styles.negative]: status === false,
+    () => cx('fc-slider__prev', {
+      ['fc-slider--posetive']: status === true,
+      ['fc-slider--negative']: status === false,
     }),
     [status],
   );
 
   return (
-    <div className={styles.wrapper}>
+    <div className="fc-slider__wrapper">
       <SwitchTransition mode='out-in'>
         <CSSTransition
           key={id}
