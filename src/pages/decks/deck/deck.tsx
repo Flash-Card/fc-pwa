@@ -62,7 +62,7 @@ const Deck = () => {
       <TabHead
         data={TABS}
         getPath={getPath}
-        getKey={({ title }) => title}
+        getKey={({ title }: ITab) => title}
         getTitle={getTitle}
       />
       {
@@ -76,6 +76,7 @@ const Deck = () => {
       <Routes>
         <Route index element={<LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />} />
         <Route path='cards' element={<CardsTab cards={cards} />} />
+        <Route path='quiz' element={<LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />} />
       </Routes>
     </div>
   );

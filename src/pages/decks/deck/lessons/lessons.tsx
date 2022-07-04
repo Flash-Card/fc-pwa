@@ -47,6 +47,7 @@ const LessonsTab: FC<IProps> = ({ cards, cardsInLesson = CARDS_IN_LESSON }) => {
       {
         typeof lessonIndex === 'number' ? (
           <Lesson
+            cards={cards}
             lesson={lesson(lessonIndex)}
             onClose={() => setLessonIndex(undefined)}
           />
