@@ -1,9 +1,18 @@
-html, body, #root {
+html,
+body,
+#root {
   width: 100%;
-  height: 100%;
+  height: 100dvh;
 }
-html, body, #root, button, button, input, select, option {
-  font-family: 'Open Sans', sans-serif;
+html,
+body,
+#root,
+button,
+button,
+input,
+select,
+option {
+  font-family: "Open Sans", sans-serif;
   font-size: inherit;
 }
 
@@ -18,7 +27,7 @@ html, body, #root, button, button, input, select, option {
 
 #root__loading {
   font-size: 40px;
-  background-color: #FAAF08;
+  background-color: #faaf08;
   color: #fff;
   display: flex;
   justify-content: center;
@@ -26,10 +35,10 @@ html, body, #root, button, button, input, select, option {
 }
 
 :root {
-  --first-color: #FAAF08;
-  --second-color: #FA812F;
-  --third-color: #FA4032;
-  --fouth-color: #FEF3E3;
+  --first-color: #faaf08;
+  --second-color: #fa812f;
+  --third-color: #fa4032;
+  --fouth-color: #fef3e3;
   --fifth-color: #739f3d;
 }
 
@@ -40,7 +49,8 @@ html, body, #root, button, button, input, select, option {
   font-weight: inherit;
 }
 
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 
@@ -80,7 +90,7 @@ b {
 }
 
 .warning {
-  background-color: rgba(203,36,49,.8);
+  background-color: rgba(203, 36, 49, 0.8);
   display: block;
   color: #fff;
   font-size: 14px;
