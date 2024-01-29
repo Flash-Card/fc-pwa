@@ -3,8 +3,56 @@
   "name": "FlashCards",
   "start_url": "./index.html",
   "display": "standalone",
+  "display_override": ["window-controls-overlay"],
+  "protocol_handlers": [
+    {
+      "protocol": "web+deck",
+      "url": "/?deck=%s"
+    }
+  ],
+  "capture_links": "existing_client_event",
+  "url_handlers": [
+    {
+      "origin": "https://cards-mem.web.app"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Create Deck",
+      "description": "Create a new deck",
+      "url": "/deck/add"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/?deck=%s",
+      "name": "Deck",
+      "accept": {
+        "application/json": [".fcdeck"]
+      }
+    }
+  ],
   "theme_color": "#fa812f",
   "background_color": "#fa812f",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://cards-mem.web.app/manifest"
+    }
+  ],
+  "share_target": {
+    "action": "/?share-target",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "files": [
+        {
+          "name": "deck",
+          "accept": ["application/json"]
+        }
+      ]
+    }
+  },
   "icons": [
     {
       "src": "images/logo48.png",
