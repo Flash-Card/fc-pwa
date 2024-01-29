@@ -1,11 +1,11 @@
-import { memo, useCallback, useMemo, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
-import { TabHead } from 'components/Tab';
-import { CardsTab } from './cards';
-import { LessonsTab } from './lessons'
-import { useDeck } from './useDeck';
-import { CreateCard } from './create';
-import styles from './deck.module.scss';
+import { memo, useCallback, useMemo, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { TabHead } from "components/Tab";
+import { CardsTab } from "./cards";
+import { LessonsTab } from "./lessons";
+import { useDeck } from "./useDeck";
+import { CreateCard } from "./create";
+import styles from "./deck.module.scss";
 
 interface ITab {
   id: string;
@@ -13,41 +13,38 @@ interface ITab {
 }
 
 const TABS: ReadonlyArray<ITab> = [
-  { id: '', title: 'Lesson' },
-  { id: 'cards', title: 'Cards' },
-  { id: 'quiz', title: 'Quiz' },
+  { id: "", title: "Lesson" },
+  { id: "cards", title: "Cards" },
+  { id: "quiz", title: "Quiz" },
 ];
 
 const Deck = () => {
-
   const { cards, deck, actionSelector, editForm } = useDeck();
   const navigate = useNavigate();
 
   const [isCreating, setState] = useState<boolean>(false);
 
-  const toggleCreate = useCallback(() => setState(s => !s), [useState]);
+  const toggleCreate = useCallback(() => setState((s) => !s), [useState]);
 
   const handleComplete = useCallback(
     (id: string) => {
       setState(false);
       navigate(`cards#${id}`);
     },
-    [navigate],
+    [navigate]
   );
 
-  const getPath = useCallback(
-    ({ id: tabId }: ITab) => [tabId].join('/'),
-    [],
-  );
+  const getPath = useCallback(({ id: tabId }: ITab) => [tabId].join("/"), []);
 
   const getTitle = useCallback(
-    ({ title, id }: ITab) => id === 'cards' ? `${title} (${cards.length})` : title,
-    [cards],
+    ({ title, id }: ITab) =>
+      id === "cards" ? `${title} (${cards.length})` : title,
+    [cards]
   );
 
   const deckSelector = useMemo(
     () => actionSelector(styles.more),
-    [actionSelector],
+    [actionSelector]
   );
 
   return (
@@ -56,7 +53,12 @@ const Deck = () => {
         <h2 className={styles.title}>{deck.name}</h2>
         <div className={styles.buttons}>
           {deckSelector}
-          <button type="button" className={styles.add} onClick={toggleCreate} />
+          <button
+            title="Create"
+            type="button"
+            className={styles.add}
+            onClick={toggleCreate}
+          />
         </div>
       </header>
       <TabHead
@@ -65,21 +67,27 @@ const Deck = () => {
         getKey={({ title }: ITab) => title}
         getTitle={getTitle}
       />
-      {
-        isCreating ? (
-          <CreateCard onCancel={toggleCreate} onComplete={handleComplete} />
-        ) : null
-      }
-      {
-        editForm
-      }
+      {isCreating ? (
+        <CreateCard onCancel={toggleCreate} onComplete={handleComplete} />
+      ) : null}
+      {editForm}
       <Routes>
-        <Route index element={<LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />} />
-        <Route path='cards' element={<CardsTab cards={cards} />} />
-        <Route path='quiz' element={<LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />} />
+        <Route
+          index
+          element={
+            <LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />
+          }
+        />
+        <Route path="cards" element={<CardsTab cards={cards} />} />
+        <Route
+          path="quiz"
+          element={
+            <LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />
+          }
+        />
       </Routes>
     </div>
   );
-}
+};
 
 export default memo(Deck);

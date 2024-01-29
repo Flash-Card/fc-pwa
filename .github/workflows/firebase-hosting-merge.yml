@@ -3,9 +3,9 @@
 
 name: Deploy to Firebase Hosting on merge
 env:
-  NODE_VER: 14
+  NODE_VER: 18
 
-'on':
+"on":
   push:
     branches:
       - master
@@ -33,7 +33,7 @@ jobs:
         run: yarn run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDS_MEM }}'
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDS_MEM }}"
           channelId: live
           projectId: cards-mem

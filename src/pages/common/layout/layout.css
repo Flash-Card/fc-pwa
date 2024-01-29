@@ -21,6 +21,13 @@ option {
   grid-template-rows: 60px 1fr 0;
   overflow: hidden;
 }
+
+@media (display-mode: window-controls-overlay) {
+  #root {
+    grid-template-rows: env(titlebar-area-height) 1fr 0;
+  }
+}
+
 #root[aria-hidden="true"] {
   display: none;
 }

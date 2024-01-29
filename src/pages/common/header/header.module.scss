@@ -11,6 +11,17 @@
   justify-content: flex-start;
   position: sticky;
   top: 0;
+  @media (display-mode: window-controls-overlay) {
+    padding-right: calc(2 * env(titlebar-area-x));
+    padding-left: env(titlebar-area-x);
+    height: calc(env(titlebar-area-height) + 10);
+    .home {
+      display: none;
+    }
+    .title {
+      flex: 18px;
+    }
+  }
 }
 .version {
   color: #fff;
@@ -25,8 +36,10 @@
   width: 40px;
   height: 40px;
   position: relative;
-  &::before, &::after, & > span {
-    content: '';
+  &::before,
+  &::after,
+  & > span {
+    content: "";
     background-color: var(--fouth-color);
     width: 100%;
     height: 2px;
@@ -77,5 +90,5 @@
   height: 60px;
   text-decoration: none;
   -webkit-tap-highlight-color: transparent;
-  background: url('./home.svg') scroll no-repeat center / contain;
+  background: url("./home.svg") scroll no-repeat center / contain;
 }
