@@ -29,7 +29,7 @@
   margin-left: auto;
 }
 .title {
-  color: var(--fouth-color);
+  color: var(--fourth-color);
   font-size: 22px;
 }
 .burger {
@@ -40,7 +40,7 @@
   &::after,
   & > span {
     content: "";
-    background-color: var(--fouth-color);
+    background-color: var(--fourth-color);
     width: 100%;
     height: 2px;
     border-radius: 1px;

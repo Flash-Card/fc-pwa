@@ -9,7 +9,7 @@
 }
 
 .link {
-  color: var(--fouth-color);
+  color: var(--fourth-color);
   font-size: 18px;
   display: block;
   padding: 0 10px;
@@ -17,7 +17,7 @@
   line-height: 40px;
   text-decoration: none;
   &.active {
-    background-color: var(--fouth-color);
+    background-color: var(--fourth-color);
     color: var(--first-color);
   }
 }
