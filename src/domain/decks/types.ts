@@ -1,3 +1,6 @@
+import * as t from "io-ts";
+import { EActionType } from "./constants";
+import * as contracts from "./contracts";
 export interface ICard {
   id: string;
   deckId: string;
@@ -13,36 +16,28 @@ export interface IDeckItem {
   cardsInLesson?: number;
   description?: string;
   cards?: Record<string, ICard>;
-  sortBy?: 'front' | 'back';
+  sortBy?: "front" | "back";
 }
+
+export type SharedDeck = t.TypeOf<typeof contracts.sharedDeck>;
 
 export type TDecks = Record<string, IDeckItem>;
 
 // Actions
 
-export enum EActionType {
-  GET_DECK_REQUEST = 'GET_DECK_REQUEST',
-  GET_DECK_SUCCESS = 'GET_DECK_SUCCESS',
-  GET_DECK_FAILURE = 'GET_DECK_FAILURE',
-  GET_DECK_LIST_REQUEST = 'GET_DECK_LIST_REQUEST',
-  GET_DECK_LIST_SUCCESS = 'GET_DECK_LIST_SUCCESS',
-  GET_DECK_LIST_FAILURE = 'GET_DECK_LIST_FAILURE',
-  ADD_DECK = 'ADD_DECKS',
-  UPDATE_DECK = 'UPDATE_DECK',
-  ADD_CARD = 'ADD_CARD',
-  UPDATE_CARD = 'UPDATE_CARD',
-  DELETE_CARD = 'DELETE_CARD',
-  DELETE_DECK = 'DELETE_DECK',
-}
-
 export interface IAddDeck {
   type: typeof EActionType.ADD_DECK;
-  payload: Omit<IDeckItem, 'cards'>;
+  payload: Omit<IDeckItem, "cards">;
+}
+
+export interface PutDeck {
+  type: typeof EActionType.PUT_DECK;
+  payload: IDeckItem;
 }
 
 export interface IUpdateDeck {
   type: typeof EActionType.UPDATE_DECK;
-  payload: Omit<IDeckItem, 'cards'>;
+  payload: Omit<IDeckItem, "cards">;
 }
 
 export interface IAddCard {
@@ -84,7 +79,8 @@ export interface IDeleteDeck {
   payload: string;
 }
 
-export type Action = IAddDeck
+export type Action =
+  | IAddDeck
   | IAddCard
   | IUpdateDeck
   | IUpdateCard
@@ -93,4 +89,5 @@ export type Action = IAddDeck
   | IGetDeckRequest
   | IGetDeckSuccess
   | IDeleteCard
-  | IDeleteDeck;
+  | IDeleteDeck
+  | PutDeck;

@@ -1,5 +1,5 @@
+import { EActionType } from "./constants";
 import {
-  EActionType,
   IAddCard,
   IAddDeck,
   ICard,
@@ -11,11 +11,19 @@ import {
   IGetDeckRequest,
   IDeleteCard,
   IDeleteDeck,
-} from './types';
+  PutDeck,
+} from "./types";
 
-export function addDeck(deck: Omit<IDeckItem, 'cards'>): IAddDeck {
+export function addDeck(deck: Omit<IDeckItem, "cards">): IAddDeck {
   return {
     type: EActionType.ADD_DECK,
+    payload: deck,
+  };
+}
+
+export function putDeck(deck: IDeckItem): PutDeck {
+  return {
+    type: EActionType.PUT_DECK,
     payload: deck,
   };
 }
@@ -40,7 +48,9 @@ export function getDeckListRequest(): IGetDeckListRequest {
   };
 }
 
-export function getDeckListSuccess(decks: ReadonlyArray<IDeckItem>): IGetDeckListSuccess {
+export function getDeckListSuccess(
+  decks: ReadonlyArray<IDeckItem>
+): IGetDeckListSuccess {
   return {
     type: EActionType.GET_DECK_LIST_SUCCESS,
     payload: decks,

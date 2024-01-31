@@ -12,20 +12,9 @@ import {
   addCard,
 } from "domain/decks";
 import { EditDeck } from "../edit";
-import { sortCart, cardValidation } from "./helpers";
+import { sortCart, cardValidation, shareDeckAdapter } from "./helpers";
 
 const defaultDeck = {} as IDeckItem;
-
-interface IActionItem {
-  value: string;
-  title: string;
-}
-
-const actionList: ReadonlyArray<IActionItem> = [
-  { value: "delete", title: "Delete Deck" },
-  { value: "edit", title: "Edit Deck" },
-  { value: "share", title: "Share Deck" },
-];
 
 export function useDeck() {
   const { id } = useParams<{ id: string }>();
@@ -34,6 +23,8 @@ export function useDeck() {
   const deck = useAppSelector((state) =>
     id ? get(state, ["decks", id], defaultDeck) : defaultDeck
   );
+
+  const dbVersion = useAppSelector((state) => state.env.version);
 
   const [isEditDeck, setEditDeck] = useState<boolean>(false);
 
@@ -53,7 +44,7 @@ export function useDeck() {
 
   const handleShare = useCallback(() => {
     const file = createFile(
-      JSON.stringify(deck),
+      JSON.stringify(shareDeckAdapter(dbVersion, deck)),
       "application/json",
       `${deck.name}.fcdeck`
     );

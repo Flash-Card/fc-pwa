@@ -1,6 +1,6 @@
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { TabHead } from "components/Tab";
+import { TabHead, NavTab, Icon, IconName } from "components";
 import { CardsTab } from "./cards";
 import { LessonsTab } from "./lessons";
 import { useDeck } from "./useDeck";
@@ -18,8 +18,17 @@ const TABS: ReadonlyArray<ITab> = [
   { id: "quiz", title: "Quiz" },
 ];
 
+function renderTab(name: IconName, handler: () => void) {
+  return (
+    <button key={name} title={name} type="button" onClick={handler}>
+      <Icon name={name} size="lg" />
+    </button>
+  );
+}
+
 const Deck = () => {
-  const { cards, deck, actionSelector, editForm } = useDeck();
+  const { cards, deck, onDeleteDeck, onEditDeck, onShareDeck, editForm } =
+    useDeck();
   const navigate = useNavigate();
 
   const [isCreating, setState] = useState<boolean>(false);
@@ -42,24 +51,10 @@ const Deck = () => {
     [cards]
   );
 
-  const deckSelector = useMemo(
-    () => actionSelector(styles.more),
-    [actionSelector]
-  );
-
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <h2 className={styles.title}>{deck.name}</h2>
-        <div className={styles.buttons}>
-          {deckSelector}
-          <button
-            title="Create"
-            type="button"
-            className={styles.add}
-            onClick={toggleCreate}
-          />
-        </div>
       </header>
       <TabHead
         data={TABS}
@@ -75,7 +70,17 @@ const Deck = () => {
         <Route
           index
           element={
-            <LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />
+            <>
+              <LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />
+              <NavTab>
+                {[
+                  renderTab("create", toggleCreate),
+                  renderTab("edit", onEditDeck),
+                  renderTab("share", onShareDeck),
+                  renderTab("delete", onDeleteDeck),
+                ]}
+              </NavTab>
+            </>
           }
         />
         <Route path="cards" element={<CardsTab cards={cards} />} />
