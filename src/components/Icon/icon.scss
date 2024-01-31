@@ -1,0 +1,42 @@
+.icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  mask-repeat: no-repeat;
+  mask-position: center center;
+  mask-size: contain;
+  mask-image: var(--icon-image);
+  background-color: currentcolor;
+  &--chevron {
+    width: 10px;
+    height: 6px;
+  }
+  &--spinner {
+    will-change: transform;
+    animation: spin 2s linear infinite;
+  }
+  &--arrow-back {
+    height: 13px;
+  }
+  &--lg {
+    width: 24px;
+    height: 24px;
+  }
+  &--md {
+    width: 20px;
+    height: 20px;
+  }
+  &--sm {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
