@@ -1,9 +1,9 @@
-import { FC, memo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { updateCard, ICard, IDeckItem } from 'domain/decks';
-import { Grid, CardButton } from 'components/Grid';
-import { Container } from 'pages/common/container';
-import { useDecks } from '../../useDecks';
+import { FC, memo, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { updateCard, ICard, IDeckItem } from "domain/decks";
+import { Grid, CardButton } from "components/Grid";
+import { Container } from "pages/common/container";
+import { useDecks } from "../../useDecks";
 
 interface IProps {
   item: ICard;
@@ -11,21 +11,23 @@ interface IProps {
 }
 
 const TransferCard: FC<IProps> = ({ onComplete, item }) => {
-  const { decks, disptch } = useDecks();
-  const navigate = useNavigate()
+  const { decks, dispatch } = useDecks();
+  const navigate = useNavigate();
 
   const handleTransfer = useCallback(
     (deckId: string) => () => {
-      disptch(updateCard({ ...item, deckId }));
+      dispatch(updateCard({ ...item, deckId }));
       navigate(`/deck/${deckId}/cards#${item.id}`, { replace: true });
       onComplete();
     },
-    [disptch, navigate],
+    [dispatch, navigate]
   );
 
   const renderItem = useCallback(
-    ({ id, name }: IDeckItem) => <CardButton title={name} onClick={handleTransfer(id)} />,
-    [],
+    ({ id, name }: IDeckItem) => (
+      <CardButton title={name} onClick={handleTransfer(id)} />
+    ),
+    []
   );
 
   return (
@@ -33,6 +35,6 @@ const TransferCard: FC<IProps> = ({ onComplete, item }) => {
       <Grid list={decks} renderItem={renderItem} />
     </Container>
   );
-}
+};
 
 export default memo(TransferCard);

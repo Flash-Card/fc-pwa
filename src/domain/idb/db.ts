@@ -1,8 +1,8 @@
-import { IDB, EMode, promisifyRequest } from 'lib/idb';
-import { arrayToRecord } from 'lib/dataAdapters';
-import * as C from './constants';
-import requestUpgrade from './migration';
-import { IDeckItem, ICard } from '../decks';
+import { IDB, EMode, promisifyRequest } from "lib/idb";
+import { arrayToRecord } from "lib/dataAdapters";
+import * as C from "./constants";
+import requestUpgrade from "./migration";
+import { IDeckItem, ICard } from "../decks";
 
 export default class CDB extends IDB {
   constructor() {
@@ -11,26 +11,62 @@ export default class CDB extends IDB {
 
   getDeck = async (id: string): Promise<IDeckItem> => {
     const idb = await this.open();
-    const transaction = idb.transaction([C.TABLE.decks.name, C.TABLE.cards.name], EMode.READONLY);
-    transaction.oncomplete = () => { idb.close(); };
+    const transaction = idb.transaction(
+      [C.TABLE.decks.name, C.TABLE.cards.name],
+      EMode.READONLY
+    );
+    transaction.oncomplete = () => {
+      idb.close();
+    };
     const osDecks = transaction.objectStore(C.TABLE.decks.name);
-    const osCards = transaction.objectStore(C.TABLE.cards.name).index(C.TABLE.cards.index.deckId);
+    const osCards = transaction
+      .objectStore(C.TABLE.cards.name)
+      .index(C.TABLE.cards.index.deckId);
     const deck = await promisifyRequest<IDeckItem>(osDecks.get(id));
     const cards = await promisifyRequest<ICard[]>(osCards.getAll(id));
-    return ({ ...deck, cards: arrayToRecord(cards, 'id') });
-  }
+    return { ...deck, cards: arrayToRecord(cards, "id") };
+  };
+
+  putDeck = async (deck: IDeckItem): Promise<void> => {
+    const idb = await this.open();
+    const transaction = idb.transaction(
+      [C.TABLE.decks.name, C.TABLE.cards.name],
+      EMode.READWRITE
+    );
+    transaction.oncomplete = () => {
+      idb.close();
+    };
+    const osDecks = transaction.objectStore(C.TABLE.decks.name);
+    const osCards = transaction.objectStore(C.TABLE.cards.name);
+    const { cards, ...rest } = deck;
+    await promisifyRequest(osDecks.put(rest));
+    if (cards) {
+      await Promise.all(
+        Object.values(cards).map((card) =>
+          promisifyRequest(osCards.put({ ...card, deckId: deck.id }))
+        )
+      );
+    }
+  };
 
   deleteDeck = async (id: string): Promise<void> => {
     const idb = await this.open();
-    const transaction = idb.transaction([C.TABLE.decks.name, C.TABLE.cards.name], EMode.READWRITE);
-    transaction.oncomplete = () => { idb.close(); };
+    const transaction = idb.transaction(
+      [C.TABLE.decks.name, C.TABLE.cards.name],
+      EMode.READWRITE
+    );
+    transaction.oncomplete = () => {
+      idb.close();
+    };
     const osDecks = transaction.objectStore(C.TABLE.decks.name);
     const osCards = transaction.objectStore(C.TABLE.cards.name);
     await promisifyRequest(osDecks.delete(id));
     return new Promise((resolve, reject) => {
-      const req = osCards.index(C.TABLE.cards.index.deckId).openKeyCursor(IDBKeyRange.only(id));
+      const req = osCards
+        .index(C.TABLE.cards.index.deckId)
+        .openKeyCursor(IDBKeyRange.only(id));
       req.onerror = (err) => reject(err);
-      req.onsuccess = function() {
+      req.onsuccess = function () {
         const cursor = req.result;
         if (cursor) {
           osCards.delete(cursor.primaryKey);
@@ -38,7 +74,7 @@ export default class CDB extends IDB {
         } else {
           resolve();
         }
-      }
+      };
     });
-  }
+  };
 }

@@ -1,12 +1,12 @@
-import { FC, memo, useCallback, useMemo } from 'react';
-import { Form } from 'react-final-form';
-import omit from 'lodash/fp/omit';
-import get from 'lodash/get';
-import { useAppDispatch } from 'domain/index';
-import { EActionType, IDeckItem } from 'domain/decks';
-import { Container } from 'pages/common/container';
+import { FC, memo, useCallback, useMemo } from "react";
+import { Form } from "react-final-form";
+import omit from "lodash/fp/omit";
+import get from "lodash/get";
+import { useAppDispatch } from "domain/index";
+import { EActionType, IDeckItem, CARDS_IN_LESSON } from "domain/decks";
+import { Container } from "pages/common/container";
 
-import { FormDeck } from '../form';
+import { FormDeck } from "../form";
 
 interface IProps {
   onComplete(): void;
@@ -16,7 +16,7 @@ interface IProps {
 const EditDeck: FC<IProps> = ({ onComplete, item }) => {
   const dispatch = useAppDispatch();
 
-  const metaDeck = useMemo(() => omit('cards')(item), [item]);
+  const metaDeck = useMemo(() => omit("cards")(item), [item]);
 
   const handleSubmit = useCallback(
     (values: IDeckItem) => {
@@ -25,12 +25,12 @@ const EditDeck: FC<IProps> = ({ onComplete, item }) => {
         payload: {
           ...metaDeck,
           ...values,
-          cardsInLesson: Number(get(values, 'cardsInLesson', 3)),
+          cardsInLesson: Number(get(values, CARDS_IN_LESSON, 3)),
         },
       });
       onComplete();
     },
-    [item],
+    [item]
   );
   return (
     <Container onClose={onComplete} name="Edit deck">
@@ -41,6 +41,6 @@ const EditDeck: FC<IProps> = ({ onComplete, item }) => {
       />
     </Container>
   );
-}
+};
 
 export default memo(EditDeck);

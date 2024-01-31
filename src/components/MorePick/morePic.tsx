@@ -1,6 +1,6 @@
 import { FC, memo, useCallback, useRef, useMemo } from "react";
 import cx from "classnames";
-import styles from "./more-pic.module.scss";
+import "./more-pic.scss";
 
 enum EAction {
   CANCEL = "CANCEL",
@@ -35,7 +35,7 @@ const MorePic: FC<IProps> = ({ list, onSelect, className }) => {
 
   return (
     <select
-      className={cx(styles.pick, className)}
+      className={cx("more-pick", className)}
       onChange={handleChange}
       ref={selector}
       title="More actions"
