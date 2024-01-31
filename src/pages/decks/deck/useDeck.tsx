@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import get from "lodash/get";
 import { createFile, share } from "lib/pwa";
+import { confirmation } from "lib/confirmation";
 import { useAppSelector, useAppDispatch } from "domain/index";
 import {
   IDeckItem,
@@ -10,7 +11,6 @@ import {
   EActionType,
   addCard,
 } from "domain/decks";
-import { MorePic } from "components/MorePick";
 import { EditDeck } from "../edit";
 import { sortCart, cardValidation } from "./helpers";
 
@@ -46,35 +46,19 @@ export function useDeck() {
     [deck]
   );
 
-  const handleSelect = useCallback(
-    ({ value }: IActionItem) => {
-      if (value === "delete") {
-        dispatch({ type: EActionType.DELETE_DECK, payload: deck.id });
-        navigate("/", { replace: true });
-      } else if (value === "edit") {
-        setEditDeck(true);
-      } else if (value === "share") {
-        const file = createFile(
-          JSON.stringify(deck),
-          "application/json",
-          `${deck.name}.fcdeck`
-        );
-        share({ files: [file], title: deck.name });
-      }
-    },
-    [deck]
-  );
+  const handleDelete = useCallback(() => {
+    dispatch({ type: EActionType.DELETE_DECK, payload: deck.id });
+    navigate("/", { replace: true });
+  }, []);
 
-  const actionSelector = useCallback(
-    (className: string) => (
-      <MorePic
-        list={actionList}
-        onSelect={handleSelect}
-        className={className}
-      />
-    ),
-    []
-  );
+  const handleShare = useCallback(() => {
+    const file = createFile(
+      JSON.stringify(deck),
+      "application/json",
+      `${deck.name}.fcdeck`
+    );
+    share({ files: [file], title: deck.name });
+  }, [deck]);
 
   const editForm = useMemo(
     () =>
@@ -95,9 +79,11 @@ export function useDeck() {
     deck,
     cards,
     id,
-    actionSelector,
     editForm,
     validateCard,
     addCard: addCardHandler,
+    onDeleteDeck: confirmation(handleDelete, "Delete deck?"),
+    onEditDeck: () => setEditDeck(true),
+    onShareDeck: handleShare,
   };
 }
