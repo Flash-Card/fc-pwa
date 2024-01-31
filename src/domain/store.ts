@@ -4,13 +4,13 @@ import {
   combineReducers,
   createStore,
   compose,
-  applyMiddleware
-} from 'redux';
-import thunk from 'redux-thunk';
-import { AppState, Action } from './types';
-import idMiddleware from 'domain/idb/middlware';
+  applyMiddleware,
+} from "redux";
+import thunk from "redux-thunk";
+import { AppState, Action } from "./types";
+import idMiddleware from "domain/idb/middleware";
 
-const __DEV__ = (process.env.NODE_ENV === 'development');
+const __DEV__ = process.env.NODE_ENV === "development";
 
 declare global {
   interface Window {
@@ -19,31 +19,25 @@ declare global {
 }
 
 export default async function configureStore(): Promise<Store<AppState>> {
-
   let composeEnhancers = compose;
   const initialState = {} as AppState;
 
   if (__DEV__) {
     const devEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-    if (typeof devEnhancers === 'function') {
+    if (typeof devEnhancers === "function") {
       composeEnhancers = devEnhancers;
     }
   }
 
   const reducers: Reducer<AppState> = combineReducers<AppState, Action>({
-    ...require('./env').reducer,
-    ...require('./decks').reducer,
+    ...require("./env").reducer,
+    ...require("./decks").reducer,
   });
 
   const store = createStore(
     reducers,
     initialState,
-    composeEnhancers(
-      applyMiddleware(
-        thunk,
-        idMiddleware(),
-      ),
-    ),
+    composeEnhancers(applyMiddleware(thunk, idMiddleware()))
   );
 
   return store;
