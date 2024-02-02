@@ -1,12 +1,18 @@
-import { FC, memo, useMemo, useCallback, useEffect } from "react";
+import {
+  FC,
+  memo,
+  useMemo,
+  useCallback,
+  useEffect,
+  createElement,
+} from "react";
 import { useLocation } from "react-router-dom";
 import cx from "classnames";
-import get from "lodash/get";
 import { ICard } from "domain/decks";
 import { FlipCard, Card } from "components/card";
 import { ViewBar, EStatus } from "components/ViewBar";
 import { Condition } from "components/Tab";
-import { NavTab, Icon, NavButton } from "components";
+import { NavTab, NavButton } from "components";
 import ViewList from "./List";
 import { EditCard } from "../edit";
 import { TransferCard } from "../transfer";
@@ -18,20 +24,11 @@ interface CardsTabProps {
   cards: ReadonlyArray<ICard>;
 }
 
-// const OPTIONS: ReadonlyArray<IPickerItem<ECardActionType>> = [
-//   { value: ECardActionType.START_EDIT, title: "Edit Card" },
-//   { value: ECardActionType.DELETE, title: "Delete Card" },
-//   { value: ECardActionType.START_TRANSFER, title: "Transfer Card to:" },
-//   { value: ECardActionType.HIDE, title: "Hide Card" },
-//   { value: ECardActionType.SHOW, title: "Show Card" },
-// ];
-
 const CardsTab: FC<CardsTabProps> = ({ cards }) => {
   const { hash } = useLocation();
 
   const {
     onDelete,
-    onEdit,
     onSetCounter,
     getIndex,
     state,
@@ -49,8 +46,8 @@ const CardsTab: FC<CardsTabProps> = ({ cards }) => {
   const item = useMemo(() => {
     return (
       card.id && {
-        front: <Card text={card.front} />,
-        back: <Card text={card.back} />,
+        front: createElement(Card, { text: card.front }),
+        back: createElement(Card, { text: card.back }),
         hasPrev: state.count > 0,
         hasNext: state.count < cards.length - 1,
       }
@@ -125,8 +122,16 @@ const CardsTab: FC<CardsTabProps> = ({ cards }) => {
         ) : (
           <NavButton title="Hide" icon="unpin" onClick={onToggleVisibility} />
         )}
-        <NavButton title="Edit" icon="edit" onClick={onEdit} />
-        <NavButton title="Transfer" icon="transfer" onClick={onEdit} />
+        <NavButton
+          title="Edit"
+          icon="edit"
+          onClick={() => onAction(ECardActionType.START_EDIT)}
+        />
+        <NavButton
+          title="Transfer"
+          icon="transfer"
+          onClick={() => onAction(ECardActionType.START_TRANSFER)}
+        />
         <NavButton title="Delete" icon="delete" onClick={onDelete} />
       </NavTab>
     </div>

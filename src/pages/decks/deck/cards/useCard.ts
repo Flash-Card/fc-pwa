@@ -49,10 +49,6 @@ export const useCard = (cards: ReadonlyArray<ICard>) => {
     appDispatch(deleteCard(card));
   }, [card]);
 
-  const onEdit = useCallback(() => {}, []);
-
-  const onTransfer = useCallback(() => {}, []);
-
   const onToggleVisibility = useCallback(() => {
     appDispatch(updateCard({ ...card, hidden: !card.hidden }));
   }, [appDispatch, card]);
@@ -66,8 +62,6 @@ export const useCard = (cards: ReadonlyArray<ICard>) => {
 
   return {
     onDelete,
-    onEdit,
-    onTransfer,
     onToggleVisibility,
     onSetCounter,
     getIndex,
