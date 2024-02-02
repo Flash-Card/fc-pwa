@@ -1,6 +1,6 @@
 import { memo, useCallback, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { TabHead, NavTab, Icon, IconName } from "components";
+import { TabHead, NavTab, NavButton } from "components";
 import { CardsTab } from "./cards";
 import { LessonsTab } from "./lessons";
 import { useDeck } from "./useDeck";
@@ -17,14 +17,6 @@ const TABS: ReadonlyArray<ITab> = [
   { id: "cards", title: "Cards" },
   { id: "quiz", title: "Quiz" },
 ];
-
-function renderTab(name: IconName, handler: () => void) {
-  return (
-    <button key={name} title={name} type="button" onClick={handler}>
-      <Icon name={name} size="lg" />
-    </button>
-  );
-}
 
 const Deck = () => {
   const { cards, deck, onDeleteDeck, onEditDeck, onShareDeck, editForm } =
@@ -73,12 +65,18 @@ const Deck = () => {
             <>
               <LessonsTab cards={cards} cardsInLesson={deck.cardsInLesson} />
               <NavTab>
-                {[
-                  renderTab("create", toggleCreate),
-                  renderTab("edit", onEditDeck),
-                  renderTab("share", onShareDeck),
-                  renderTab("delete", onDeleteDeck),
-                ]}
+                <NavButton
+                  title="Create"
+                  onClick={toggleCreate}
+                  icon="create"
+                />
+                <NavButton title="edit" onClick={onEditDeck} icon="edit" />
+                <NavButton title="share" onClick={onShareDeck} icon="share" />
+                <NavButton
+                  title="delete"
+                  onClick={onDeleteDeck}
+                  icon="delete"
+                />
               </NavTab>
             </>
           }

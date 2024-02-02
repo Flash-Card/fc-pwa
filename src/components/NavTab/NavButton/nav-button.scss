@@ -1,0 +1,9 @@
+.nav-button {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  &__title {
+    font-size: 12px;
+    text-transform: capitalize;
+  }
+}

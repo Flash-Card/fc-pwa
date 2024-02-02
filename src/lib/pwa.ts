@@ -14,3 +14,24 @@ export function share(data: ShareData) {
     }
   }
 }
+
+declare global {
+  interface Window {
+    launchQueue: {
+      setConsumer: (launchParams: any) => void;
+    };
+  }
+}
+
+export function checkQueue(handler: (file: unknown) => void) {
+  if ("launchQueue" in window) {
+    window.launchQueue.setConsumer(async (launchParams: any) => {
+      const files = launchParams.files;
+      for (const file of files) {
+        const blob = await file.getFile();
+        const text = await blob.text();
+        handler(JSON.parse(text));
+      }
+    });
+  }
+}

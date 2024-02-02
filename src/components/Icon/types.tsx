@@ -1,4 +1,13 @@
-export type IconName = "share" | "open" | "create" | "edit" | "delete";
+export type IconName =
+  | "share"
+  | "open"
+  | "create"
+  | "edit"
+  | "delete"
+  | "pin"
+  | "unpin"
+  | "move"
+  | "transfer";
 
 export interface IconProps {
   name: IconName;

@@ -9,7 +9,7 @@ export const NavTab: FC<NavTabProps> = ({ children }) => {
   return (
     <ul className="nav-tab">
       {children.map((el) => (
-        <li key={el.key} className="nav-tab__item">
+        <li key={el.key || el.props.title} className="nav-tab__item">
           {el}
         </li>
       ))}

@@ -3,12 +3,14 @@ import { useAppSelector, useAppDispatch } from "domain/index";
 import { getDeckListRequest, putDeck } from "domain/decks";
 import * as contract from "domain/decks/contracts";
 import { valueOrThrow } from "lib/contracts";
+import { checkQueue } from "lib/pwa";
 
 export function useDecks() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getDeckListRequest());
+    checkQueue(appendDeck);
   }, []);
 
   const decks = useAppSelector((state) => Object.values(state.decks));
